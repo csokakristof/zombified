@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZOMBIF!ED</title>
+<link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--purple:#490e7e;--purple-dark:#2e0950;--purple-light:#6d14b0}
+body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+.lacquer{font-family:'Lacquer',cursive;isolation:isolate}
+.w{color:#ffffff;-webkit-text-fill-color:#ffffff;text-rendering:geometricPrecision}
+.p{color:#490e7e;-webkit-text-fill-color:#490e7e;text-rendering:geometricPrecision}
+
+@media(max-width:600px){
+  nav{padding:0 1rem;height:60px}
+  .nav-logo{font-size:1.1rem}
+  .nav-links{gap:.9rem}
+  .nav-links a{font-size:.65rem;letter-spacing:1px}
+  .nav-cart{padding:.4rem .7rem;font-size:.65rem;letter-spacing:1px}
+  .hero-brand{font-size:clamp(2.2rem,11vw,3.5rem) !important;letter-spacing:2px}
+  .hero-tag{letter-spacing:.2rem;font-size:.7rem}
+  .hero-cta{width:100%;max-width:280px}
+  .motto-band{font-size:.65rem;letter-spacing:.15rem;padding:.6rem .5rem}
+  #shop{padding:3rem 1rem}
+  .section-title{font-size:1.5rem}
+  .products{grid-template-columns:1fr}
+  #about{padding:3rem 1rem}
+  .about-brandmark{font-size:2rem}
+  .about-title{font-size:1.1rem;letter-spacing:1.5px}
+  .about-text{font-size:.85rem}
+  .about-tags{gap:.5rem}
+  .tag{font-size:.65rem;padding:.25rem .7rem}
+  #newsletter{padding:3rem 1rem}
+  .nl-title{font-size:1.2rem;letter-spacing:2px}
+  .nl-form{flex-direction:column}
+  .nl-btn{width:100%}
+  footer{padding:1.5rem 1rem}
+  .footer-links{gap:1rem}
+  .modal{padding:1.3rem}
+  .form-row{grid-template-columns:1fr}
+  .modal-btns{flex-direction:column}
+  .btn-back,.btn-next{flex:none;width:100%}
+  .cart-drawer{width:100%;max-width:100%}
+  .cookie-banner{padding:.9rem 1rem;flex-direction:column;align-items:flex-start;gap:.8rem}
+  .cookie-btns{width:100%;justify-content:flex-end}
+  .legal-inner{padding:2rem 1rem 4rem}
+  .legal-title{font-size:1.5rem}
+  .barion-methods{gap:.4rem}
+  .pay-method{padding:.45rem .6rem;font-size:.7rem}
+}
+
+.legal-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
+.legal-overlay.open{display:block}
+.legal-inner{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem}
+.legal-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:2.5rem;transition:color .2s;padding:0}
+.legal-back:hover{color:#fff}
+.legal-title{font-family:'Lacquer',cursive;font-size:2rem;letter-spacing:3px;margin-bottom:.3rem}
+.legal-updated{font-size:.72rem;color:#555;letter-spacing:1px;margin-bottom:2.5rem}
+.legal-section{margin-bottom:2rem}
+.legal-section h2{font-size:.82rem;letter-spacing:2px;text-transform:uppercase;color:#c084f5;margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid #490e7e22}
+.legal-section p,.legal-section li{font-size:.88rem;color:#888;line-height:1.85;margin-bottom:.5rem}
+.legal-section ul{padding-left:1.2rem}
+.legal-section li{list-style:none;position:relative;padding-left:.8rem}
+.legal-section li::before{content:'—';position:absolute;left:0;color:#490e7e}
+.legal-highlight{background:#490e7e15;border-left:2px solid #490e7e;padding:.8rem 1rem;border-radius:0 3px 3px 0;margin:.8rem 0}
+.legal-highlight p{margin:0;color:#c084f5 !important}
+
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #490e7e55;z-index:500;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease}
+.cookie-banner.show{transform:translateY(0)}
+.cookie-text{flex:1;min-width:220px}
+.cookie-text p{font-size:.78rem;color:#999;line-height:1.6}
+.cookie-text a{color:#c084f5;text-decoration:underline;cursor:pointer}
+.cookie-btns{display:flex;gap:.6rem;flex-shrink:0}
+.cookie-btn-accept{background:#490e7e;color:#fff;border:none;padding:.5rem 1.2rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s;white-space:nowrap}
+.cookie-btn-accept:hover{background:#6d14b0}
+.cookie-btn-reject{background:transparent;color:#666;border:1px solid #333;padding:.5rem 1rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;white-space:nowrap}
+.cookie-btn-reject:hover{border-color:#666;color:#aaa}
+.cookie-modal{display:none;position:fixed;inset:0;background:#000000cc;z-index:600;align-items:center;justify-content:center;padding:1rem}
+.cookie-modal.open{display:flex}
+.cookie-modal-box{background:#111;border:1px solid #490e7e55;border-radius:6px;width:100%;max-width:460px;padding:2rem}
+.cookie-modal-title{font-size:1rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:1.5rem}
+.cookie-modal-title span{color:#490e7e}
+.cookie-type{padding:.9rem 0;border-bottom:1px solid #490e7e22}
+.cookie-type:last-of-type{border-bottom:none}
+.cookie-type-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem}
+.cookie-type-name{font-size:.82rem;color:#fff}
+.cookie-type-desc{font-size:.72rem;color:#666;line-height:1.5}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#2a2a2a;border-radius:20px;cursor:pointer;transition:background .2s}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#555;border-radius:50%;transition:transform .2s,background .2s}
+.toggle input:checked+.toggle-slider{background:#490e7e}
+.toggle input:checked+.toggle-slider::before{transform:translateX(16px);background:#fff}
+.toggle input:disabled+.toggle-slider{cursor:not-allowed;opacity:.6}
+.cookie-modal-btns{display:flex;gap:.6rem;margin-top:1.5rem}
+.cookie-save-btn{flex:1;background:#490e7e;color:#fff;border:none;padding:.65rem;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.cookie-accept-all-btn{flex:1;background:transparent;border:1px solid #490e7e44;color:#c084f5;padding:.65rem;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bottom:1px solid #490e7e55;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 1.5rem;height:70px;gap:.5rem}
+.nav-logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
+.nav-links{display:flex;gap:1.5rem;justify-content:center}
+.nav-links a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:.3rem 0;border-bottom:2px solid transparent;font-family:'Segoe UI',sans-serif}
+.nav-links a:hover{color:#fff;border-bottom-color:#490e7e}
+.nav-cart{background:#490e7e;color:#fff;border:none;padding:.5rem 1rem;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s;font-family:'Segoe UI',sans-serif;white-space:nowrap}
+.nav-cart:hover{background:#6d14b0}
+
+#hero{min-height:90vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a}
+.hero-content{text-align:center;padding:2rem}
+.hero-brand{font-family:'Lacquer',cursive;font-size:clamp(3rem,10vw,8rem);letter-spacing:6px;line-height:1}
+.hero-tag{font-size:clamp(.7rem,2vw,1rem);letter-spacing:.5rem;color:#aaa;margin:.8rem 0 2rem;text-transform:uppercase}
+.hero-cta{background:#490e7e;color:#fff;padding:.8rem 2.5rem;letter-spacing:2px;font-size:.85rem;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:background .25s}
+.hero-cta:hover{background:#6d14b0}
+.motto-band{background:#490e7e;padding:.75rem 2rem;text-align:center;font-family:'Lacquer',cursive;font-size:clamp(.9rem,2.5vw,1.2rem);letter-spacing:.4rem;color:#fff}
+
+#shop{padding:5rem 2rem;max-width:900px;margin:0 auto}
+.section-title{font-family:'Lacquer',cursive;font-size:2rem;letter-spacing:4px;margin-bottom:.4rem}
+.section-sub{color:#888;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:2.5rem}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem}
+.product-card{background:#111;border:1px solid #490e7e33;border-radius:4px;overflow:hidden;transition:border-color .2s,transform .2s}
+.product-card:hover{border-color:#490e7e;transform:translateY(-4px)}
+.product-img{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#0d0d0d;position:relative;overflow:hidden}
+.img-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem}
+.product-badge{position:absolute;top:.6rem;right:.6rem;background:#490e7e;color:#fff;font-size:.65rem;letter-spacing:1px;padding:.2rem .5rem;text-transform:uppercase;z-index:2}
+.product-info{padding:1.2rem}
+.product-name{font-family:'Lacquer',cursive;letter-spacing:2px;font-size:1rem}
+.product-desc{color:#666;font-size:.78rem;margin:.3rem 0 .9rem}
+.size-row{display:flex;gap:.4rem;margin-bottom:.5rem;align-items:center}
+.size-label{color:#666;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;margin-right:.2rem}
+.size-btn{background:transparent;border:1px solid #490e7e44;color:#888;width:32px;height:32px;font-size:.75rem;cursor:pointer;border-radius:2px;transition:all .2s}
+.size-btn:hover{border-color:#490e7e;color:#c084f5}
+.size-btn.selected{background:#490e7e;border-color:#490e7e;color:#fff}
+.size-btn.out{background:#1a1a1a !important;border-color:#2a2a2a !important;color:#333 !important;cursor:not-allowed !important;text-decoration:line-through}
+.stock-info{font-size:.68rem;color:#c0392b;letter-spacing:.5px;margin-bottom:.5rem;min-height:.85rem}
+.product-meta{display:flex;justify-content:space-between;align-items:center;margin-top:.8rem}
+.product-price{color:#c084f5;font-size:1.15rem;font-weight:600}
+.add-btn{background:#490e7e;color:#fff;border:none;padding:.45rem 1rem;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s}
+.add-btn:hover{background:#6d14b0}
+
+.cart-overlay{display:none;position:fixed;inset:0;background:#0009;z-index:200}
+.cart-drawer{position:fixed;top:0;right:-400px;width:360px;max-width:95vw;height:100%;background:#111;border-left:1px solid #490e7e55;z-index:201;transition:right .3s;display:flex;flex-direction:column}
+.cart-drawer.open{right:0}
+.cart-head{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.5rem;border-bottom:1px solid #490e7e33}
+.cart-close{background:none;border:none;color:#888;font-size:1.4rem;cursor:pointer}
+.cart-close:hover{color:#fff}
+.cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+.cart-empty{color:#555;font-size:.85rem;text-align:center;margin-top:3rem}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid #490e7e22}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:.85rem;letter-spacing:1px}
+.cart-item-sub{color:#666;font-size:.72rem;margin-top:.2rem}
+.cart-item-remove{background:none;border:none;color:#555;cursor:pointer;font-size:1rem;margin-left:.5rem;transition:color .2s}
+.cart-item-remove:hover{color:#c084f5}
+.cart-footer{padding:1.2rem 1.5rem;border-top:1px solid #490e7e33}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:1rem;font-size:.9rem}
+.cart-total span:last-child{color:#c084f5;font-weight:700}
+.checkout-btn{width:100%;background:#490e7e;color:#fff;border:none;padding:.8rem;font-family:'Segoe UI',sans-serif;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s}
+.checkout-btn:hover{background:#6d14b0}
+.checkout-btn:disabled{background:#2a2a2a;color:#555;cursor:not-allowed}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:#000000cc;z-index:300;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#111;border:1px solid #490e7e55;border-radius:6px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;padding:2rem}
+.modal-title{font-size:1.2rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;color:#fff}
+.modal-title .p{color:#490e7e}
+.steps{display:flex;margin-bottom:2rem}
+.step{flex:1;text-align:center;font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:#555;position:relative;padding-bottom:.5rem}
+.step::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#222}
+.step.active{color:#c084f5}
+.step.active::after{background:#490e7e}
+.step.done{color:#666}
+.step.done::after{background:#490e7e55}
+.form-group{margin-bottom:1rem}
+.form-label{display:block;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:.4rem}
+.form-input{width:100%;background:#0d0d0d;border:1px solid #490e7e33;color:#fff;padding:.7rem 1rem;font-size:.88rem;outline:none;border-radius:2px;transition:border-color .2s;font-family:'Segoe UI',sans-serif}
+.form-input:focus{border-color:#490e7e}
+.form-input::placeholder{color:#444}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.form-error{color:#e05;font-size:.68rem;margin-top:.25rem;display:none}
+.shipping-options{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.2rem}
+.shipping-opt{display:flex;align-items:center;gap:1rem;padding:.85rem 1rem;background:#0d0d0d;border:1px solid #490e7e33;border-radius:4px;cursor:pointer;transition:border-color .2s}
+.shipping-opt.selected{border-color:#490e7e;background:#490e7e11}
+.shipping-opt input[type=radio]{accent-color:#490e7e;width:16px;height:16px}
+.shipping-opt-info{flex:1}
+.shipping-opt-name{font-size:.85rem;color:#fff}
+.shipping-opt-desc{font-size:.72rem;color:#666;margin-top:.2rem}
+.shipping-opt-price{font-size:.9rem;color:#c084f5;font-weight:600;white-space:nowrap}
+.summary-item{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid #490e7e22;font-size:.85rem}
+.summary-item-size{color:#666;font-size:.72rem;margin-top:.15rem}
+.summary-total{display:flex;justify-content:space-between;padding:.8rem 0;font-size:.95rem;font-weight:700;border-top:1px solid #490e7e33;margin-top:.3rem}
+.summary-total span:last-child{color:#c084f5}
+.barion-section{margin-top:1.3rem}
+.barion-label{font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin-bottom:.8rem}
+.barion-methods{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.pay-method{display:flex;align-items:center;gap:.4rem;padding:.5rem .8rem;background:#0d0d0d;border:1px solid #490e7e33;border-radius:3px;cursor:pointer;font-size:.75rem;color:#aaa;transition:all .2s}
+.pay-method:hover{border-color:#490e7e;color:#fff}
+.pay-method.selected{border-color:#490e7e;background:#490e7e15;color:#fff}
+.barion-badge{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;font-size:.68rem;color:#555}
+.barion-badge-box{background:#1a1a2e;border:1px solid #490e7e33;border-radius:3px;padding:.25rem .6rem;color:#c084f5;font-size:.65rem;letter-spacing:1px}
+.modal-btns{display:flex;gap:.8rem;margin-top:1.5rem}
+.btn-back{flex:1;background:transparent;border:1px solid #490e7e44;color:#888;padding:.7rem;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;font-family:'Segoe UI',sans-serif}
+.btn-back:hover{border-color:#490e7e;color:#fff}
+.btn-next{flex:2;background:#490e7e;color:#fff;border:none;padding:.7rem;font-family:'Segoe UI',sans-serif;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s}
+.btn-next:hover{background:#6d14b0}
+.success-screen{text-align:center;padding:1rem 0}
+.success-icon{font-size:3rem;margin-bottom:1rem}
+.success-title{font-size:1.6rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem;color:#fff}
+.success-sub{color:#888;font-size:.85rem;line-height:1.7;margin-bottom:1.5rem}
+.success-order{background:#0d0d0d;border:1px solid #490e7e33;border-radius:4px;padding:1rem;margin-bottom:1.5rem;text-align:left}
+.success-order-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.3rem 0;color:#999}
+.success-order-row span:first-child{color:#666}
+.btn-close-success{width:100%;background:#490e7e;color:#fff;border:none;padding:.8rem;font-family:'Segoe UI',sans-serif;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+
+#about{background:#0d0d0d;border-top:1px solid #490e7e22;border-bottom:1px solid #490e7e22;padding:5rem 2rem}
+.about-inner{max-width:800px;margin:0 auto;text-align:center}
+.about-brandmark{font-family:'Lacquer',cursive;font-size:3.5rem;line-height:1;margin-bottom:1rem}
+.about-title{font-family:'Lacquer',cursive;font-size:1.8rem;letter-spacing:4px;margin-bottom:1.5rem}
+.about-text{color:#999;line-height:1.9;font-size:.95rem;max-width:600px;margin:0 auto}
+.about-tags{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.tag{border:1px solid #490e7e;color:#c084f5;padding:.3rem .9rem;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;border-radius:2px}
+
+#newsletter{padding:5rem 2rem;max-width:600px;margin:0 auto;text-align:center}
+.nl-title{font-family:'Lacquer',cursive;font-size:1.8rem;letter-spacing:3px;margin-bottom:.5rem}
+.nl-sub{color:#888;font-size:.85rem;margin-bottom:2rem;letter-spacing:1px}
+.nl-form{display:flex;gap:.5rem;max-width:460px;margin:0 auto}
+.nl-input{flex:1;background:#111;border:1px solid #490e7e55;color:#fff;padding:.7rem 1rem;font-size:.9rem;outline:none;border-radius:2px}
+.nl-input:focus{border-color:#490e7e}
+.nl-input::placeholder{color:#555}
+.nl-btn{background:#490e7e;color:#fff;border:none;padding:.7rem 1.4rem;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-radius:2px}
+.nl-btn:hover{background:#6d14b0}
+.nl-note{color:#555;font-size:.75rem;margin-top:1rem}
+.nl-success{display:none;color:#c084f5;margin-top:1rem;letter-spacing:1px;font-size:.9rem}
+
+footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align:center}
+.footer-logo{font-family:'Lacquer',cursive;font-size:1.5rem;letter-spacing:3px}
+.footer-motto{font-size:.7rem;letter-spacing:.4rem;color:#555;margin:.3rem 0 1rem;text-transform:uppercase}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.footer-links a{color:#555;text-decoration:none;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:color .2s;display:flex;align-items:center;gap:.4rem}
+.footer-links a:hover{color:#c084f5}
+.footer-copy{color:#333;font-size:.7rem;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div class="legal-overlay" id="shippingPage">
+  <div class="legal-inner">
+    <button class="legal-back" onclick="closeLegal('shippingPage')">← Vissza a shopba</button>
+    <div class="legal-title lacquer"><span class="w">SZÁLLÍTÁSI </span><span class="p">FELTÉTELEK!</span></div>
+    <div class="legal-updated">Utoljára frissítve: 2025. január</div>
+    <div class="legal-section"><h2>Szállítási módok</h2><p>Jelenleg az alábbi szállítási módokat kínáljuk:</p><ul><li><strong style="color:#fff">GLS Házhozszállítás</strong> — 990 Ft · 2–3 munkanap</li><li><strong style="color:#fff">Packeta csomagpont</strong> — 690 Ft · 2–4 munkanap</li></ul></div>
+    <div class="legal-section"><h2>Szállítási határidők</h2><p>A rendelések feldolgozása munkanapokon 1–2 munkanapon belül történik.</p><div class="legal-highlight"><p>Rendelés után e-mailben küldünk visszaigazolást a csomagkövetési számmal.</p></div></div>
+    <div class="legal-section"><h2>Szállítási terület</h2><p>Jelenleg Magyarország és Szlovákia területére szállítunk.</p></div>
+    <div class="legal-section"><h2>Sérült vagy elveszett csomag</h2><p>Ha a csomag sérülten érkezik, kérjük ne vedd át, és jelezd 24 órán belül: <strong style="color:#fff">zombifiedinfo@gmail.com</strong></p></div>
+    <div class="legal-section"><h2>Visszaküldés</h2><p>Az átvételtől számított 14 napon belül visszaküldheted a terméket.</p><div class="legal-highlight"><p>Visszaküldés: zombifiedinfo@gmail.com</p></div></div>
+    <div class="legal-section"><h2>Kapcsolat</h2><ul><li>E-mail: zombifiedinfo@gmail.com</li><li>Válaszidő: 1–2 munkanap</li></ul></div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="returnsPage">
+  <div class="legal-inner">
+    <button class="legal-back" onclick="closeLegal('returnsPage')">← Vissza a shopba</button>
+    <div class="legal-title lacquer"><span class="w">VISSZAKÜLDÉS </span><span class="p">&amp; CSERE!</span></div>
+    <div class="legal-updated">Utoljára frissítve: 2025. január</div>
+    <div class="legal-section"><h2>Elállási jog</h2><p>Az átvételtől számított <strong style="color:#fff">14 naptári napon belül</strong> indoklás nélkül elállhatsz a vásárlástól.</p></div>
+    <div class="legal-section"><h2>Visszaküldés feltételei</h2><ul><li>Viseletmentes, mosatlan, eredeti állapotban</li><li>A címke rajta van</li><li>Megfelelő csomagolásban érkezik vissza</li></ul></div>
+    <div class="legal-section"><h2>Visszaküldés menete</h2><ul><li>Jelezd e-mailben: <strong style="color:#fff">zombifiedinfo@gmail.com</strong></li><li>Írd meg a rendelési számodat</li><li>A visszaküldés postaköltségét a vásárló viseli</li></ul><div class="legal-highlight"><p>Visszaküldés előtt mindig vedd fel velünk a kapcsolatot!</p></div></div>
+    <div class="legal-section"><h2>Visszatérítés</h2><p>A csomag megérkezése után <strong style="color:#fff">5 munkanapon belül</strong> visszautaljuk a vételárat. Kártyás/Barion fizetésnél automatikusan ugyanarra a kártyára. Átutalásnál az IBAN-t e-mailben kérjük el.</p></div>
+    <div class="legal-section"><h2>Csere</h2><p>Ha más méretet szeretnél, az új termék szállítási költségét mi álljuk.</p></div>
+    <div class="legal-section"><h2>Hibás termék</h2><p>Ha hibás terméket kaptál, fotóval jelezd <strong style="color:#fff">48 órán belül</strong>. A visszaküldés és az új termék szállítása a mi költségünk.</p></div>
+    <div class="legal-section"><h2>Kapcsolat</h2><ul><li>E-mail: zombifiedinfo@gmail.com</li><li>Válaszidő: 1–2 munkanap</li></ul></div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="contactPage">
+  <div class="legal-inner">
+    <button class="legal-back" onclick="closeLegal('contactPage')">← Vissza a shopba</button>
+    <div class="legal-title lacquer"><span class="w">KAPCSOLAT</span><span class="p">!</span></div>
+    <div class="legal-updated">Szívesen segítünk — írj bátran!</div>
+    <div class="legal-section"><h2>Elérhetőség</h2><ul><li>E-mail: <strong style="color:#fff">zombifiedinfo@gmail.com</strong></li><li>Válaszidő: 1–2 munkanap</li><li>Ügyfélszolgálat: hétfő–péntek</li></ul></div>
+    <div class="legal-section"><h2>Miben tudunk segíteni?</h2><ul><li>Rendeléssel kapcsolatos kérdések</li><li>Szállítás, csomagkövetés</li><li>Visszaküldés és csere</li><li>Méretekkel kapcsolatos tanácsok</li><li>Együttműködési ajánlatok</li></ul></div>
+    <div class="legal-section"><h2>Közösségi média</h2><ul><li>Instagram: <a href="https://instagram.com/zombified.clothing" target="_blank" style="color:#c084f5">@zombified.clothing</a></li><li>TikTok: <a href="https://tiktok.com/@zombified.clothing" target="_blank" style="color:#c084f5">@zombified.clothing</a></li></ul><div class="legal-highlight"><p>Leggyorsabb válasz e-mailben — általában 24 órán belül visszajelzünk.</p></div></div>
+    <div class="legal-section"><h2>Írj nekünk</h2>
+      <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem">
+        <div class="form-group" style="margin:0"><label class="form-label">Neved</label><input class="form-input" id="contactName" placeholder="Kovács János"></div>
+        <div class="form-group" style="margin:0"><label class="form-label">E-mail</label><input class="form-input" id="contactEmail" type="email" placeholder="pelda@email.hu"></div>
+        <div class="form-group" style="margin:0"><label class="form-label">Üzenet</label><textarea class="form-input" id="contactMsg" rows="4" placeholder="Miben segíthetünk?" style="resize:vertical;min-height:100px"></textarea></div>
+        <button onclick="sendContact()" style="background:#490e7e;color:#fff;border:none;padding:.75rem 2rem;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;align-self:flex-start" onmouseover="this.style.background='#6d14b0'" onmouseout="this.style.background='#490e7e'">Küldés</button>
+        <div id="contactSuccess" style="display:none;color:#c084f5;font-size:.82rem;letter-spacing:1px">Üzeneted megérkezett — hamarosan válaszolunk!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cookie-modal" id="cookieModal">
+  <div class="cookie-modal-box">
+    <div class="cookie-modal-title">Süti <span>beállítások!</span></div>
+    <div class="cookie-type"><div class="cookie-type-row"><span class="cookie-type-name">Szükséges sütik</span><label class="toggle"><input type="checkbox" checked disabled><span class="toggle-slider"></span></label></div><div class="cookie-type-desc">Az oldal működéséhez elengedhetetlenek.</div></div>
+    <div class="cookie-type"><div class="cookie-type-row"><span class="cookie-type-name">Analitikai sütik</span><label class="toggle"><input type="checkbox" id="toggleAnalytics"><span class="toggle-slider"></span></label></div><div class="cookie-type-desc">Segítenek megérteni, hogyan használják a látogatók az oldalt.</div></div>
+    <div class="cookie-type"><div class="cookie-type-row"><span class="cookie-type-name">Marketing sütik</span><label class="toggle"><input type="checkbox" id="toggleMarketing"><span class="toggle-slider"></span></label></div><div class="cookie-type-desc">Személyre szabott hirdetésekhez.</div></div>
+    <div class="cookie-modal-btns"><button class="cookie-save-btn" onclick="saveCookieSettings()">Mentés</button><button class="cookie-accept-all-btn" onclick="acceptAllCookies()">Mindet elfogadom</button></div>
+  </div>
+</div>
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-text"><p>Az oldal sütiket használ a jobb felhasználói élmény érdekében. <a onclick="openCookieSettings()">Részletes beállítások</a></p></div>
+  <div class="cookie-btns"><button class="cookie-btn-reject" onclick="rejectCookies()">Csak szükséges</button><button class="cookie-btn-accept" onclick="acceptAllCookies()">Elfogadom</button></div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h2 style="font-size:1rem;letter-spacing:2px;text-transform:uppercase;color:#fff">KOSÁR<span style="color:#490e7e">!</span></h2>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty" id="cartEmpty">A kosár üres.</div></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Részösszeg</span><span id="cartTotalPrice">0 Ft</span></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>Megrendelés</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <div class="steps"><div class="step active" id="s1">1. Adatok</div><div class="step" id="s2">2. Szállítás</div><div class="step" id="s3">3. Fizetés</div><div class="step" id="s4">4. Kész</div></div>
+    <div id="step1">
+      <div class="modal-title">Szállítási <span class="p">adatok</span></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Vezetéknév</label><input class="form-input" id="fLastName" placeholder="Kovács"><div class="form-error" id="eLastName">Kötelező mező</div></div><div class="form-group"><label class="form-label">Keresztnév</label><input class="form-input" id="fFirstName" placeholder="János"><div class="form-error" id="eFirstName">Kötelező mező</div></div></div>
+      <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="fEmail" type="email" placeholder="pelda@email.hu"><div class="form-error" id="eEmail">Érvényes e-mail szükséges</div></div>
+      <div class="form-group"><label class="form-label">Telefonszám</label><input class="form-input" id="fPhone" placeholder="+36 20 123 4567"><div class="form-error" id="ePhone">Kötelező mező</div></div>
+      <div class="form-group"><label class="form-label">Cím</label><input class="form-input" id="fAddress" placeholder="Fő utca 12."><div class="form-error" id="eAddress">Kötelező mező</div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Irányítószám</label><input class="form-input" id="fZip" placeholder="1234"><div class="form-error" id="eZip">Kötelező mező</div></div><div class="form-group"><label class="form-label">Város</label><input class="form-input" id="fCity" placeholder="Budapest"><div class="form-error" id="eCity">Kötelező mező</div></div></div>
+      <div class="modal-btns"><button class="btn-back" onclick="closeCheckout()">Vissza</button><button class="btn-next" onclick="goToStep2()">Tovább →</button></div>
+    </div>
+    <div id="step2" style="display:none">
+      <div class="modal-title">Szállítási <span class="p">mód</span></div>
+      <div class="shipping-options">
+        <label class="shipping-opt selected" id="optGLS" onclick="selectShipping('gls')"><input type="radio" name="shipping" value="gls" checked><div class="shipping-opt-info"><div class="shipping-opt-name">GLS Házhozszállítás</div><div class="shipping-opt-desc">2–3 munkanap · Csomagkövetéssel</div></div><div class="shipping-opt-price">990 Ft</div></label>
+        <label class="shipping-opt" id="optPacketa" onclick="selectShipping('packeta')"><input type="radio" name="shipping" value="packeta"><div class="shipping-opt-info"><div class="shipping-opt-name">Packeta csomagpont</div><div class="shipping-opt-desc">2–4 munkanap · Ejtsd le, vedd át mikor jó</div></div><div class="shipping-opt-price">690 Ft</div></label>
+      </div>
+      <div id="packetaPointRow" style="display:none"><div class="form-group"><label class="form-label">Csomagpont keresése</label><input class="form-input" id="fPacketaPoint" placeholder="Pl. Budapest, Váci út 12."></div></div>
+      <div class="modal-btns"><button class="btn-back" onclick="goToStep1()">← Vissza</button><button class="btn-next" onclick="goToStep3()">Tovább →</button></div>
+    </div>
+    <div id="step3" style="display:none">
+      <div class="modal-title">Fizetési <span class="p">mód</span></div>
+      <div id="paymentSummary" style="background:#0d0d0d;border:1px solid #490e7e22;border-radius:4px;padding:.9rem 1rem;margin-bottom:1.3rem;font-size:.8rem"></div>
+      <div class="barion-section">
+        <div class="barion-label">Válassz fizetési módot</div>
+        <div class="barion-methods">
+          <div class="pay-method selected" id="pm-card" onclick="selectPayment('card')"><span>💳</span> Bankkártya</div>
+          <div class="pay-method" id="pm-google" onclick="selectPayment('google')"><span>G</span> Google Pay</div>
+          <div class="pay-method" id="pm-apple" onclick="selectPayment('apple')"><span></span> Apple Pay</div>
+          <div class="pay-method" id="pm-transfer" onclick="selectPayment('transfer')"><span>🏦</span> Átutalás</div>
+        </div>
+        <div class="barion-badge"><div class="barion-badge-box">BARION</div><span>Biztonságos fizetés — PCI DSS certified</span></div>
+      </div>
+      <div class="modal-btns"><button class="btn-back" onclick="goToStep2()">← Vissza</button><button class="btn-next" id="payBtn" onclick="placeOrder()">Fizetés →</button></div>
+    </div>
+    <div id="step4" style="display:none">
+      <div class="success-screen">
+        <div class="success-icon">🖤</div>
+        <div class="success-title">Köszönjük<span style="color:#490e7e">!</span></div>
+        <div class="success-sub">A rendelésed megérkezett.<br>Hamarosan küldünk visszaigazolást e-mailben.</div>
+        <div class="success-order" id="successOrder"></div>
+        <div style="color:#555;font-size:.75rem;margin-bottom:1.5rem">Kérdés: zombifiedinfo@gmail.com</div>
+        <button class="btn-close-success" onclick="finishOrder()">NEVER DEAD — NEVER DONE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
+  <div class="nav-links">
+    <a onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
+    <a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
+    <a onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
+  </div>
+  <button class="nav-cart" id="cartBtn" onclick="openCart()">Kosár (0)</button>
+</nav>
+
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-brand">
+    <img src="logo.svg" alt="ZOMBIF!ED" style="max-width:min(600px,85vw);width:100%;height:auto;display:block;margin:0 auto">
+    </div>
+    <div class="hero-tag">Never Dead &nbsp;&nbsp; Never Done</div>
+    <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop the Drop</button>
+  </div>
+</section>
+
+<div class="motto-band lacquer">NEVER DEAD &nbsp;&nbsp;&nbsp; NEVER DONE</div>
+
+<section id="shop">
+  <div class="section-title lacquer"><span class="w">THE </span><span class="p">DROP!</span></div>
+  <div class="section-sub">Jelenlegi kollekció — S / M / L</div>
+  <div class="products">
+    <div class="product-card">
+      <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">WHITE TEE</div></div></div>
+      <div class="product-info">
+        <div class="product-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
+        <div class="product-desc">Oversized fazon · 100% pamut</div>
+        <div class="stock-info" id="stock-white"></div>
+        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
+        <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">BLACK TEE</div></div></div>
+      <div class="product-info">
+        <div class="product-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
+        <div class="product-desc">Oversized fazon · 100% pamut</div>
+        <div class="stock-info" id="stock-black"></div>
+        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button></div>
+        <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'Black Tee',10990)">Kosárba +</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-inner">
+    <div class="about-brandmark lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
+    <div class="about-title lacquer"><span class="w">NEVER DEAD &nbsp; NEVER DONE</span></div>
+    <p class="about-text">Nem csak ruhát készítünk. A ZOMBIF!ED azoknak szól, akik nem akarnak beleolvadni a tömegbe. Akik nem félnek önmaguk lenni, és nem hajlandók élőhalottként élni. Egy mentalitást képviselünk azoknak, akik tényleg élni akarnak — nem csak létezni.</p>
+    <div class="about-tags"><span class="tag">Streetwear</span><span class="tag">Limited Drops</span><span class="tag">100% Pamut</span><span class="tag">Oversized Fazon</span><span class="tag">Magyarországról</span></div>
+  </div>
+</section>
+
+<section id="newsletter">
+  <div class="nl-title lacquer"><span class="w">ÉBREDJ </span><span class="p">FEL!</span></div>
+  <div class="nl-sub">Iratkozz fel és értesítünk, mielőtt bárki más megkapja az új dropokat</div>
+  <div class="nl-form"><input class="nl-input" type="email" placeholder="email@cimed.hu" id="emailInput"><button class="nl-btn" onclick="subscribe()">Feliratkozás</button></div>
+  <div class="nl-note">Nem küldünk spamet. Bármikor leiratkozhatsz.</div>
+  <div class="nl-success" id="nlSuccess">BENT VAGY A HORDÁBAN — ÜDVÖZLÜNK!</div>
+</section>
+
+<footer>
+  <div class="footer-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
+  <div class="footer-motto">Never Dead &nbsp;&nbsp; Never Done</div>
+  <div class="footer-links">
+    <a href="https://instagram.com/zombified.clothing" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram
+    </a>
+    <a href="https://tiktok.com/@zombified.clothing" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
+      TikTok
+    </a>
+    <a onclick="openLegal('shippingPage')">Szállítás</a>
+    <a onclick="openLegal('returnsPage')">Visszaküldés</a>
+    <a onclick="openLegal('contactPage')">Kapcsolat</a>
+  </div>
+  <div class="footer-copy">© 2025 ZOMBIF!ED. Minden jog fenntartva.</div>
+</footer>
+
+<script>
+let cartItems=[];
+let selectedShipping='gls';
+let selectedPayment='card';
+const SHIPPING={gls:{name:'GLS Házhozszállítás',price:990},packeta:{name:'Packeta csomagpont',price:690}};
+const stock={'White Tee':{S:true,M:true,L:true},'Black Tee':{S:true,M:false,L:true}};
+
+function initStock(){
+  document.querySelectorAll('.product-card').forEach(card=>{
+    const addBtn=card.querySelector('.add-btn');
+    if(!addBtn)return;
+    const match=addBtn.getAttribute('onclick').match(/'([^']+)'/);
+    if(!match)return;
+    const name=match[1];
+    card.querySelectorAll('.size-btn').forEach(btn=>{
+      if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}
+    });
+  });
+}
+
+function selectSize(btn,product){
+  if(btn.classList.contains('out'))return;
+  btn.closest('.size-row').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const info=btn.closest('.product-card').querySelector('.stock-info');
+  if(info)info.textContent='';
+}
+
+function addToCart(btn,name,price){
+  const card=btn.closest('.product-card');
+  const sizeBtn=card.querySelector('.size-btn.selected');
+  if(!sizeBtn){
+    card.querySelectorAll('.size-btn:not(.out)').forEach(b=>{b.style.borderColor='#c084f5';});
+    setTimeout(()=>card.querySelectorAll('.size-btn').forEach(b=>{b.style.borderColor='';}),800);
+    const info=card.querySelector('.stock-info');
+    if(info){info.textContent='Válassz méretet!';info.style.color='#c084f5';}
+    return;
+  }
+  cartItems.push({name,size:sizeBtn.textContent.trim(),price});
+  updateCart();
+  btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
+  setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
+}
+
+function updateCart(){
+  const count=cartItems.length;
+  document.getElementById('cartBtn').textContent='Kosár ('+count+')';
+  document.getElementById('cartTotalPrice').textContent=cartItems.reduce((s,i)=>s+i.price,0).toLocaleString('hu-HU')+' Ft';
+  document.getElementById('checkoutBtn').disabled=count===0;
+  const el=document.getElementById('cartItems');
+  el.querySelectorAll('.cart-item').forEach(e=>e.remove());
+  document.getElementById('cartEmpty').style.display=count?'none':'block';
+  cartItems.forEach((item,i)=>{
+    const isBlack=item.name.startsWith('Black');
+    const [first,...rest]=item.name.split(' ');
+    const div=document.createElement('div');div.className='cart-item';
+    div.innerHTML=`<div class="cart-item-info"><div class="cart-item-name"><span style="color:#fff">ZOMBI</span><span style="color:#490e7e">F!ED</span> <span style="color:${isBlack?'#888':'#fff'}">${first}</span> <span style="color:#490e7e">${rest.join(' ')}!</span></div><div class="cart-item-sub">Méret: ${item.size} · ${item.price.toLocaleString('hu-HU')} Ft</div></div><button class="cart-item-remove" onclick="removeItem(${i})">✕</button>`;
+    el.appendChild(div);
+  });
+}
+
+function removeItem(i){cartItems.splice(i,1);updateCart();}
+function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').style.display='block';}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').style.display='none';}
+function openCheckout(){closeCart();document.getElementById('checkoutModal').classList.add('open');showStep(1);}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
+
+function showStep(n){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById('step'+i).style.display=i===n?'block':'none';
+    const s=document.getElementById('s'+i);
+    s.className='step'+(i===n?' active':i<n?' done':'');
+  });
+}
+
+function validate(){
+  const fields=[['fLastName','eLastName',v=>v.trim().length>0],['fFirstName','eFirstName',v=>v.trim().length>0],['fEmail','eEmail',v=>v.includes('@')&&v.includes('.')],['fPhone','ePhone',v=>v.trim().length>5],['fAddress','eAddress',v=>v.trim().length>0],['fZip','eZip',v=>v.trim().length>0],['fCity','eCity',v=>v.trim().length>0]];
+  let ok=true;
+  fields.forEach(([fid,eid,fn])=>{const err=document.getElementById(eid);if(!fn(document.getElementById(fid).value)){err.style.display='block';ok=false;}else err.style.display='none';});
+  return ok;
+}
+
+function goToStep1(){showStep(1);}
+function goToStep2(){if(validate())showStep(2);}
+
+function selectShipping(type){
+  selectedShipping=type;
+  document.getElementById('optGLS').classList.toggle('selected',type==='gls');
+  document.getElementById('optPacketa').classList.toggle('selected',type==='packeta');
+  document.getElementById('packetaPointRow').style.display=type==='packeta'?'block':'none';
+}
+
+function goToStep3(){
+  const itemTotal=cartItems.reduce((s,i)=>s+i.price,0);
+  const ship=SHIPPING[selectedShipping];
+  const ln=document.getElementById('fLastName').value;
+  const fn=document.getElementById('fFirstName').value;
+  const city=document.getElementById('fCity').value;
+  document.getElementById('paymentSummary').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.4rem"><span style="color:#666">Termékek (${cartItems.length} db)</span><span>${itemTotal.toLocaleString('hu-HU')} Ft</span></div><div style="display:flex;justify-content:space-between;margin-bottom:.6rem"><span style="color:#666">${ship.name}</span><span>${ship.price.toLocaleString('hu-HU')} Ft</span></div><div style="display:flex;justify-content:space-between;font-weight:700;border-top:1px solid #490e7e33;padding-top:.6rem"><span>Végösszeg</span><span style="color:#c084f5">${(itemTotal+ship.price).toLocaleString('hu-HU')} Ft</span></div><div style="margin-top:.6rem;font-size:.72rem;color:#555">${ln} ${fn} — ${city}</div>`;
+  showStep(3);
+}
+
+function selectPayment(type){
+  selectedPayment=type;
+  ['card','google','apple','transfer'].forEach(t=>document.getElementById('pm-'+t).classList.toggle('selected',t===type));
+  const labels={card:'Fizetés kártyával →',google:'Fizetés Google Pay →',apple:'Fizetés Apple Pay →',transfer:'Fizetési adatok küldése →'};
+  document.getElementById('payBtn').textContent=labels[type];
+}
+
+function placeOrder(){
+  const orderNum='ZMB-'+Math.floor(10000+Math.random()*90000);
+  const itemTotal=cartItems.reduce((s,i)=>s+i.price,0);
+  const ship=SHIPPING[selectedShipping];
+  const payLabels={card:'Bankkártya (Barion)',google:'Google Pay (Barion)',apple:'Apple Pay (Barion)',transfer:'Banki átutalás'};
+  document.getElementById('successOrder').innerHTML=`<div class="success-order-row"><span>Rendelési szám</span><span style="color:#c084f5">${orderNum}</span></div><div class="success-order-row"><span>Szállítás</span><span>${ship.name}</span></div><div class="success-order-row"><span>Fizetési mód</span><span>${payLabels[selectedPayment]}</span></div><div class="success-order-row"><span>Végösszeg</span><span style="color:#c084f5">${(itemTotal+ship.price).toLocaleString('hu-HU')} Ft</span></div>`;
+  showStep(4);
+}
+
+function finishOrder(){
+  cartItems=[];updateCart();
+  document.getElementById('checkoutModal').classList.remove('open');
+  ['fLastName','fFirstName','fEmail','fPhone','fAddress','fZip','fCity','fPacketaPoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  selectShipping('gls');selectPayment('card');
+}
+
+function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
+function closeLegal(id){document.getElementById(id).classList.remove('open');}
+
+function initCookieBanner(){
+  if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);
+}
+function acceptAllCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));hideCookieBanner();}
+function rejectCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:false,marketing:false}));hideCookieBanner();}
+function saveCookieSettings(){
+  localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:document.getElementById('toggleAnalytics').checked,marketing:document.getElementById('toggleMarketing').checked}));
+  hideCookieBanner();
+}
+function hideCookieBanner(){document.getElementById('cookieBanner').classList.remove('show');document.getElementById('cookieModal').classList.remove('open');}
+function openCookieSettings(){document.getElementById('cookieModal').classList.add('open');}
+
+function sendContact(){
+  const n=document.getElementById('contactName').value;
+  const e=document.getElementById('contactEmail').value;
+  const m=document.getElementById('contactMsg').value;
+  if(!n.trim()||!e.includes('@')||!m.trim())return;
+  document.getElementById('contactSuccess').style.display='block';
+  document.getElementById('contactName').value='';
+  document.getElementById('contactEmail').value='';
+  document.getElementById('contactMsg').value='';
+}
+
+function subscribe(){
+  const v=document.getElementById('emailInput').value;
+  if(!v||!v.includes('@'))return;
+  document.querySelector('.nl-form').style.display='none';
+  document.getElementById('nlSuccess').style.display='block';
+}
+
+initStock();
+initCookieBanner();
+</script>
+</body>
+</html>
