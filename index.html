@@ -14,11 +14,11 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .p{color:#490e7e;-webkit-text-fill-color:#490e7e;text-rendering:geometricPrecision}
 
 @media(max-width:600px){
-  nav{padding:0 1rem;height:60px}
-  .nav-logo{font-size:1.1rem}
-  .nav-links{gap:.9rem}
-  .nav-links a{font-size:.65rem;letter-spacing:1px}
-  .nav-cart{padding:.4rem .7rem;font-size:.65rem;letter-spacing:1px}
+  nav{padding:0 1rem;height:55px}
+  .nav-logo{display:none}
+  .nav-links{gap:1.2rem}
+  .nav-links a{font-size:.68rem;letter-spacing:1px}
+  .nav-cart{padding:.4rem .8rem;font-size:.68rem;letter-spacing:1px}
   .hero-brand{font-size:clamp(2.2rem,11vw,3.5rem) !important;letter-spacing:2px}
   .hero-tag{letter-spacing:.2rem;font-size:.7rem}
   .hero-cta{width:100%;max-width:280px}
@@ -380,9 +380,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 
 <section id="hero">
   <div class="hero-content">
-    <div class="hero-brand">
-    <img src="logo.svg" alt="ZOMBIF!ED" style="max-width:min(600px,85vw);width:100%;height:auto;display:block;margin:0 auto">
-    </div>
+    <div class="hero-brand lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="hero-tag">Never Dead &nbsp;&nbsp; Never Done</div>
     <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop the Drop</button>
   </div>
