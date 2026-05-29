@@ -9,47 +9,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--purple:#490e7e;--purple-dark:#2e0950;--purple-light:#6d14b0}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
-.lacquer{font-family:'Lacquer',cursive;isolation:isolate}
-.w{color:#ffffff;-webkit-text-fill-color:#ffffff;text-rendering:geometricPrecision}
-.p{color:#490e7e;-webkit-text-fill-color:#490e7e;text-rendering:geometricPrecision}
-
-@media(max-width:600px){
-  nav{padding:0 1rem;height:55px}
-  .nav-logo{display:none}
-  .nav-links{gap:1.2rem}
-  .nav-links a{font-size:.68rem;letter-spacing:1px}
-  .nav-cart{padding:.4rem .8rem;font-size:.68rem;letter-spacing:1px}
-  .hero-brand{font-size:clamp(2.2rem,11vw,3.5rem) !important;letter-spacing:2px}
-  .hero-tag{letter-spacing:.2rem;font-size:.7rem}
-  .hero-cta{width:100%;max-width:280px}
-  .motto-band{font-size:.65rem;letter-spacing:.15rem;padding:.6rem .5rem}
-  #shop{padding:3rem 1rem}
-  .section-title{font-size:1.5rem}
-  .products{grid-template-columns:1fr}
-  #about{padding:3rem 1rem}
-  .about-brandmark{font-size:2rem}
-  .about-title{font-size:1.1rem;letter-spacing:1.5px}
-  .about-text{font-size:.85rem}
-  .about-tags{gap:.5rem}
-  .tag{font-size:.65rem;padding:.25rem .7rem}
-  #newsletter{padding:3rem 1rem}
-  .nl-title{font-size:1.2rem;letter-spacing:2px}
-  .nl-form{flex-direction:column}
-  .nl-btn{width:100%}
-  footer{padding:1.5rem 1rem}
-  .footer-links{gap:1rem}
-  .modal{padding:1.3rem}
-  .form-row{grid-template-columns:1fr}
-  .modal-btns{flex-direction:column}
-  .btn-back,.btn-next{flex:none;width:100%}
-  .cart-drawer{width:100%;max-width:100%}
-  .cookie-banner{padding:.9rem 1rem;flex-direction:column;align-items:flex-start;gap:.8rem}
-  .cookie-btns{width:100%;justify-content:flex-end}
-  .legal-inner{padding:2rem 1rem 4rem}
-  .legal-title{font-size:1.5rem}
-  .barion-methods{gap:.4rem}
-  .pay-method{padding:.45rem .6rem;font-size:.7rem}
-}
+.lacquer{font-family:'Lacquer',cursive}
+.w{color:#ffffff}.p{color:#490e7e}
 
 .legal-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .legal-overlay.open{display:block}
@@ -73,10 +34,8 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .cookie-text p{font-size:.78rem;color:#999;line-height:1.6}
 .cookie-text a{color:#c084f5;text-decoration:underline;cursor:pointer}
 .cookie-btns{display:flex;gap:.6rem;flex-shrink:0}
-.cookie-btn-accept{background:#490e7e;color:#fff;border:none;padding:.5rem 1.2rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s;white-space:nowrap}
-.cookie-btn-accept:hover{background:#6d14b0}
-.cookie-btn-reject{background:transparent;color:#666;border:1px solid #333;padding:.5rem 1rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;white-space:nowrap}
-.cookie-btn-reject:hover{border-color:#666;color:#aaa}
+.cookie-btn-accept{background:#490e7e;color:#fff;border:none;padding:.5rem 1.2rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap}
+.cookie-btn-reject{background:transparent;color:#666;border:1px solid #333;padding:.5rem 1rem;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap}
 .cookie-modal{display:none;position:fixed;inset:0;background:#000000cc;z-index:600;align-items:center;justify-content:center;padding:1rem}
 .cookie-modal.open{display:flex}
 .cookie-modal-box{background:#111;border:1px solid #490e7e55;border-radius:6px;width:100%;max-width:460px;padding:2rem}
@@ -239,6 +198,44 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 .footer-links a{color:#555;text-decoration:none;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:color .2s;display:flex;align-items:center;gap:.4rem}
 .footer-links a:hover{color:#c084f5}
 .footer-copy{color:#333;font-size:.7rem;letter-spacing:1px}
+
+@media(max-width:600px){
+  nav{padding:0 1rem;height:55px}
+  .nav-logo{display:none}
+  .nav-links{gap:1.2rem}
+  .nav-links a{font-size:.68rem;letter-spacing:1px}
+  .nav-cart{padding:.4rem .8rem;font-size:.68rem;letter-spacing:1px}
+  .hero-brand{font-size:clamp(2.2rem,11vw,3.5rem) !important;letter-spacing:2px}
+  .hero-tag{letter-spacing:.2rem;font-size:.7rem}
+  .hero-cta{width:100%;max-width:280px}
+  .motto-band{display:none}
+  #shop{padding:3rem 1rem}
+  .section-title{font-size:1.5rem}
+  .products{grid-template-columns:1fr}
+  #about{padding:3rem 1rem}
+  .about-brandmark{font-size:2rem}
+  .about-title{font-size:1.1rem;letter-spacing:1.5px}
+  .about-text{font-size:.85rem}
+  .about-tags{gap:.5rem}
+  .tag{font-size:.65rem;padding:.25rem .7rem}
+  #newsletter{padding:3rem 1rem}
+  .nl-title{font-size:1.2rem;letter-spacing:2px}
+  .nl-form{flex-direction:column}
+  .nl-btn{width:100%}
+  footer{padding:1.5rem 1rem}
+  .footer-links{gap:1rem}
+  .modal{padding:1.3rem}
+  .form-row{grid-template-columns:1fr}
+  .modal-btns{flex-direction:column}
+  .btn-back,.btn-next{flex:none;width:100%}
+  .cart-drawer{width:100%;max-width:100%}
+  .cookie-banner{padding:.9rem 1rem;flex-direction:column;align-items:flex-start;gap:.8rem}
+  .cookie-btns{width:100%;justify-content:flex-end}
+  .legal-inner{padding:2rem 1rem 4rem}
+  .legal-title{font-size:1.5rem}
+  .barion-methods{gap:.4rem}
+  .pay-method{padding:.45rem .6rem;font-size:.7rem}
+}
 </style>
 </head>
 <body>
@@ -381,12 +378,12 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <section id="hero">
   <div class="hero-content">
     <div class="hero-brand lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
-    <div class="hero-tag">Never Dead<br>Never Done</div>
+    <div class="hero-tag">Never Dead &nbsp;&nbsp; Never Done</div>
     <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop the Drop</button>
   </div>
 </section>
 
-<div class="motto-band lacquer">NEVER DEAD &nbsp; NEVER DONE</div>
+<div class="motto-band"></div>
 
 <section id="shop">
   <div class="section-title lacquer"><span class="w">THE </span><span class="p">DROP!</span></div>
