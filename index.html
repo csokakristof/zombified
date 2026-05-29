@@ -13,7 +13,11 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .w{color:#ffffff;-webkit-text-fill-color:#ffffff;text-rendering:geometricPrecision}
 .p{color:#490e7e;-webkit-text-fill-color:#490e7e;text-rendering:geometricPrecision}
 
+.motto-band-mobile{display:none}
 @media(max-width:600px){
+  .motto-band{display:none}
+  .motto-band-mobile{display:block;background:#490e7e;padding:.4rem 0}
+}
   nav{padding:0 1rem;height:55px}
   .nav-logo{display:none}
   .nav-links{gap:1.2rem}
@@ -387,6 +391,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 </section>
 
 <div class="motto-band lacquer">NEVER DEAD &nbsp; NEVER DONE</div>
+<div class="motto-band-mobile"></div>
 
 <section id="shop">
   <div class="section-title lacquer"><span class="w">THE </span><span class="p">DROP!</span></div>
