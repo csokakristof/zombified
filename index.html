@@ -13,11 +13,9 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .w{color:#ffffff;-webkit-text-fill-color:#ffffff;text-rendering:geometricPrecision}
 .p{color:#490e7e;-webkit-text-fill-color:#490e7e;text-rendering:geometricPrecision}
 
+.legal-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
+.legal-overlay.open{display:block}
 .motto-band-mobile{display:none}
-@media(max-width:600px){
-  .motto-band{display:none}
-  .motto-band-mobile{display:block;background:#490e7e;padding:.4rem 0}
-}
   nav{padding:0 1rem;height:55px}
   .nav-logo{display:none}
   .nav-links{gap:1.2rem}
