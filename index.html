@@ -67,7 +67,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bott
 
 @keyframes cslide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-#hero{min-height:90vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a}
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a;aspect-ratio:9/16}
 .hero-content{text-align:center;padding:2rem}
 .hero-brand{font-family:'Lacquer',cursive;font-size:clamp(3rem,10vw,8rem);letter-spacing:6px;line-height:1}
 .hero-tag{font-size:clamp(.7rem,2vw,1rem);letter-spacing:.5rem;color:#aaa;margin:.8rem 0 2rem;text-transform:uppercase}
@@ -383,20 +383,20 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <section id="hero" style="position:relative;overflow:hidden">
   <!-- háttér képek -->
   <div id="heroBg" style="position:absolute;inset:0;z-index:0">
-    <div class="hslide active" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher allas en.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher fel nez en.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris balra.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris hatul.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris jobbra.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher lepcso en.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri hat.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri le.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri oldalas sapka hatra.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en 2.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en balrol.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
-    <div class="hslide" style="position:absolute;inset:0;background-image:url('lepcso minketten kris all.jpeg');background-size:contain;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide active" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher allas en.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher fel nez en.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris balra.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris hatul.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris jobbra.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher lepcso en.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri hat.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri le.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri oldalas sapka hatra.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en 2.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en balrol.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('lepcso minketten kris all.jpeg');background-size:cover;background-position:top center;opacity:0;transition:opacity 1.2s ease"></div>
     <!-- sötét overlay hogy a szöveg olvasható maradjon -->
     <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);z-index:1"></div>
   </div>
