@@ -378,30 +378,30 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 </nav>
 
 <!-- CAROUSEL — közvetlenül a nav után, hero előtt -->
-<div style="background:#0a0a0a;overflow:hidden;border-bottom:1px solid #490e7e22">
-  <div style="overflow:hidden;width:100%;position:relative">
-    <div id="csTrack" style="display:flex;transition:transform 0.8s ease;width:100%">
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="W R me.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher allas en.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher fel nez en.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher kris balra.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher kris hatul.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher kris jobbra.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="feher lepcso en.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete kri hat.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete kri le.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete kri oldalas sapka hatra.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete lepcso en 2.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete lepcso en balrol.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="fekete lepcso en.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-      <div style="min-width:100%;height:320px;flex-shrink:0;overflow:hidden"><img src="lepcso minketten kris all.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-    </div>
-  </div>
-</div>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-content">
+<!-- HERO háttér slideshow-val -->
+<section id="hero" style="position:relative;overflow:hidden">
+  <!-- háttér képek -->
+  <div id="heroBg" style="position:absolute;inset:0;z-index:0">
+    <div class="hslide active" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher allas en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher fel nez en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris balra.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris hatul.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris jobbra.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('feher lepcso en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri hat.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri le.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete kri oldalas sapka hatra.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en 2.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en balrol.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('lepcso minketten kris all.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <!-- sötét overlay hogy a szöveg olvasható maradjon -->
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);z-index:1"></div>
+  </div>
+  <!-- hero tartalom -->
+  <div class="hero-content" style="position:relative;z-index:2">
     <div class="hero-brand lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="hero-tag">Never Dead &nbsp;&nbsp; Never Done</div>
     <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop the Drop</button>
@@ -597,16 +597,17 @@ function subscribe(){
 }
 initStock();initCookieBanner();
 
-// Slideshow
+// Hero háttér slideshow
 (function(){
-  const track=document.getElementById('csTrack');
-  if(!track)return;
-  const total=track.children.length;
+  const slides=document.querySelectorAll('.hslide');
+  if(!slides.length)return;
   let cur=0;
+  slides[cur].style.opacity='1';
   setInterval(()=>{
-    cur=(cur+1)%total;
-    track.style.transform='translateX(-'+(cur*100)+'%)';
-  },3000);
+    slides[cur].style.opacity='0';
+    cur=(cur+1)%slides.length;
+    slides[cur].style.opacity='1';
+  },3500);
 })();
 </script>
 </body>
