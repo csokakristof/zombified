@@ -419,8 +419,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
       <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">WHITE TEE</div></div></div>
       <div class="product-info">
         <div class="product-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-        <div class="product-desc">Oversized fazon · 100% pamut</div>
-        <div class="stock-info" id="stock-white"></div>
+        <div class="product-desc">Oversized · 100% pamut</div>        <div class="stock-info" id="stock-white"></div>
         <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
       </div>
@@ -429,7 +428,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
       <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">BLACK TEE</div></div></div>
       <div class="product-info">
         <div class="product-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
-        <div class="product-desc">Oversized fazon · 100% pamut</div>
+        <div class="product-desc">Oversized · 100% pamut</div>
         <div class="stock-info" id="stock-black"></div>
         <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button></div>
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'Black Tee',10990)">Kosárba +</button></div>
@@ -443,7 +442,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="about-inner">
     <div class="about-brandmark lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="about-title lacquer"><span class="w">NEVER DEAD &nbsp; NEVER DONE</span></div>
-    <p class="about-text">Nem csak ruhát készítünk. A ZOMBIF!ED azoknak szól, akik nem akarnak beleolvadni a tömegbe. Akik nem félnek önmaguk lenni, és nem hajlandók élőhalottként élni. Egy mentalitást képviselünk azoknak, akik tényleg élni akarnak — nem csak létezni.</p>
+    <p class="about-text">Nem csak ruhát készítünk. A ZOMBIF!ED azoknak szól, akik nem akarnak beleolvadni a tömegbe. Akik nem félnek önmaguk lenni, és nem hajlandók élőhalottként élni. Egy mentalitást képviselünk azoknak, akik tényleg élni akarnak, nem csak létezni.</p>
     <div class="about-tags"><span class="tag">Streetwear</span><span class="tag">Limited Drops</span><span class="tag">100% Pamut</span><span class="tag">Oversized Fazon</span><span class="tag">Magyarországról</span></div>
   </div>
 </section>
@@ -597,16 +596,16 @@ function subscribe(){
 }
 initStock();initCookieBanner();
 
-// Hero háttér slideshow
+// Hero háttér slideshow - csúszás jobbról balra
 (function(){
-  const slides=document.querySelectorAll('.hslide');
-  if(!slides.length)return;
+  const track=document.getElementById('hTrack');
+  if(!track)return;
+  const total=track.children.length;
   let cur=0;
-  slides[cur].style.opacity='1';
   setInterval(()=>{
-    slides[cur].style.opacity='0';
-    cur=(cur+1)%slides.length;
-    slides[cur].style.opacity='1';
+    cur=(cur+1)%total;
+    track.style.transition='transform 0.8s ease';
+    track.style.transform='translateX(-'+(cur*100)+'vw)';
   },3500);
 })();
 </script>
