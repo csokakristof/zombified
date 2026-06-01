@@ -596,17 +596,18 @@ function subscribe(){
 }
 initStock();initCookieBanner();
 
-// Hero háttér slideshow - csúszás jobbról balra
+// Hero slideshow - csúszás jobbról balra
 (function(){
-  const track=document.getElementById('hTrack');
-  if(!track)return;
-  const slides=track.querySelectorAll('.hslide');
-  const w=document.getElementById('hero').offsetWidth;
-  slides.forEach(s=>s.style.width=w+'px');
+  const slides=document.querySelectorAll('.hslide');
+  if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
+    const prev=cur;
     cur=(cur+1)%slides.length;
-    track.style.transform='translateX(-'+(cur*w)+'px)';
+    // jelenlegi kimegy balra
+    slides[prev].style.transform='translateX(-100%)';
+    // következő bejön jobbról
+    slides[cur].style.transform='translateX(0)';
   },3500);
 })();
 </script>
