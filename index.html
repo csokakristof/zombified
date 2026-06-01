@@ -596,18 +596,15 @@ function subscribe(){
 }
 initStock();initCookieBanner();
 
-// Hero slideshow - csúszás jobbról balra
+// Hero slideshow - fade
 (function(){
   const slides=document.querySelectorAll('.hslide');
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    const prev=cur;
+    slides[cur].style.opacity='0';
     cur=(cur+1)%slides.length;
-    // jelenlegi kimegy balra
-    slides[prev].style.transform='translateX(-100%)';
-    // következő bejön jobbról
-    slides[cur].style.transform='translateX(0)';
+    slides[cur].style.opacity='1';
   },3500);
 })();
 </script>
