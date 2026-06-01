@@ -600,12 +600,13 @@ initStock();initCookieBanner();
 (function(){
   const track=document.getElementById('hTrack');
   if(!track)return;
-  const total=track.children.length;
+  const slides=track.querySelectorAll('.hslide');
+  const w=document.getElementById('hero').offsetWidth;
+  slides.forEach(s=>s.style.width=w+'px');
   let cur=0;
   setInterval(()=>{
-    cur=(cur+1)%total;
-    track.style.transition='transform 0.8s ease';
-    track.style.transform='translateX(-'+(cur*100)+'vw)';
+    cur=(cur+1)%slides.length;
+    track.style.transform='translateX(-'+(cur*w)+'px)';
   },3500);
 })();
 </script>
