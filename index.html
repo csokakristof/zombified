@@ -12,6 +12,7 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .lacquer{font-family:'Lacquer',cursive}
 .w{color:#ffffff}.p{color:#490e7e}
 
+/* LEGAL */
 .legal-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .legal-overlay.open{display:block}
 .legal-inner{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem}
@@ -28,6 +29,23 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .legal-highlight{background:#490e7e15;border-left:2px solid #490e7e;padding:.8rem 1rem;border-radius:0 3px 3px 0;margin:.8rem 0}
 .legal-highlight p{margin:0;color:#c084f5 !important}
 
+/* PRODUCT GALLERY */
+.product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
+.product-gallery.open{display:block}
+.gallery-inner{max-width:500px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
+.gallery-back:hover{color:#fff}
+.gallery-main-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;display:block;margin-bottom:1rem}
+.gallery-thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.gallery-thumb{width:70px;height:70px;object-fit:cover;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
+.gallery-thumb.active{border-color:#490e7e}
+.gallery-info{border-top:1px solid #490e7e22;padding-top:1.2rem}
+.gallery-name{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px;margin-bottom:.4rem}
+.gallery-desc{color:#666;font-size:.82rem;margin-bottom:1rem}
+.gallery-price{color:#c084f5;font-size:1.3rem;font-weight:600;margin-bottom:1rem}
+.gallery-sizes{display:flex;gap:.4rem;margin-bottom:1rem;align-items:center}
+
+/* COOKIE */
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #490e7e55;z-index:500;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease}
 .cookie-banner.show{transform:translateY(0)}
 .cookie-text{flex:1;min-width:220px}
@@ -68,7 +86,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bott
 @keyframes cslide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 #hero{height:70vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a;position:relative;overflow:hidden}
-.hero-content{text-align:center;padding:2rem}
+.hero-content{text-align:center;padding:2rem;position:relative;z-index:2}
 .hero-brand{font-family:'Lacquer',cursive;font-size:clamp(3rem,10vw,8rem);letter-spacing:6px;line-height:1}
 .hero-tag{font-size:clamp(.7rem,2vw,1rem);letter-spacing:.5rem;color:#aaa;margin:.8rem 0 2rem;text-transform:uppercase}
 .hero-cta{background:#490e7e;color:#fff;padding:.8rem 2.5rem;letter-spacing:2px;font-size:.85rem;text-transform:uppercase;border:none;cursor:pointer;border-radius:2px;transition:background .25s}
@@ -81,8 +99,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bott
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem}
 .product-card{background:#111;border:1px solid #490e7e33;border-radius:4px;overflow:hidden;transition:border-color .2s,transform .2s}
 .product-card:hover{border-color:#490e7e;transform:translateY(-4px)}
-.product-img{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#0d0d0d;position:relative;overflow:hidden}
-.img-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem}
+.product-img{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:#0d0d0d;position:relative;overflow:hidden;cursor:pointer}
+.product-img img{width:100%;height:100%;object-fit:cover;display:block}
 .product-badge{position:absolute;top:.6rem;right:.6rem;background:#490e7e;color:#fff;font-size:.65rem;letter-spacing:1px;padding:.2rem .5rem;text-transform:uppercase;z-index:2}
 .product-info{padding:1.2rem}
 .product-name{font-family:'Lacquer',cursive;letter-spacing:2px;font-size:1rem}
@@ -235,6 +253,8 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   .legal-title{font-size:1.5rem}
   .barion-methods{gap:.4rem}
   .pay-method{padding:.45rem .6rem;font-size:.7rem}
+  .gallery-inner{padding:1.5rem 1rem 4rem}
+  .gallery-thumb{width:55px;height:55px}
 }
 </style>
 </head>
@@ -264,7 +284,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div class="legal-section"><h2>Feltételek</h2><ul><li>Viseletmentes, mosatlan</li><li>Címke rajta van</li><li>Megfelelő csomagolás</li></ul></div>
     <div class="legal-section"><h2>Menete</h2><ul><li>E-mail: <strong style="color:#fff">zombifiedinfo@gmail.com</strong></li><li>Postaköltség a vásárlót terheli</li></ul><div class="legal-highlight"><p>Visszaküldés előtt mindig vedd fel velünk a kapcsolatot!</p></div></div>
     <div class="legal-section"><h2>Visszatérítés</h2><p><strong style="color:#fff">5 munkanapon belül.</strong> Kártyás fizetésnél automatikusan ugyanarra a kártyára. Átutalásnál IBAN-t kérünk.</p></div>
-    <div class="legal-section"><h2>Hibás termék</h2><p>Fotóval jelezd <strong style="color:#fff">48 órán belül.</strong> Visszaküldés és új termék a mi költségünk.</p></div>
+    <div class="legal-section"><h2>Hibás termék</h2><p>Fotóval jelezd <strong style="color:#fff">48 órán belül.</strong></p></div>
   </div>
 </div>
 
@@ -287,51 +307,65 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </div>
 
-<!-- PRODUCT MODALS -->
-<div class="product-modal-overlay" id="modalWhite">
-  <div class="product-modal" style="position:relative">
-    <button class="product-modal-close" onclick="closeProductModal('modalWhite')">✕</button>
-    <div class="product-modal-imgs" id="whiteImgs">
-      <img src="feher kris jobbra.jpeg" class="active" alt="White Tee">
-      <img src="feher allas en.jpeg" alt="White Tee">
-      <img src="feher fel nez en.jpeg" alt="White Tee">
-      <img src="feher kris balra.jpeg" alt="White Tee">
-      <img src="feher kris hatul.jpeg" alt="White Tee">
-      <img src="feher lepcso en.jpeg" alt="White Tee">
-      <img src="W R me.jpeg" alt="White Tee">
-      <button class="modal-img-prev" onclick="modalPrev('whiteImgs')">‹</button>
-      <button class="modal-img-next" onclick="modalNext('whiteImgs')">›</button>
-      <div class="modal-img-dots" id="whiteImgsDots"></div>
+<!-- TERMÉK GALÉRIÁK -->
+<div class="product-gallery" id="galleryWhite">
+  <div class="gallery-inner">
+    <button class="legal-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
+    <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-main-img" alt="White Tee">
+    <div class="gallery-thumbs">
+      <img src="feher kris jobbra.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="feher allas en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="feher fel nez en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="feher kris balra.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="feher kris hatul.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="feher lepcso en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+      <img src="W R me.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
     </div>
-    <div class="product-modal-info">
-      <div class="product-name lacquer" style="margin-bottom:.8rem"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-      <div class="product-desc" style="margin-bottom:1rem">Oversized · 100% pamut</div>
-      <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
-      <div class="product-meta" style="margin-top:.8rem"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
+    <div class="gallery-info">
+      <div class="gallery-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
+      <div class="gallery-desc">Oversized · 100% pamut</div>
+      <div class="gallery-price">10 990 Ft</div>
+      <div class="gallery-sizes size-row">
+        <span class="size-label">Méret</span>
+        <button class="size-btn" onclick="selectSize(this,'White Tee')">S</button>
+        <button class="size-btn" onclick="selectSize(this,'White Tee')">M</button>
+        <button class="size-btn" onclick="selectSize(this,'White Tee')">L</button>
+      </div>
+      <div class="stock-info" id="stock-white-gallery"></div>
+      <div class="product-meta" style="margin-top:.8rem">
+        <button class="add-btn" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="product-modal-overlay" id="modalBlack">
-  <div class="product-modal" style="position:relative">
-    <button class="product-modal-close" onclick="closeProductModal('modalBlack')">✕</button>
-    <div class="product-modal-imgs" id="blackImgs">
-      <img src="fekete kri le.jpeg" class="active" alt="Black Tee">
-      <img src="fekete kri hat.jpeg" alt="Black Tee">
-      <img src="fekete kri oldalas sapka hatra.jpeg" alt="Black Tee">
-      <img src="fekete lepcso en.jpeg" alt="Black Tee">
-      <img src="fekete lepcso en 2.jpeg" alt="Black Tee">
-      <img src="fekete lepcso en balrol.jpeg" alt="Black Tee">
-      <img src="lepcso minketten kris all.jpeg" alt="Black Tee">
-      <button class="modal-img-prev" onclick="modalPrev('blackImgs')">‹</button>
-      <button class="modal-img-next" onclick="modalNext('blackImgs')">›</button>
-      <div class="modal-img-dots" id="blackImgsDots"></div>
+<div class="product-gallery" id="galleryBlack">
+  <div class="gallery-inner">
+    <button class="legal-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
+    <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-main-img" alt="Black Tee">
+    <div class="gallery-thumbs">
+      <img src="fekete kri le.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="fekete kri hat.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="fekete kri oldalas sapka hatra.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="fekete lepcso en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="fekete lepcso en 2.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="fekete lepcso en balrol.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+      <img src="lepcso minketten kris all.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
     </div>
-    <div class="product-modal-info">
-      <div class="product-name lacquer" style="margin-bottom:.8rem"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
-      <div class="product-desc" style="margin-bottom:1rem">Oversized · 100% pamut</div>
-      <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button></div>
-      <div class="product-meta" style="margin-top:.8rem"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'Black Tee',10990)">Kosárba +</button></div>
+    <div class="gallery-info">
+      <div class="gallery-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
+      <div class="gallery-desc">Oversized · 100% pamut</div>
+      <div class="gallery-price">10 990 Ft</div>
+      <div class="gallery-sizes size-row">
+        <span class="size-label">Méret</span>
+        <button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button>
+        <button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button>
+        <button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button>
+      </div>
+      <div class="stock-info" id="stock-black-gallery"></div>
+      <div class="product-meta" style="margin-top:.8rem">
+        <button class="add-btn" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
+      </div>
     </div>
   </div>
 </div>
@@ -426,13 +460,10 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <button class="nav-cart" id="cartBtn" onclick="openCart()">Kosár (0)</button>
 </nav>
 
-<!-- CAROUSEL — közvetlenül a nav után, hero előtt -->
-
-<!-- HERO háttér slideshow-val -->
-<section id="hero" style="position:relative;overflow:hidden">
-  <!-- háttér képek -->
+<!-- HERO -->
+<section id="hero">
   <div id="heroBg" style="position:absolute;inset:0;z-index:0">
-    <div class="hslide active" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
+    <div class="hslide" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:cover;background-position:center;opacity:1;transition:opacity 1.2s ease"></div>
     <div class="hslide" style="position:absolute;inset:0;background-image:url('feher allas en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
     <div class="hslide" style="position:absolute;inset:0;background-image:url('feher fel nez en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
     <div class="hslide" style="position:absolute;inset:0;background-image:url('feher kris balra.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
@@ -446,11 +477,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en balrol.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
     <div class="hslide" style="position:absolute;inset:0;background-image:url('fekete lepcso en.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
     <div class="hslide" style="position:absolute;inset:0;background-image:url('lepcso minketten kris all.jpeg');background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease"></div>
-    <!-- sötét overlay hogy a szöveg olvasható maradjon -->
     <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);z-index:1"></div>
   </div>
-  <!-- hero tartalom -->
-  <div class="hero-content" style="position:relative;z-index:2">
+  <div class="hero-content">
     <div class="hero-brand lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="hero-tag">Never Dead &nbsp;&nbsp; Never Done</div>
     <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop the Drop</button>
@@ -465,19 +494,20 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="section-sub">Jelenlegi kollekció — S / M / L</div>
   <div class="products">
     <div class="product-card">
-      <div class="product-img" style="padding:0;cursor:pointer" onclick="openProductModal('modalWhite')">
+      <div class="product-img" onclick="openGallery('galleryWhite')">
         <div class="product-badge">Új</div>
         <img src="feher kris jobbra.jpeg" style="width:100%;height:100%;object-fit:cover;display:block" alt="White Tee">
       </div>
       <div class="product-info">
         <div class="product-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-        <div class="product-desc">Oversized · 100% pamut</div>        <div class="stock-info" id="stock-white"></div>
+        <div class="product-desc">Oversized · 100% pamut</div>
+        <div class="stock-info" id="stock-white"></div>
         <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
       </div>
     </div>
     <div class="product-card">
-      <div class="product-img" style="padding:0;cursor:pointer" onclick="openProductModal('modalBlack')">
+      <div class="product-img" onclick="openGallery('galleryBlack')">
         <div class="product-badge">Új</div>
         <img src="fekete kri le.jpeg" style="width:100%;height:100%;object-fit:cover;display:block" alt="Black Tee">
       </div>
@@ -498,7 +528,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div class="about-brandmark lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="about-title lacquer"><span class="w">NEVER DEAD &nbsp; NEVER DONE</span></div>
     <p class="about-text">Nem csak ruhát készítünk. A ZOMBIF!ED azoknak szól, akik nem akarnak beleolvadni a tömegbe. Akik nem félnek önmaguk lenni, és nem hajlandók élőhalottként élni. Egy mentalitást képviselünk azoknak, akik tényleg élni akarnak, nem csak létezni.</p>
-    <div class="about-tags"><span class="tag">Streetwear</span><span class="tag">Limited Drops</span><span class="tag">100% Pamut</span><span class="tag">Oversized Fazon</span><span class="tag">Magyarországról</span></div>
+    <div class="about-tags"><span class="tag">Streetwear</span><span class="tag">Limited Drops</span><span class="tag">100% Pamut</span><span class="tag">Oversized</span><span class="tag">Magyarországról</span></div>
   </div>
 </section>
 
@@ -538,13 +568,15 @@ function initStock(){
     card.querySelectorAll('.size-btn').forEach(btn=>{if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}});
   });
 }
+
 function selectSize(btn,product){
   if(btn.classList.contains('out'))return;
   btn.closest('.size-row').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  const info=btn.closest('.product-card').querySelector('.stock-info');
+  const info=btn.closest('.product-card,.gallery-inner')?.querySelector('.stock-info');
   if(info)info.textContent='';
 }
+
 function addToCart(btn,name,price){
   const card=btn.closest('.product-card');
   const sizeBtn=card.querySelector('.size-btn.selected');
@@ -560,6 +592,22 @@ function addToCart(btn,name,price){
   btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
   setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
 }
+
+function addToCartFromGallery(name,price,galleryId){
+  const gallery=document.getElementById(galleryId);
+  const sizeBtn=gallery.querySelector('.size-btn.selected');
+  if(!sizeBtn){
+    gallery.querySelectorAll('.size-btn:not(.out)').forEach(b=>{b.style.borderColor='#c084f5';});
+    setTimeout(()=>gallery.querySelectorAll('.size-btn').forEach(b=>{b.style.borderColor='';}),800);
+    return;
+  }
+  cartItems.push({name,size:sizeBtn.textContent.trim(),price});
+  updateCart();
+  const btn=gallery.querySelector('.add-btn');
+  btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
+  setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
+}
+
 function updateCart(){
   const count=cartItems.length;
   document.getElementById('cartBtn').textContent='Kosár ('+count+')';
@@ -576,11 +624,13 @@ function updateCart(){
     el.appendChild(div);
   });
 }
+
 function removeItem(i){cartItems.splice(i,1);updateCart();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').style.display='block';}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').style.display='none';}
 function openCheckout(){closeCart();document.getElementById('checkoutModal').classList.add('open');showStep(1);}
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
+
 function showStep(n){
   [1,2,3,4].forEach(i=>{
     document.getElementById('step'+i).style.display=i===n?'block':'none';
@@ -588,12 +638,14 @@ function showStep(n){
     s.className='step'+(i===n?' active':i<n?' done':'');
   });
 }
+
 function validate(){
   const fields=[['fLastName','eLastName',v=>v.trim().length>0],['fFirstName','eFirstName',v=>v.trim().length>0],['fEmail','eEmail',v=>v.includes('@')&&v.includes('.')],['fPhone','ePhone',v=>v.trim().length>5],['fAddress','eAddress',v=>v.trim().length>0],['fZip','eZip',v=>v.trim().length>0],['fCity','eCity',v=>v.trim().length>0]];
   let ok=true;
   fields.forEach(([fid,eid,fn])=>{const err=document.getElementById(eid);if(!fn(document.getElementById(fid).value)){err.style.display='block';ok=false;}else err.style.display='none';});
   return ok;
 }
+
 function goToStep1(){showStep(1);}
 function goToStep2(){if(validate())showStep(2);}
 function selectShipping(type){
@@ -629,14 +681,28 @@ function finishOrder(){
   ['fLastName','fFirstName','fEmail','fPhone','fAddress','fZip','fCity','fPacketaPoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   selectShipping('gls');selectPayment('card');
 }
+
 function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
 function closeLegal(id){document.getElementById(id).classList.remove('open');}
+
+function openGallery(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
+function closeGallery(id){document.getElementById(id).classList.remove('open');}
+
+function setGalleryImg(galleryId,thumb){
+  const gallery=document.getElementById(galleryId);
+  const mainId=galleryId==='galleryWhite'?'galleryWhiteMain':'galleryBlackMain';
+  document.getElementById(mainId).src=thumb.src;
+  gallery.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
 function initCookieBanner(){if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
 function acceptAllCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));hideCookieBanner();}
 function rejectCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:false,marketing:false}));hideCookieBanner();}
 function saveCookieSettings(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:document.getElementById('toggleAnalytics').checked,marketing:document.getElementById('toggleMarketing').checked}));hideCookieBanner();}
 function hideCookieBanner(){document.getElementById('cookieBanner').classList.remove('show');document.getElementById('cookieModal').classList.remove('open');}
 function openCookieSettings(){document.getElementById('cookieModal').classList.add('open');}
+
 function sendContact(){
   const n=document.getElementById('contactName').value,e=document.getElementById('contactEmail').value,m=document.getElementById('contactMsg').value;
   if(!n.trim()||!e.includes('@')||!m.trim())return;
@@ -649,70 +715,20 @@ function subscribe(){
   document.querySelector('.nl-form').style.display='none';
   document.getElementById('nlSuccess').style.display='block';
 }
-function openProductModal(id){
-  document.getElementById(id).classList.add('open');
-  initModalDots(id==='modalWhite'?'whiteImgs':'blackImgs');
-}
-function closeProductModal(id){document.getElementById(id).classList.remove('open');}
-function initModalDots(containerId){
-  const c=document.getElementById(containerId);
-  const imgs=c.querySelectorAll('img');
-  const dotsEl=document.getElementById(containerId+'Dots');
-  dotsEl.innerHTML='';
-  imgs.forEach((_,i)=>{
-    const d=document.createElement('button');
-    d.className='modal-img-dot'+(i===0?' active':'');
-    d.onclick=()=>goModalImg(containerId,i);
-    dotsEl.appendChild(d);
-  });
-}
-function goModalImg(containerId,idx){
-  const c=document.getElementById(containerId);
-  const imgs=c.querySelectorAll('img');
-  const dots=document.getElementById(containerId+'Dots').querySelectorAll('.modal-img-dot');
-  imgs.forEach(img=>img.classList.remove('active'));
-  dots.forEach(d=>d.classList.remove('active'));
-  imgs[idx].classList.add('active');
-  dots[idx].classList.add('active');
-  c._cur=idx;
-}
-function modalPrev(containerId){
-  const c=document.getElementById(containerId);
-  const imgs=c.querySelectorAll('img');
-  const cur=c._cur||0;
-  goModalImg(containerId,(cur-1+imgs.length)%imgs.length);
-}
-function modalNext(containerId){
-  const c=document.getElementById(containerId);
-  const imgs=c.querySelectorAll('img');
-  const cur=c._cur||0;
-  goModalImg(containerId,(cur+1)%imgs.length);
-}
 
-initStock();initCookieBanner();
-
-// Hero slideshow - fade
+// Hero slideshow
 (function(){
   const slides=document.querySelectorAll('.hslide');
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    const prev=cur;
+    slides[cur].style.opacity='0';
     cur=(cur+1)%slides.length;
-    // következő kép jobbra pozicionálva
-    slides[cur].style.transition='none';
-    slides[cur].style.transform='translateX(100%)';
     slides[cur].style.opacity='1';
-    // kis késleltetés után animálva becsúszik
-    setTimeout(()=>{
-      slides[cur].style.transition='transform 0.8s ease';
-      slides[cur].style.transform='translateX(0)';
-      // jelenlegi kimegy balra
-      slides[prev].style.transition='transform 0.8s ease';
-      slides[prev].style.transform='translateX(-100%)';
-    },20);
   },3500);
 })();
+
+initStock();initCookieBanner();
 </script>
 </body>
 </html>
