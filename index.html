@@ -727,10 +727,15 @@ function closeGallery(id){document.getElementById(id).classList.remove('open');}
 function initSwipe(gid){
   const wrap=document.getElementById(galleries[gid].wrapId);
   let startX=0;
-  wrap.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});
-  wrap.addEventListener('touchend',e=>{
-    const diff=startX-e.changedTouches[0].clientX;
-    if(Math.abs(diff)>40){diff>0?galleryNext(gid):galleryPrev(gid);}
+  let swiped=false;
+  wrap.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;swiped=false;},{passive:true});
+  wrap.addEventListener('touchmove',e=>{
+    if(swiped)return;
+    const diff=startX-e.touches[0].clientX;
+    if(Math.abs(diff)>40){
+      swiped=true;
+      diff>0?galleryNext(gid):galleryPrev(gid);
+    }
   },{passive:true});
 }
 
