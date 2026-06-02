@@ -32,7 +32,25 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 /* PRODUCT GALLERY */
 .product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .product-gallery.open{display:block}
-.gallery-inner{max-width:600px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.gallery-inner{max-width:1100px;margin:0 auto;padding:2rem 2rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.gallery-left{position:sticky;top:2rem}
+.gallery-right{padding-top:1rem}
+.gallery-brand{font-family:'Lacquer',cursive;font-size:2.5rem;letter-spacing:3px;margin-bottom:.3rem}
+.gallery-tagline{font-size:.8rem;letter-spacing:.3rem;color:#555;text-transform:uppercase;margin-bottom:2rem}
+.gallery-feature{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:1rem}
+.gallery-feature-icon{color:#490e7e;font-size:1rem;margin-top:.1rem;flex-shrink:0}
+.gallery-feature-text{font-size:.85rem;color:#888;line-height:1.5}
+.gallery-feature-title{color:#ccc;font-size:.82rem;margin-bottom:.15rem}
+.gallery-sizing{margin-top:1.5rem;padding:1rem;background:#111;border:1px solid #490e7e22;border-radius:4px}
+.gallery-sizing-title{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#666;margin-bottom:.8rem}
+.gallery-sizing-row{display:flex;justify-content:space-between;font-size:.78rem;color:#888;padding:.3rem 0;border-bottom:1px solid #490e7e11}
+.gallery-sizing-row:last-child{border-bottom:none}
+.gallery-sizing-row span:first-child{color:#aaa}
+@media(max-width:750px){
+  .gallery-inner{grid-template-columns:1fr;gap:1.5rem}
+  .gallery-left{position:static}
+  .gallery-right{padding-top:0}
+}
 .gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
 .gallery-back:hover{color:#fff}
 .gallery-main-wrap{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:4px;margin-bottom:1rem;touch-action:pan-y}
@@ -316,52 +334,112 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <!-- TERMÉK GALÉRIÁK -->
 <div class="product-gallery" id="galleryWhite">
   <div class="gallery-inner">
-    <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
-    <div class="gallery-main-wrap" id="wrapWhite">
-      <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="White Tee">
-      <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryWhite')">‹</button>
-      <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryWhite')">›</button>
+    <!-- BAL: képek -->
+    <div class="gallery-left">
+      <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
+      <div class="gallery-main-wrap" id="wrapWhite">
+        <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="White Tee">
+        <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryWhite')">‹</button>
+        <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryWhite')">›</button>
+      </div>
+      <div class="gallery-dots" id="dotsWhite"></div>
     </div>
-    <div class="gallery-dots" id="dotsWhite"></div>
-    <div class="gallery-info">
-      <div class="gallery-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-      <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
-      <div class="gallery-price">10 990 Ft</div>
+    <!-- JOBB: infó -->
+    <div class="gallery-right">
+      <div class="gallery-brand lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
+      <div class="gallery-tagline">Oversized · 100% pamut</div>
+      <div class="gallery-price" style="font-size:1.6rem;font-weight:700;color:#c084f5;margin-bottom:1.5rem">10 990 Ft</div>
       <div class="gallery-divider"></div>
-      <div class="gallery-sizes size-row">
+      <div class="gallery-sizes size-row" style="margin:1.2rem 0 .5rem">
         <span class="size-label">Méret</span>
         <button class="size-btn" onclick="selectSize(this,'White Tee')">S</button>
         <button class="size-btn" onclick="selectSize(this,'White Tee')">M</button>
         <button class="size-btn" onclick="selectSize(this,'White Tee')">L</button>
       </div>
       <div class="stock-info" id="stock-white-gallery"></div>
-      <button class="add-btn" style="width:100%;padding:.7rem;font-size:.85rem;margin-top:.5rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
+      <button class="add-btn" style="width:100%;padding:.8rem;font-size:.9rem;margin-top:.5rem;margin-bottom:2rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
+      <div class="gallery-divider"></div>
+      <div style="margin-top:1.5rem">
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon">🖤</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Oversized fazon</div>Bő, kényelmes viselet — pontosan olyan mint kell.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon" style="color:#490e7e">✦</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Hímzett felirat</div>Elején ZOMBIF!ED felirat, hátán NEVER DEAD NEVER DONE.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon">👕</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">100% pamut</div>Puha, tartós anyag — mosógépben mosható.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon" style="color:#490e7e">📦</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Szállítás</div>GLS házhozszállítás 990 Ft · Packeta 690 Ft · 2–4 munkanap.</div>
+        </div>
+      </div>
+      <div class="gallery-sizing">
+        <div class="gallery-sizing-title">Mérettáblázat</div>
+        <div class="gallery-sizing-row"><span>S</span><span>Mellbőség: 96–100 cm</span></div>
+        <div class="gallery-sizing-row"><span>M</span><span>Mellbőség: 100–104 cm</span></div>
+        <div class="gallery-sizing-row"><span>L</span><span>Mellbőség: 104–110 cm</span></div>
+        <div style="font-size:.72rem;color:#555;margin-top:.6rem">Oversized — javasolt egy mérettel kisebbet választani.</div>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="product-gallery" id="galleryBlack">
   <div class="gallery-inner">
-    <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
-    <div class="gallery-main-wrap" id="wrapBlack">
-      <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="Black Tee">
-      <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryBlack')">‹</button>
-      <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryBlack')">›</button>
+    <!-- BAL: képek -->
+    <div class="gallery-left">
+      <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
+      <div class="gallery-main-wrap" id="wrapBlack">
+        <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="Black Tee">
+        <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryBlack')">‹</button>
+        <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryBlack')">›</button>
+      </div>
+      <div class="gallery-dots" id="dotsBlack"></div>
     </div>
-    <div class="gallery-dots" id="dotsBlack"></div>
-    <div class="gallery-info">
-      <div class="gallery-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
-      <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
-      <div class="gallery-price">10 990 Ft</div>
+    <!-- JOBB: infó -->
+    <div class="gallery-right">
+      <div class="gallery-brand lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
+      <div class="gallery-tagline">Oversized · 100% pamut</div>
+      <div class="gallery-price" style="font-size:1.6rem;font-weight:700;color:#c084f5;margin-bottom:1.5rem">10 990 Ft</div>
       <div class="gallery-divider"></div>
-      <div class="gallery-sizes size-row">
+      <div class="gallery-sizes size-row" style="margin:1.2rem 0 .5rem">
         <span class="size-label">Méret</span>
         <button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button>
         <button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button>
         <button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button>
       </div>
       <div class="stock-info" id="stock-black-gallery"></div>
-      <button class="add-btn" style="width:100%;padding:.7rem;font-size:.85rem;margin-top:.5rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
+      <button class="add-btn" style="width:100%;padding:.8rem;font-size:.9rem;margin-top:.5rem;margin-bottom:2rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
+      <div class="gallery-divider"></div>
+      <div style="margin-top:1.5rem">
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon">🖤</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Oversized fazon</div>Bő, kényelmes viselet — pontosan olyan mint kell.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon" style="color:#490e7e">✦</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Hímzett felirat</div>Elején ZOMBIF!ED felirat, hátán NEVER DEAD NEVER DONE.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon">👕</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">100% pamut</div>Puha, tartós anyag — mosógépben mosható.</div>
+        </div>
+        <div class="gallery-feature">
+          <div class="gallery-feature-icon" style="color:#490e7e">📦</div>
+          <div class="gallery-feature-text"><div class="gallery-feature-title">Szállítás</div>GLS házhozszállítás 990 Ft · Packeta 690 Ft · 2–4 munkanap.</div>
+        </div>
+      </div>
+      <div class="gallery-sizing">
+        <div class="gallery-sizing-title">Mérettáblázat</div>
+        <div class="gallery-sizing-row"><span>S</span><span>Mellbőség: 96–100 cm</span></div>
+        <div class="gallery-sizing-row"><span>M</span><span>Mellbőség: 100–104 cm</span></div>
+        <div class="gallery-sizing-row"><span>L</span><span>Mellbőség: 104–110 cm</span></div>
+        <div style="font-size:.72rem;color:#555;margin-top:.6rem">Oversized — javasolt egy mérettel kisebbet választani.</div>
+      </div>
     </div>
   </div>
 </div>
