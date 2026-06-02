@@ -14,6 +14,17 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 /* OVERLAYS */
 .legal-overlay,.product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .legal-overlay.open,.product-gallery.open{display:block}
+.gallery-nav{position:sticky;top:0;z-index:10;background:rgba(10,10,10,0.96);border-bottom:1px solid #490e7e55;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 1.5rem;height:70px;gap:.5rem}
+.gallery-nav-logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
+.gallery-nav-links{display:flex;gap:1.5rem;justify-content:center}
+.gallery-nav-links a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:.3rem 0;border-bottom:2px solid transparent;font-family:'Segoe UI',sans-serif}
+.gallery-nav-links a:hover{color:#fff;border-bottom-color:#490e7e}
+@media(max-width:600px){
+  .gallery-nav{padding:0 1rem;height:55px}
+  .gallery-nav-logo{display:none}
+  .gallery-nav-links{gap:1.2rem}
+  .gallery-nav-links a{font-size:.68rem;letter-spacing:1px}
+}
 
 /* LEGAL */
 .legal-inner{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem}
@@ -306,6 +317,15 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 
 <!-- GALÉRIÁK -->
 <div class="product-gallery" id="galleryWhite">
+  <div class="gallery-nav">
+    <div class="gallery-nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
+    <div class="gallery-nav-links">
+      <a onclick="closeGallery('galleryWhite');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
+      <a onclick="closeGallery('galleryWhite');document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
+      <a onclick="closeGallery('galleryWhite');document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
+    </div>
+    <button class="nav-cart" onclick="closeGallery('galleryWhite');openCart()" id="cartBtnW">Kosár (0)</button>
+  </div>
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
     <div class="gallery-main-wrap" id="wrapWhite">
@@ -328,6 +348,15 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 </div>
 
 <div class="product-gallery" id="galleryBlack">
+  <div class="gallery-nav">
+    <div class="gallery-nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
+    <div class="gallery-nav-links">
+      <a onclick="closeGallery('galleryBlack');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
+      <a onclick="closeGallery('galleryBlack');document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
+      <a onclick="closeGallery('galleryBlack');document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
+    </div>
+    <button class="nav-cart" onclick="closeGallery('galleryBlack');openCart()" id="cartBtnB">Kosár (0)</button>
+  </div>
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
     <div class="gallery-main-wrap" id="wrapBlack">
