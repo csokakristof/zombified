@@ -7,14 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--purple:#490e7e}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
 .lacquer{font-family:'Lacquer',cursive}
-.w{color:#ffffff}.p{color:#490e7e}
+.w{color:#fff}.p{color:#490e7e}
+
+/* OVERLAYS */
+.legal-overlay,.product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
+.legal-overlay.open,.product-gallery.open{display:block}
 
 /* LEGAL */
-.legal-overlay{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
-.legal-overlay.open{display:block}
 .legal-inner{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem}
 .legal-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:2.5rem;transition:color .2s;padding:0}
 .legal-back:hover{color:#fff}
@@ -29,33 +30,21 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .legal-highlight{background:#490e7e15;border-left:2px solid #490e7e;padding:.8rem 1rem;border-radius:0 3px 3px 0;margin:.8rem 0}
 .legal-highlight p{margin:0;color:#c084f5 !important}
 
-/* PRODUCT GALLERY */
-.product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow:hidden}
-.product-gallery.open{display:block}
-.gallery-inner{max-width:1100px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;height:100vh;overflow-y:auto}
+/* GALLERY */
+.gallery-inner{max-width:480px;margin:0 auto;padding:2rem 1.5rem 4rem}
 .gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
 .gallery-back:hover{color:#fff}
-.gallery-main-wrap{position:relative;width:100%;height:calc(100vh - 6rem);max-height:580px;overflow:hidden;border-radius:4px;margin-bottom:.8rem;touch-action:pan-y}
+.gallery-main-wrap{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:4px;margin-bottom:.8rem;touch-action:pan-y}
 .gallery-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease}
 .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:none;color:#fff;font-size:1.8rem;cursor:pointer;padding:.2rem .7rem;z-index:2;border-radius:2px;line-height:1}
 .gallery-arrow:hover{background:rgba(73,14,126,0.7)}
 .gallery-arrow-left{left:.5rem}
 .gallery-arrow-right{right:.5rem}
-.gallery-dots{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.5rem}
+.gallery-dots{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.2rem}
 .gallery-dot{width:7px;height:7px;border-radius:50%;background:#ffffff33;border:none;cursor:pointer;padding:0}
 .gallery-dot.active{background:#490e7e}
-.gallery-brand{font-family:'Lacquer',cursive;font-size:1.8rem;letter-spacing:3px;margin-bottom:.2rem}
-.gallery-tagline{font-size:.72rem;letter-spacing:.3rem;color:#555;text-transform:uppercase;margin-bottom:.8rem}
-.gallery-price-big{color:#c084f5;font-size:1.3rem;font-weight:700;margin-bottom:.8rem}
-.gallery-divider{height:1px;background:#490e7e22;margin:.5rem 0}
-.gallery-feature{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
-.gallery-feature-icon{color:#490e7e;font-size:.9rem;flex-shrink:0;width:1rem}
-.gallery-feature-text{font-size:.78rem;color:#888;line-height:1.4}
-.gallery-feature-title{color:#ccc;font-size:.76rem;margin-bottom:.05rem}
-@media(max-width:750px){
-  .gallery-inner{grid-template-columns:1fr;gap:1.5rem;padding:1.5rem 1rem 3rem;height:auto;overflow-y:visible}
-  .product-gallery{overflow-y:auto}
-}
+.gallery-name{font-family:'Lacquer',cursive;font-size:1.8rem;letter-spacing:3px;margin-bottom:.3rem}
+.gallery-price{color:#c084f5;font-size:1.3rem;font-weight:700;margin-bottom:1rem}
 
 /* COOKIE */
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #490e7e55;z-index:500;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease}
@@ -191,7 +180,6 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bott
 .btn-next{flex:2;background:#490e7e;color:#fff;border:none;padding:.7rem;font-family:'Segoe UI',sans-serif;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
 .btn-next:hover{background:#6d14b0}
 .success-screen{text-align:center;padding:1rem 0}
-.success-icon{font-size:3rem;margin-bottom:1rem}
 .success-title{font-size:1.6rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem;color:#fff}
 .success-sub{color:#888;font-size:.85rem;line-height:1.7;margin-bottom:1.5rem}
 .success-order{background:#0d0d0d;border:1px solid #490e7e33;border-radius:4px;padding:1rem;margin-bottom:1.5rem;text-align:left}
@@ -263,6 +251,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   .legal-title{font-size:1.5rem}
   .barion-methods{gap:.4rem}
   .pay-method{padding:.45rem .6rem;font-size:.7rem}
+  .gallery-inner{padding:1.5rem 1rem 4rem}
 }
 </style>
 </head>
@@ -315,27 +304,26 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </div>
 
-<!-- TERMÉK GALÉRIÁK -->
+<!-- GALÉRIÁK -->
 <div class="product-gallery" id="galleryWhite">
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
     <div class="gallery-main-wrap" id="wrapWhite">
-      <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="White Tee">
+      <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="">
       <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryWhite')">&#8249;</button>
       <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryWhite')">&#8250;</button>
     </div>
     <div class="gallery-dots" id="dotsWhite"></div>
-    <div class="gallery-brand lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-    <div class="gallery-price-big">10 990 Ft</div>
-    <div class="gallery-divider"></div>
-    <div class="size-row" style="margin:.8rem 0 .5rem">
+    <div class="gallery-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
+    <div class="gallery-price">10 990 Ft</div>
+    <div class="size-row" style="margin:.5rem 0">
       <span class="size-label">Méret</span>
       <button class="size-btn" onclick="selectSize(this,'White Tee')">S</button>
       <button class="size-btn" onclick="selectSize(this,'White Tee')">M</button>
       <button class="size-btn" onclick="selectSize(this,'White Tee')">L</button>
     </div>
     <div class="stock-info" id="stock-white-gallery"></div>
-    <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.5rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
+    <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.3rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
   </div>
 </div>
 
@@ -343,22 +331,21 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
     <div class="gallery-main-wrap" id="wrapBlack">
-      <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="Black Tee">
+      <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-slide" style="transform:translateX(0)" alt="">
       <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryBlack')">&#8249;</button>
       <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryBlack')">&#8250;</button>
     </div>
     <div class="gallery-dots" id="dotsBlack"></div>
-    <div class="gallery-brand lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
-    <div class="gallery-price-big">10 990 Ft</div>
-    <div class="gallery-divider"></div>
-    <div class="size-row" style="margin:.8rem 0 .5rem">
+    <div class="gallery-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
+    <div class="gallery-price">10 990 Ft</div>
+    <div class="size-row" style="margin:.5rem 0">
       <span class="size-label">Méret</span>
       <button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button>
       <button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button>
       <button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button>
     </div>
     <div class="stock-info" id="stock-black-gallery"></div>
-    <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.5rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
+    <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.3rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
   </div>
 </div>
 
@@ -440,7 +427,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
   <div class="nav-links">
@@ -451,7 +437,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <button class="nav-cart" id="cartBtn" onclick="openCart()">Kosár (0)</button>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div id="heroBg" style="position:absolute;inset:0;z-index:0">
     <div class="hslide" style="position:absolute;inset:0;background-image:url('W R me.jpeg');background-size:cover;background-position:center;opacity:1;transition:opacity 1.2s ease"></div>
@@ -479,7 +464,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 
 <div class="motto-band"></div>
 
-<!-- SHOP -->
 <section id="shop">
   <div class="section-title lacquer"><span class="w">THE </span><span class="p">DROP!</span></div>
   <div class="section-sub">Jelenlegi kollekció — S / M / L</div>
@@ -513,7 +497,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="about-inner">
     <div class="about-brandmark lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
@@ -523,7 +506,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </section>
 
-<!-- NEWSLETTER -->
 <section id="newsletter">
   <div class="nl-title lacquer"><span class="w">ÉBREDJ </span><span class="p">FEL!</span></div>
   <div class="nl-sub">Iratkozz fel és értesítünk, mielőtt bárki más megkapja az új dropokat</div>
@@ -532,7 +514,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="nl-success" id="nlSuccess">BENT VAGY A HORDÁBAN — ÜDVÖZLÜNK!</div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
   <div class="footer-motto">Never Dead &nbsp;&nbsp; Never Done</div>
@@ -550,7 +531,6 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 let cartItems=[],selectedShipping='gls',selectedPayment='card';
 const SHIPPING={gls:{name:'GLS Házhozszállítás',price:990},packeta:{name:'Packeta csomagpont',price:690}};
 const stock={'White Tee':{S:true,M:true,L:true},'Black Tee':{S:true,M:false,L:true}};
-
 const galleries={
   galleryWhite:{imgs:['feher kris jobbra.jpeg','feher allas en.jpeg','feher fel nez en.jpeg','feher kris balra.jpeg','feher kris hatul.jpeg','feher lepcso en.jpeg','W R me.jpeg'],cur:0,mainId:'galleryWhiteMain',dotsId:'dotsWhite',wrapId:'wrapWhite'},
   galleryBlack:{imgs:['fekete kri le.jpeg','fekete kri hat.jpeg','fekete kri oldalas sapka hatra.jpeg','fekete lepcso en.jpeg','fekete lepcso en 2.jpeg','fekete lepcso en balrol.jpeg','lepcso minketten kris all.jpeg'],cur:0,mainId:'galleryBlackMain',dotsId:'dotsBlack',wrapId:'wrapBlack'}
@@ -564,13 +544,11 @@ function initStock(){
     card.querySelectorAll('.size-btn').forEach(btn=>{if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}});
   });
 }
-
-function selectSize(btn,product){
+function selectSize(btn){
   if(btn.classList.contains('out'))return;
   btn.closest('.size-row').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
 }
-
 function addToCart(btn,name,price){
   const card=btn.closest('.product-card');
   const sizeBtn=card.querySelector('.size-btn.selected');
@@ -586,22 +564,20 @@ function addToCart(btn,name,price){
   btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
   setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
 }
-
-function addToCartFromGallery(name,price,galleryId){
-  const gallery=document.getElementById(galleryId);
-  const sizeBtn=gallery.querySelector('.size-btn.selected');
+function addToCartFromGallery(name,price,gid){
+  const g=document.getElementById(gid);
+  const sizeBtn=g.querySelector('.size-btn.selected');
   if(!sizeBtn){
-    gallery.querySelectorAll('.size-btn:not(.out)').forEach(b=>{b.style.borderColor='#c084f5';});
-    setTimeout(()=>gallery.querySelectorAll('.size-btn').forEach(b=>{b.style.borderColor='';}),800);
+    g.querySelectorAll('.size-btn:not(.out)').forEach(b=>{b.style.borderColor='#c084f5';});
+    setTimeout(()=>g.querySelectorAll('.size-btn').forEach(b=>{b.style.borderColor='';}),800);
     return;
   }
   cartItems.push({name,size:sizeBtn.textContent.trim(),price});
   updateCart();
-  const btn=gallery.querySelector('.add-btn');
+  const btn=g.querySelector('.add-btn');
   btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
   setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
 }
-
 function updateCart(){
   const count=cartItems.length;
   document.getElementById('cartBtn').textContent='Kosár ('+count+')';
@@ -618,28 +594,23 @@ function updateCart(){
     el.appendChild(div);
   });
 }
-
 function removeItem(i){cartItems.splice(i,1);updateCart();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').style.display='block';}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').style.display='none';}
 function openCheckout(){closeCart();document.getElementById('checkoutModal').classList.add('open');showStep(1);}
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
-
 function showStep(n){
   [1,2,3,4].forEach(i=>{
     document.getElementById('step'+i).style.display=i===n?'block':'none';
-    const s=document.getElementById('s'+i);
-    s.className='step'+(i===n?' active':i<n?' done':'');
+    const s=document.getElementById('s'+i);s.className='step'+(i===n?' active':i<n?' done':'');
   });
 }
-
 function validate(){
   const fields=[['fLastName','eLastName',v=>v.trim().length>0],['fFirstName','eFirstName',v=>v.trim().length>0],['fEmail','eEmail',v=>v.includes('@')&&v.includes('.')],['fPhone','ePhone',v=>v.trim().length>5],['fAddress','eAddress',v=>v.trim().length>0],['fZip','eZip',v=>v.trim().length>0],['fCity','eCity',v=>v.trim().length>0]];
   let ok=true;
   fields.forEach(([fid,eid,fn])=>{const err=document.getElementById(eid);if(!fn(document.getElementById(fid).value)){err.style.display='block';ok=false;}else err.style.display='none';});
   return ok;
 }
-
 function goToStep1(){showStep(1);}
 function goToStep2(){if(validate())showStep(2);}
 function selectShipping(type){
@@ -675,10 +646,20 @@ function finishOrder(){
   ['fLastName','fFirstName','fEmail','fPhone','fAddress','fZip','fCity','fPacketaPoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   selectShipping('gls');selectPayment('card');
 }
-
 function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
 function closeLegal(id){document.getElementById(id).classList.remove('open');}
-
+function openGallery(id){
+  document.getElementById(id).classList.add('open');
+  window.scrollTo(0,0);
+  const g=galleries[id];
+  g.cur=0;
+  initGalleryDots(id);
+  const mainImg=document.getElementById(g.mainId);
+  mainImg.src=g.imgs[0];
+  mainImg.style.transform='translateX(0)';
+  initSwipe(id);
+}
+function closeGallery(id){document.getElementById(id).classList.remove('open');}
 function initGalleryDots(gid){
   const g=galleries[gid];
   const dotsEl=document.getElementById(g.dotsId);
@@ -690,44 +671,24 @@ function initGalleryDots(gid){
     dotsEl.appendChild(d);
   });
 }
-
 function goGalleryImg(gid,idx,dir){
   const g=galleries[gid];
   const wrap=document.getElementById(g.wrapId);
-  const currentImg=document.getElementById(g.mainId);
+  const cur=document.getElementById(g.mainId);
   if(!dir)dir=idx>g.cur?'next':'prev';
-  const newImg=document.createElement('img');
-  newImg.src=g.imgs[idx];
-  newImg.className='gallery-slide';
-  newImg.style.transform=dir==='next'?'translateX(100%)':'translateX(-100%)';
-  newImg.id=g.mainId+'_next';
-  newImg.alt='';
-  wrap.appendChild(newImg);
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-    newImg.style.transform='translateX(0)';
-    currentImg.style.transform=dir==='next'?'translateX(-100%)':'translateX(100%)';
-    setTimeout(()=>{currentImg.remove();newImg.id=g.mainId;g.cur=idx;document.getElementById(g.dotsId).querySelectorAll('.gallery-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));},420);
-  });});
+  const next=document.createElement('img');
+  next.src=g.imgs[idx];next.className='gallery-slide';next.alt='';
+  next.style.transform=dir==='next'?'translateX(100%)':'translateX(-100%)';
+  next.id=g.mainId+'_n';
+  wrap.appendChild(next);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    next.style.transform='translateX(0)';
+    cur.style.transform=dir==='next'?'translateX(-100%)':'translateX(100%)';
+    setTimeout(()=>{cur.remove();next.id=g.mainId;g.cur=idx;document.getElementById(g.dotsId).querySelectorAll('.gallery-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));},420);
+  }));
 }
-
 function galleryPrev(gid){const g=galleries[gid];goGalleryImg(gid,(g.cur-1+g.imgs.length)%g.imgs.length,'prev');}
 function galleryNext(gid){const g=galleries[gid];goGalleryImg(gid,(g.cur+1)%g.imgs.length,'next');}
-
-function openGallery(id){
-  document.getElementById(id).classList.add('open');
-  window.scrollTo(0,0);
-  galleries[id].cur=0;
-  initGalleryDots(id);
-  const g=galleries[id];
-  const mainImg=document.getElementById(g.mainId);
-  mainImg.src=g.imgs[0];
-  mainImg.style.transform='translateX(0)';
-  initSwipe(id);
-}
-function closeGallery(id){
-  document.getElementById(id).classList.remove('open');
-}
-
 function initSwipe(gid){
   const wrap=document.getElementById(galleries[gid].wrapId);
   let startX=0,swiped=false;
@@ -738,7 +699,6 @@ function initSwipe(gid){
     if(Math.abs(diff)>40){swiped=true;diff>0?galleryNext(gid):galleryPrev(gid);}
   },{passive:true});
 }
-
 function initCookieBanner(){if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
 function acceptAllCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));hideCookieBanner();}
 function rejectCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:false,marketing:false}));hideCookieBanner();}
@@ -757,29 +717,20 @@ function subscribe(){
   document.querySelector('.nl-form').style.display='none';
   document.getElementById('nlSuccess').style.display='block';
 }
-
-// Hero slideshow
 (function(){
   const slides=document.querySelectorAll('.hslide');
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    const prev=cur;
-    cur=(cur+1)%slides.length;
-    slides[cur].style.transition='none';
-    slides[cur].style.transform='translateX(100%)';
-    slides[cur].style.opacity='1';
+    const prev=cur;cur=(cur+1)%slides.length;
+    slides[cur].style.transition='none';slides[cur].style.transform='translateX(100%)';slides[cur].style.opacity='1';
     setTimeout(()=>{
-      slides[cur].style.transition='transform 0.8s ease';
-      slides[cur].style.transform='translateX(0)';
-      slides[prev].style.transition='transform 0.8s ease';
-      slides[prev].style.transform='translateX(-100%)';
+      slides[cur].style.transition='transform 0.8s ease';slides[cur].style.transform='translateX(0)';
+      slides[prev].style.transition='transform 0.8s ease';slides[prev].style.transform='translateX(-100%)';
     },20);
   },3500);
 })();
-
-initStock();
-initCookieBanner();
+initStock();initCookieBanner();
 </script>
 </body>
 </html>
