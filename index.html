@@ -35,11 +35,15 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .gallery-inner{max-width:600px;margin:0 auto;padding:2rem 1.5rem 5rem}
 .gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
 .gallery-back:hover{color:#fff}
-.gallery-main-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;display:block;margin-bottom:1rem}
-.gallery-thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
-.gallery-thumb{width:80px;height:80px;object-fit:cover;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:border-color .2s;opacity:.7}
-.gallery-thumb:hover{opacity:1}
-.gallery-thumb.active{border-color:#490e7e;opacity:1}
+.gallery-main-wrap{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:4px;margin-bottom:1rem;touch-action:pan-y}
+.gallery-main-img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:none;color:#fff;font-size:1.8rem;cursor:pointer;padding:.2rem .7rem;z-index:2;border-radius:2px;line-height:1;transition:background .2s}
+.gallery-arrow:hover{background:rgba(73,14,126,0.7)}
+.gallery-arrow-left{left:.5rem}
+.gallery-arrow-right{right:.5rem}
+.gallery-dots{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.5rem}
+.gallery-dot{width:7px;height:7px;border-radius:50%;background:#ffffff33;border:none;cursor:pointer;transition:background .2s;padding:0}
+.gallery-dot.active{background:#490e7e}
 .gallery-info{background:#111;border:1px solid #490e7e22;border-radius:6px;padding:1.5rem}
 .gallery-name{font-family:'Lacquer',cursive;font-size:1.5rem;letter-spacing:2px;margin-bottom:.4rem}
 .gallery-desc{color:#666;font-size:.85rem;margin-bottom:.8rem}
@@ -313,16 +317,12 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <div class="product-gallery" id="galleryWhite">
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
-    <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-main-img" alt="White Tee">
-    <div class="gallery-thumbs">
-      <img src="feher kris jobbra.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="feher allas en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="feher fel nez en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="feher kris balra.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="feher kris hatul.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="feher lepcso en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
-      <img src="W R me.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryWhite',this)" alt="">
+    <div class="gallery-main-wrap" id="wrapWhite">
+      <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-main-img" alt="White Tee">
+      <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryWhite')">‹</button>
+      <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryWhite')">›</button>
     </div>
+    <div class="gallery-dots" id="dotsWhite"></div>
     <div class="gallery-info">
       <div class="gallery-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
       <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
@@ -343,16 +343,12 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <div class="product-gallery" id="galleryBlack">
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
-    <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-main-img" alt="Black Tee">
-    <div class="gallery-thumbs">
-      <img src="fekete kri le.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="fekete kri hat.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="fekete kri oldalas sapka hatra.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="fekete lepcso en.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="fekete lepcso en 2.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="fekete lepcso en balrol.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
-      <img src="lepcso minketten kris all.jpeg" class="gallery-thumb" onclick="setGalleryImg('galleryBlack',this)" alt="">
+    <div class="gallery-main-wrap" id="wrapBlack">
+      <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-main-img" alt="Black Tee">
+      <button class="gallery-arrow gallery-arrow-left" onclick="galleryPrev('galleryBlack')">‹</button>
+      <button class="gallery-arrow gallery-arrow-right" onclick="galleryNext('galleryBlack')">›</button>
     </div>
+    <div class="gallery-dots" id="dotsBlack"></div>
     <div class="gallery-info">
       <div class="gallery-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
       <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
@@ -685,16 +681,60 @@ function finishOrder(){
 function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
 function closeLegal(id){document.getElementById(id).classList.remove('open');}
 
-function openGallery(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
+const galleries={
+  galleryWhite:{imgs:['feher kris jobbra.jpeg','feher allas en.jpeg','feher fel nez en.jpeg','feher kris balra.jpeg','feher kris hatul.jpeg','feher lepcso en.jpeg','W R me.jpeg'],cur:0,mainId:'galleryWhiteMain',dotsId:'dotsWhite',wrapId:'wrapWhite'},
+  galleryBlack:{imgs:['fekete kri le.jpeg','fekete kri hat.jpeg','fekete kri oldalas sapka hatra.jpeg','fekete lepcso en.jpeg','fekete lepcso en 2.jpeg','fekete lepcso en balrol.jpeg','lepcso minketten kris all.jpeg'],cur:0,mainId:'galleryBlackMain',dotsId:'dotsBlack',wrapId:'wrapBlack'}
+};
+
+function initGalleryDots(gid){
+  const g=galleries[gid];
+  const dotsEl=document.getElementById(g.dotsId);
+  dotsEl.innerHTML='';
+  g.imgs.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='gallery-dot'+(i===0?' active':'');
+    d.onclick=()=>goGalleryImg(gid,i);
+    dotsEl.appendChild(d);
+  });
+}
+
+function goGalleryImg(gid,idx){
+  const g=galleries[gid];
+  g.cur=idx;
+  document.getElementById(g.mainId).src=g.imgs[idx];
+  document.getElementById(g.dotsId).querySelectorAll('.gallery-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+
+function galleryPrev(gid){
+  const g=galleries[gid];
+  goGalleryImg(gid,(g.cur-1+g.imgs.length)%g.imgs.length);
+}
+function galleryNext(gid){
+  const g=galleries[gid];
+  goGalleryImg(gid,(g.cur+1)%g.imgs.length);
+}
+
+function openGallery(id){
+  document.getElementById(id).classList.add('open');
+  window.scrollTo(0,0);
+  galleries[id].cur=0;
+  initGalleryDots(id);
+  document.getElementById(galleries[id].mainId).src=galleries[id].imgs[0];
+  initSwipe(id);
+}
 function closeGallery(id){document.getElementById(id).classList.remove('open');}
 
-function setGalleryImg(galleryId,thumb){
-  const gallery=document.getElementById(galleryId);
-  const mainId=galleryId==='galleryWhite'?'galleryWhiteMain':'galleryBlackMain';
-  document.getElementById(mainId).src=thumb.src;
-  gallery.querySelectorAll('.gallery-thumb').forEach(t=>t.classList.remove('active'));
-  thumb.classList.add('active');
+function initSwipe(gid){
+  const wrap=document.getElementById(galleries[gid].wrapId);
+  let startX=0;
+  wrap.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});
+  wrap.addEventListener('touchend',e=>{
+    const diff=startX-e.changedTouches[0].clientX;
+    if(Math.abs(diff)>40){diff>0?galleryNext(gid):galleryPrev(gid);}
+  },{passive:true});
 }
+
+function setGalleryImg(){} // legacy, nem kell
 
 function initCookieBanner(){if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
 function acceptAllCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));hideCookieBanner();}
