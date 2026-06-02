@@ -8,30 +8,14 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+body.no-scroll{overflow:hidden}
 .lacquer{font-family:'Lacquer',cursive}
 .w{color:#fff}.p{color:#490e7e}
 
-/* OVERLAYS */
 .legal-overlay,.product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .legal-overlay.open,.product-gallery.open{display:block}
-.gallery-inner{max-width:480px;margin:0 auto;padding:2rem 1.5rem 4rem}
-.gallery-nav-logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
-.gallery-nav-links{display:flex;gap:1.5rem;justify-content:center}
-.gallery-nav-links a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:.3rem 0;border-bottom:2px solid transparent;font-family:'Segoe UI',sans-serif}
-.gallery-nav-links a:hover{color:#fff;border-bottom-color:#490e7e}
-.gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
-.gallery-back:hover{color:#fff}
-@media(max-width:600px){
-  .gallery-nav{padding:0 1rem;height:55px}
-  .gallery-nav-logo{display:none}
-  .gallery-nav-links{gap:1.2rem}
-  .gallery-nav-links a{font-size:.68rem;letter-spacing:1px}
-  .gallery-inner{padding:1.5rem 1rem 4rem}
-}
-
-/* LEGAL */
 .legal-inner{max-width:740px;margin:0 auto;padding:3rem 2rem 5rem}
-.legal-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:2.5rem;transition:color .2s;padding:0}
+.legal-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:2.5rem;padding:0}
 .legal-back:hover{color:#fff}
 .legal-title{font-family:'Lacquer',cursive;font-size:2rem;letter-spacing:3px;margin-bottom:.3rem}
 .legal-updated{font-size:.72rem;color:#555;letter-spacing:1px;margin-bottom:2.5rem}
@@ -44,9 +28,14 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .legal-highlight{background:#490e7e15;border-left:2px solid #490e7e;padding:.8rem 1rem;border-radius:0 3px 3px 0;margin:.8rem 0}
 .legal-highlight p{margin:0;color:#c084f5 !important}
 
-/* GALLERY */
+.gallery-nav{position:sticky;top:0;z-index:10;background:rgba(10,10,10,0.96);border-bottom:1px solid #490e7e55;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 1.5rem;height:70px;gap:.5rem}
+.gallery-nav-logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
+.gallery-nav-links{display:flex;gap:1.5rem;justify-content:center}
+.gallery-nav-links a{color:#aaa;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:.3rem 0;border-bottom:2px solid transparent;font-family:'Segoe UI',sans-serif}
+.gallery-nav-links a:hover{color:#fff;border-bottom-color:#490e7e}
 .gallery-inner{max-width:480px;margin:0 auto;padding:2rem 1.5rem 4rem}
-body.no-scroll{overflow:hidden}
+.gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;padding:0}
+.gallery-back:hover{color:#fff}
 .gallery-main-wrap{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:4px;margin-bottom:.8rem;touch-action:pan-y}
 .gallery-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease}
 .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.5);border:none;color:#fff;font-size:1.8rem;cursor:pointer;padding:.2rem .7rem;z-index:2;border-radius:2px;line-height:1}
@@ -59,7 +48,6 @@ body.no-scroll{overflow:hidden}
 .gallery-name{font-family:'Lacquer',cursive;font-size:1.8rem;letter-spacing:3px;margin-bottom:.3rem}
 .gallery-price{color:#c084f5;font-size:1.3rem;font-weight:700;margin-bottom:1rem}
 
-/* COOKIE */
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #490e7e55;z-index:500;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease}
 .cookie-banner.show{transform:translateY(0)}
 .cookie-text{flex:1;min-width:220px}
@@ -264,6 +252,10 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   .legal-title{font-size:1.5rem}
   .barion-methods{gap:.4rem}
   .pay-method{padding:.45rem .6rem;font-size:.7rem}
+  .gallery-nav{padding:0 1rem;height:55px}
+  .gallery-nav-logo{display:none}
+  .gallery-nav-links{gap:1.2rem}
+  .gallery-nav-links a{font-size:.68rem;letter-spacing:1px}
   .gallery-inner{padding:1.5rem 1rem 4rem}
 }
 </style>
@@ -322,11 +314,11 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="gallery-nav">
     <div class="gallery-nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="gallery-nav-links">
-      <a onclick="closeGallery('galleryWhite');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
-      <a onclick="closeGallery('galleryWhite');document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
-      <a onclick="closeGallery('galleryWhite');document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
+      <a onclick="closeGallery('galleryWhite');setTimeout(()=>document.getElementById('shop').scrollIntoView({behavior:'smooth'}),100)">Shop</a>
+      <a onclick="closeGallery('galleryWhite');setTimeout(()=>document.getElementById('about').scrollIntoView({behavior:'smooth'}),100)">Rólunk</a>
+      <a onclick="closeGallery('galleryWhite');setTimeout(()=>document.getElementById('newsletter').scrollIntoView({behavior:'smooth'}),100)">Kapcsolat</a>
     </div>
-    <button class="nav-cart" onclick="closeGallery('galleryWhite');openCart()" id="cartBtnW">Kosár (0)</button>
+    <button class="nav-cart" id="cartBtnW" onclick="closeGallery('galleryWhite');setTimeout(openCart,100)">Kosár (0)</button>
   </div>
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
@@ -340,9 +332,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div class="gallery-price">10 990 Ft</div>
     <div class="size-row" style="margin:.5rem 0">
       <span class="size-label">Méret</span>
-      <button class="size-btn" onclick="selectSize(this,'White Tee')">S</button>
-      <button class="size-btn" onclick="selectSize(this,'White Tee')">M</button>
-      <button class="size-btn" onclick="selectSize(this,'White Tee')">L</button>
+      <button class="size-btn" onclick="selectSize(this)">S</button>
+      <button class="size-btn" onclick="selectSize(this)">M</button>
+      <button class="size-btn" onclick="selectSize(this)">L</button>
     </div>
     <div class="stock-info" id="stock-white-gallery"></div>
     <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.3rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
@@ -353,11 +345,11 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="gallery-nav">
     <div class="gallery-nav-logo lacquer"><span class="w">ZOMBI</span><span class="p">F!ED</span></div>
     <div class="gallery-nav-links">
-      <a onclick="closeGallery('galleryBlack');document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
-      <a onclick="closeGallery('galleryBlack');document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
-      <a onclick="closeGallery('galleryBlack');document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
+      <a onclick="closeGallery('galleryBlack');setTimeout(()=>document.getElementById('shop').scrollIntoView({behavior:'smooth'}),100)">Shop</a>
+      <a onclick="closeGallery('galleryBlack');setTimeout(()=>document.getElementById('about').scrollIntoView({behavior:'smooth'}),100)">Rólunk</a>
+      <a onclick="closeGallery('galleryBlack');setTimeout(()=>document.getElementById('newsletter').scrollIntoView({behavior:'smooth'}),100)">Kapcsolat</a>
     </div>
-    <button class="nav-cart" onclick="closeGallery('galleryBlack');openCart()" id="cartBtnB">Kosár (0)</button>
+    <button class="nav-cart" id="cartBtnB" onclick="closeGallery('galleryBlack');setTimeout(openCart,100)">Kosár (0)</button>
   </div>
   <div class="gallery-inner">
     <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
@@ -371,9 +363,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div class="gallery-price">10 990 Ft</div>
     <div class="size-row" style="margin:.5rem 0">
       <span class="size-label">Méret</span>
-      <button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button>
-      <button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button>
-      <button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button>
+      <button class="size-btn" onclick="selectSize(this)">S</button>
+      <button class="size-btn" onclick="selectSize(this)">M</button>
+      <button class="size-btn" onclick="selectSize(this)">L</button>
     </div>
     <div class="stock-info" id="stock-black-gallery"></div>
     <button class="add-btn" style="width:100%;padding:.7rem;font-size:.88rem;margin-top:.3rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
@@ -508,7 +500,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
         <div class="product-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
         <div class="product-desc">Oversized · 100% pamut</div>
         <div class="stock-info" id="stock-white"></div>
-        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
+        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this)">S</button><button class="size-btn" onclick="selectSize(this)">M</button><button class="size-btn" onclick="selectSize(this)">L</button></div>
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
       </div>
     </div>
@@ -521,7 +513,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
         <div class="product-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
         <div class="product-desc">Oversized · 100% pamut</div>
         <div class="stock-info" id="stock-black"></div>
-        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button></div>
+        <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this)">S</button><button class="size-btn" onclick="selectSize(this)">M</button><button class="size-btn" onclick="selectSize(this)">L</button></div>
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'Black Tee',10990)">Kosárba +</button></div>
       </div>
     </div>
@@ -568,18 +560,25 @@ const galleries={
 };
 
 function initStock(){
+  ['White Tee','Black Tee'].forEach(name=>{
+    const sel=name==='White Tee'?'#stock-white':'#stock-black';
+  });
   document.querySelectorAll('.product-card').forEach(card=>{
     const addBtn=card.querySelector('.add-btn');if(!addBtn)return;
     const match=addBtn.getAttribute('onclick').match(/'([^']+)'/);if(!match)return;
     const name=match[1];
-    card.querySelectorAll('.size-btn').forEach(btn=>{if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}});
+    card.querySelectorAll('.size-btn').forEach(btn=>{
+      if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}
+    });
   });
 }
+
 function selectSize(btn){
   if(btn.classList.contains('out'))return;
   btn.closest('.size-row').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
 }
+
 function addToCart(btn,name,price){
   const card=btn.closest('.product-card');
   const sizeBtn=card.querySelector('.size-btn.selected');
@@ -595,6 +594,7 @@ function addToCart(btn,name,price){
   btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
   setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
 }
+
 function addToCartFromGallery(name,price,gid){
   const g=document.getElementById(gid);
   const sizeBtn=g.querySelector('.size-btn.selected');
@@ -609,6 +609,7 @@ function addToCartFromGallery(name,price,gid){
   btn.textContent='Hozzáadva!';btn.style.background='#2e0950';
   setTimeout(()=>{btn.textContent='Kosárba +';btn.style.background='';},1300);
 }
+
 function updateCart(){
   const count=cartItems.length;
   document.querySelectorAll('#cartBtn,#cartBtnW,#cartBtnB').forEach(el=>{if(el)el.textContent='Kosár ('+count+')';});
@@ -625,11 +626,13 @@ function updateCart(){
     el.appendChild(div);
   });
 }
+
 function removeItem(i){cartItems.splice(i,1);updateCart();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').style.display='block';}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').style.display='none';}
 function openCheckout(){closeCart();document.getElementById('checkoutModal').classList.add('open');showStep(1);}
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
+
 function showStep(n){
   [1,2,3,4].forEach(i=>{
     document.getElementById('step'+i).style.display=i===n?'block':'none';
@@ -679,18 +682,21 @@ function finishOrder(){
 }
 function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
 function closeLegal(id){document.getElementById(id).classList.remove('open');}
-.gallery-nav{position:sticky;top:0;z-index:10;background:rgba(10,10,10,0.96);border-bottom:1px solid #490e7e55;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 1.5rem;height:70px;gap:.5rem}
+function openGallery(id){
+  document.body.classList.add('no-scroll');
   document.getElementById(id).classList.add('open');
-  window.scrollTo(0,0);
+  document.getElementById(id).scrollTop=0;
   const g=galleries[id];
   g.cur=0;
   initGalleryDots(id);
-  const mainImg=document.getElementById(g.mainId);
-  mainImg.src=g.imgs[0];
-  mainImg.style.transform='translateX(0)';
+  document.getElementById(g.mainId).src=g.imgs[0];
+  document.getElementById(g.mainId).style.transform='translateX(0)';
   initSwipe(id);
 }
-function closeGallery(id){document.getElementById(id).classList.remove('open');}
+function closeGallery(id){
+  document.body.classList.remove('no-scroll');
+  document.getElementById(id).classList.remove('open');
+}
 function initGalleryDots(gid){
   const g=galleries[gid];
   const dotsEl=document.getElementById(g.dotsId);
