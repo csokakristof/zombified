@@ -19,11 +19,13 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 .gallery-nav-links{display:flex;gap:1.5rem;justify-content:center}
 .gallery-nav-links a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:.3rem 0;border-bottom:2px solid transparent;font-family:'Segoe UI',sans-serif}
 .gallery-nav-links a:hover{color:#fff;border-bottom-color:#490e7e}
+.gallery-inner{max-width:480px;margin:0 auto;padding:2rem 1.5rem 4rem}
 @media(max-width:600px){
   .gallery-nav{padding:0 1rem;height:55px}
   .gallery-nav-logo{display:none}
   .gallery-nav-links{gap:1.2rem}
   .gallery-nav-links a{font-size:.68rem;letter-spacing:1px}
+  .gallery-inner{padding:1.5rem 1rem 4rem}
 }
 
 /* LEGAL */
@@ -609,7 +611,7 @@ function addToCartFromGallery(name,price,gid){
 }
 function updateCart(){
   const count=cartItems.length;
-  document.getElementById('cartBtn').textContent='Kosár ('+count+')';
+  document.querySelectorAll('#cartBtn,#cartBtnW,#cartBtnB').forEach(el=>{if(el)el.textContent='Kosár ('+count+')';});
   document.getElementById('cartTotalPrice').textContent=cartItems.reduce((s,i)=>s+i.price,0).toLocaleString('hu-HU')+' Ft';
   document.getElementById('checkoutBtn').disabled=count===0;
   const el=document.getElementById('cartItems');
