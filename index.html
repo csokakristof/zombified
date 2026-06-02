@@ -32,18 +32,20 @@ body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow
 /* PRODUCT GALLERY */
 .product-gallery{display:none;position:fixed;inset:0;background:#0a0a0a;z-index:400;overflow-y:auto}
 .product-gallery.open{display:block}
-.gallery-inner{max-width:500px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.gallery-inner{max-width:600px;margin:0 auto;padding:2rem 1.5rem 5rem}
 .gallery-back{display:inline-flex;align-items:center;gap:.5rem;color:#888;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:none;background:none;margin-bottom:1.5rem;transition:color .2s;padding:0}
 .gallery-back:hover{color:#fff}
 .gallery-main-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:4px;display:block;margin-bottom:1rem}
-.gallery-thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
-.gallery-thumb{width:70px;height:70px;object-fit:cover;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
-.gallery-thumb.active{border-color:#490e7e}
-.gallery-info{border-top:1px solid #490e7e22;padding-top:1.2rem}
-.gallery-name{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px;margin-bottom:.4rem}
-.gallery-desc{color:#666;font-size:.82rem;margin-bottom:1rem}
-.gallery-price{color:#c084f5;font-size:1.3rem;font-weight:600;margin-bottom:1rem}
-.gallery-sizes{display:flex;gap:.4rem;margin-bottom:1rem;align-items:center}
+.gallery-thumbs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem}
+.gallery-thumb{width:80px;height:80px;object-fit:cover;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:border-color .2s;opacity:.7}
+.gallery-thumb:hover{opacity:1}
+.gallery-thumb.active{border-color:#490e7e;opacity:1}
+.gallery-info{background:#111;border:1px solid #490e7e22;border-radius:6px;padding:1.5rem}
+.gallery-name{font-family:'Lacquer',cursive;font-size:1.5rem;letter-spacing:2px;margin-bottom:.4rem}
+.gallery-desc{color:#666;font-size:.85rem;margin-bottom:.8rem}
+.gallery-price{color:#c084f5;font-size:1.4rem;font-weight:700;margin-bottom:1.2rem}
+.gallery-divider{height:1px;background:#490e7e22;margin:1rem 0}
+.gallery-sizes{display:flex;gap:.4rem;margin-bottom:.8rem;align-items:center}
 
 /* COOKIE */
 .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #490e7e55;z-index:500;padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease}
@@ -310,7 +312,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 <!-- TERMÉK GALÉRIÁK -->
 <div class="product-gallery" id="galleryWhite">
   <div class="gallery-inner">
-    <button class="legal-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
+    <button class="gallery-back" onclick="closeGallery('galleryWhite')">← Vissza a shopba</button>
     <img id="galleryWhiteMain" src="feher kris jobbra.jpeg" class="gallery-main-img" alt="White Tee">
     <div class="gallery-thumbs">
       <img src="feher kris jobbra.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryWhite',this)" alt="">
@@ -323,8 +325,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     </div>
     <div class="gallery-info">
       <div class="gallery-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
-      <div class="gallery-desc">Oversized · 100% pamut</div>
+      <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
       <div class="gallery-price">10 990 Ft</div>
+      <div class="gallery-divider"></div>
       <div class="gallery-sizes size-row">
         <span class="size-label">Méret</span>
         <button class="size-btn" onclick="selectSize(this,'White Tee')">S</button>
@@ -332,16 +335,14 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
         <button class="size-btn" onclick="selectSize(this,'White Tee')">L</button>
       </div>
       <div class="stock-info" id="stock-white-gallery"></div>
-      <div class="product-meta" style="margin-top:.8rem">
-        <button class="add-btn" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
-      </div>
+      <button class="add-btn" style="width:100%;padding:.7rem;font-size:.85rem;margin-top:.5rem" onclick="addToCartFromGallery('White Tee',10990,'galleryWhite')">Kosárba +</button>
     </div>
   </div>
 </div>
 
 <div class="product-gallery" id="galleryBlack">
   <div class="gallery-inner">
-    <button class="legal-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
+    <button class="gallery-back" onclick="closeGallery('galleryBlack')">← Vissza a shopba</button>
     <img id="galleryBlackMain" src="fekete kri le.jpeg" class="gallery-main-img" alt="Black Tee">
     <div class="gallery-thumbs">
       <img src="fekete kri le.jpeg" class="gallery-thumb active" onclick="setGalleryImg('galleryBlack',this)" alt="">
@@ -354,8 +355,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     </div>
     <div class="gallery-info">
       <div class="gallery-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
-      <div class="gallery-desc">Oversized · 100% pamut</div>
+      <div class="gallery-desc">Oversized · 100% pamut · Elején hímzett felirat · Hátán NEVER DEAD NEVER DONE</div>
       <div class="gallery-price">10 990 Ft</div>
+      <div class="gallery-divider"></div>
       <div class="gallery-sizes size-row">
         <span class="size-label">Méret</span>
         <button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button>
@@ -363,9 +365,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
         <button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button>
       </div>
       <div class="stock-info" id="stock-black-gallery"></div>
-      <div class="product-meta" style="margin-top:.8rem">
-        <button class="add-btn" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
-      </div>
+      <button class="add-btn" style="width:100%;padding:.7rem;font-size:.85rem;margin-top:.5rem" onclick="addToCartFromGallery('Black Tee',10990,'galleryBlack')">Kosárba +</button>
     </div>
   </div>
 </div>
@@ -716,15 +716,23 @@ function subscribe(){
   document.getElementById('nlSuccess').style.display='block';
 }
 
-// Hero slideshow
+// Hero slideshow - csúszás
 (function(){
   const slides=document.querySelectorAll('.hslide');
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    slides[cur].style.opacity='0';
+    const prev=cur;
     cur=(cur+1)%slides.length;
+    slides[cur].style.transition='none';
+    slides[cur].style.transform='translateX(100%)';
     slides[cur].style.opacity='1';
+    setTimeout(()=>{
+      slides[cur].style.transition='transform 0.8s ease';
+      slides[cur].style.transform='translateX(0)';
+      slides[prev].style.transition='transform 0.8s ease';
+      slides[prev].style.transform='translateX(-100%)';
+    },20);
   },3500);
 })();
 
