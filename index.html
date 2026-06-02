@@ -9,6 +9,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--purple:#490e7e}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+body.gallery-open{overflow:hidden}
 .lacquer{font-family:'Lacquer',cursive}
 .w{color:#ffffff}.p{color:#490e7e}
 
@@ -739,6 +740,7 @@ function galleryNext(gid){const g=galleries[gid];goGalleryImg(gid,(g.cur+1)%g.im
 
 function openGallery(id){
   document.getElementById(id).classList.add('open');
+  document.body.classList.add('gallery-open');
   window.scrollTo(0,0);
   galleries[id].cur=0;
   initGalleryDots(id);
@@ -748,7 +750,10 @@ function openGallery(id){
   mainImg.style.transform='translateX(0)';
   initSwipe(id);
 }
-function closeGallery(id){document.getElementById(id).classList.remove('open');}
+function closeGallery(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.classList.remove('gallery-open');
+}
 
 function initSwipe(gid){
   const wrap=document.getElementById(galleries[gid].wrapId);
