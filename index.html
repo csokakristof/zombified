@@ -602,9 +602,20 @@ initStock();initCookieBanner();
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    slides[cur].style.opacity='0';
+    const prev=cur;
     cur=(cur+1)%slides.length;
+    // következő kép jobbra pozicionálva
+    slides[cur].style.transition='none';
+    slides[cur].style.transform='translateX(100%)';
     slides[cur].style.opacity='1';
+    // kis késleltetés után animálva becsúszik
+    setTimeout(()=>{
+      slides[cur].style.transition='transform 0.8s ease';
+      slides[cur].style.transform='translateX(0)';
+      // jelenlegi kimegy balra
+      slides[prev].style.transition='transform 0.8s ease';
+      slides[prev].style.transform='translateX(-100%)';
+    },20);
   },3500);
 })();
 </script>
