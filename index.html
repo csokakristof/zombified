@@ -287,6 +287,55 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   </div>
 </div>
 
+<!-- PRODUCT MODALS -->
+<div class="product-modal-overlay" id="modalWhite">
+  <div class="product-modal" style="position:relative">
+    <button class="product-modal-close" onclick="closeProductModal('modalWhite')">✕</button>
+    <div class="product-modal-imgs" id="whiteImgs">
+      <img src="feher kris jobbra.jpeg" class="active" alt="White Tee">
+      <img src="feher allas en.jpeg" alt="White Tee">
+      <img src="feher fel nez en.jpeg" alt="White Tee">
+      <img src="feher kris balra.jpeg" alt="White Tee">
+      <img src="feher kris hatul.jpeg" alt="White Tee">
+      <img src="feher lepcso en.jpeg" alt="White Tee">
+      <img src="W R me.jpeg" alt="White Tee">
+      <button class="modal-img-prev" onclick="modalPrev('whiteImgs')">‹</button>
+      <button class="modal-img-next" onclick="modalNext('whiteImgs')">›</button>
+      <div class="modal-img-dots" id="whiteImgsDots"></div>
+    </div>
+    <div class="product-modal-info">
+      <div class="product-name lacquer" style="margin-bottom:.8rem"><span class="w">WHITE </span><span class="p">TEE!</span></div>
+      <div class="product-desc" style="margin-bottom:1rem">Oversized · 100% pamut</div>
+      <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'White Tee')">S</button><button class="size-btn" onclick="selectSize(this,'White Tee')">M</button><button class="size-btn" onclick="selectSize(this,'White Tee')">L</button></div>
+      <div class="product-meta" style="margin-top:.8rem"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="product-modal-overlay" id="modalBlack">
+  <div class="product-modal" style="position:relative">
+    <button class="product-modal-close" onclick="closeProductModal('modalBlack')">✕</button>
+    <div class="product-modal-imgs" id="blackImgs">
+      <img src="fekete kri le.jpeg" class="active" alt="Black Tee">
+      <img src="fekete kri hat.jpeg" alt="Black Tee">
+      <img src="fekete kri oldalas sapka hatra.jpeg" alt="Black Tee">
+      <img src="fekete lepcso en.jpeg" alt="Black Tee">
+      <img src="fekete lepcso en 2.jpeg" alt="Black Tee">
+      <img src="fekete lepcso en balrol.jpeg" alt="Black Tee">
+      <img src="lepcso minketten kris all.jpeg" alt="Black Tee">
+      <button class="modal-img-prev" onclick="modalPrev('blackImgs')">‹</button>
+      <button class="modal-img-next" onclick="modalNext('blackImgs')">›</button>
+      <div class="modal-img-dots" id="blackImgsDots"></div>
+    </div>
+    <div class="product-modal-info">
+      <div class="product-name lacquer" style="margin-bottom:.8rem"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
+      <div class="product-desc" style="margin-bottom:1rem">Oversized · 100% pamut</div>
+      <div class="size-row"><span class="size-label">Méret</span><button class="size-btn" onclick="selectSize(this,'Black Tee')">S</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">M</button><button class="size-btn" onclick="selectSize(this,'Black Tee')">L</button></div>
+      <div class="product-meta" style="margin-top:.8rem"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'Black Tee',10990)">Kosárba +</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- COOKIE -->
 <div class="cookie-modal" id="cookieModal">
   <div class="cookie-modal-box">
@@ -415,8 +464,11 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   <div class="section-title lacquer"><span class="w">THE </span><span class="p">DROP!</span></div>
   <div class="section-sub">Jelenlegi kollekció — S / M / L</div>
   <div class="products">
-    <div class="product-card">
-      <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">WHITE TEE</div></div></div>
+    <div class="product-card" onclick="openProductModal('modalWhite')" style="cursor:pointer">
+      <div class="product-img" style="padding:0">
+        <div class="product-badge">Új</div>
+        <img src="feher kris jobbra.jpeg" style="width:100%;height:100%;object-fit:cover;display:block" alt="White Tee">
+      </div>
       <div class="product-info">
         <div class="product-name lacquer"><span class="w">WHITE </span><span class="p">TEE!</span></div>
         <div class="product-desc">Oversized · 100% pamut</div>        <div class="stock-info" id="stock-white"></div>
@@ -424,8 +476,11 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
         <div class="product-meta"><span class="product-price">10 990 Ft</span><button class="add-btn" onclick="addToCart(this,'White Tee',10990)">Kosárba +</button></div>
       </div>
     </div>
-    <div class="product-card">
-      <div class="product-img"><div class="product-badge">Új</div><div class="img-fallback"><div class="lacquer" style="font-size:1.2rem"><span class="w">ZOMBI</span><span class="p">F!ED</span></div><div style="font-size:.55rem;color:#666;letter-spacing:.2rem">BLACK TEE</div></div></div>
+    <div class="product-card" onclick="openProductModal('modalBlack')" style="cursor:pointer">
+      <div class="product-img" style="padding:0">
+        <div class="product-badge">Új</div>
+        <img src="fekete kri le.jpeg" style="width:100%;height:100%;object-fit:cover;display:block" alt="Black Tee">
+      </div>
       <div class="product-info">
         <div class="product-name lacquer"><span style="color:#888">BLACK </span><span class="p">TEE!</span></div>
         <div class="product-desc">Oversized · 100% pamut</div>
@@ -594,6 +649,46 @@ function subscribe(){
   document.querySelector('.nl-form').style.display='none';
   document.getElementById('nlSuccess').style.display='block';
 }
+function openProductModal(id){
+  document.getElementById(id).classList.add('open');
+  initModalDots(id==='modalWhite'?'whiteImgs':'blackImgs');
+}
+function closeProductModal(id){document.getElementById(id).classList.remove('open');}
+function initModalDots(containerId){
+  const c=document.getElementById(containerId);
+  const imgs=c.querySelectorAll('img');
+  const dotsEl=document.getElementById(containerId+'Dots');
+  dotsEl.innerHTML='';
+  imgs.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='modal-img-dot'+(i===0?' active':'');
+    d.onclick=()=>goModalImg(containerId,i);
+    dotsEl.appendChild(d);
+  });
+}
+function goModalImg(containerId,idx){
+  const c=document.getElementById(containerId);
+  const imgs=c.querySelectorAll('img');
+  const dots=document.getElementById(containerId+'Dots').querySelectorAll('.modal-img-dot');
+  imgs.forEach(img=>img.classList.remove('active'));
+  dots.forEach(d=>d.classList.remove('active'));
+  imgs[idx].classList.add('active');
+  dots[idx].classList.add('active');
+  c._cur=idx;
+}
+function modalPrev(containerId){
+  const c=document.getElementById(containerId);
+  const imgs=c.querySelectorAll('img');
+  const cur=c._cur||0;
+  goModalImg(containerId,(cur-1+imgs.length)%imgs.length);
+}
+function modalNext(containerId){
+  const c=document.getElementById(containerId);
+  const imgs=c.querySelectorAll('img');
+  const cur=c._cur||0;
+  goModalImg(containerId,(cur+1)%imgs.length);
+}
+
 initStock();initCookieBanner();
 
 // Hero slideshow - fade
