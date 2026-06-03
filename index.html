@@ -694,7 +694,7 @@ async function placeOrder(){
   const name=document.getElementById('fLastName').value+' '+document.getElementById('fFirstName').value;
   const email=document.getElementById('fEmail').value;
   try{
-    const res=await fetch('/.netlify/functions/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:total*100})});
+    const res=await fetch('/api/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:total*100})});
     if(!res.ok){throw new Error('Szerver hiba: '+res.status);}
     const {clientSecret}=await res.json();
     if(!clientSecret){throw new Error('Nincs clientSecret');}
