@@ -705,6 +705,7 @@ async function placeOrder(){
     } else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){
       const orderNum='ZMB-'+Math.floor(10000+Math.random()*90000);
       emailjs.send('service_za2zu8v','template_oq6dnqg',{to_name:name,to_email:email,order_num:orderNum,items:cartItems.map(i=>i.name+' ('+i.size+')').join(', '),shipping:ship.name,total:total.toLocaleString('hu-HU')});
+      emailjs.send('service_za2zu8v','template_rrefo5k',{to_name:name,to_email:email,order_num:orderNum,items:cartItems.map(i=>i.name+' ('+i.size+')').join(', '),shipping:ship.name,total:total.toLocaleString('hu-HU')});
       document.getElementById('successOrder').innerHTML=`<div class="success-order-row"><span>Rendelési szám</span><span style="color:#c084f5">${orderNum}</span></div><div class="success-order-row"><span>Szállítás</span><span>${ship.name}</span></div><div class="success-order-row"><span>Fizetési mód</span><span>Bankkártya (Stripe)</span></div><div class="success-order-row"><span>Végösszeg</span><span style="color:#c084f5">${total.toLocaleString('hu-HU')} Ft</span></div>`;
       showStep(4);
     } else {
