@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZOMBIF!ED</title>
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
@@ -548,14 +549,9 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 
 <script>
 let cartItems=[],selectedShipping='gls',selectedPayment='card',stripe,cardElement;
-(function(){
-  const s=document.createElement('script');
-  s.src='https://js.stripe.com/v3/';
-  s.onload=()=>{
-    stripe=Stripe('pk_test_51TeAq30lDcLkeMPeLSOzgCXuJ50IvRpcsFSIO7o7E0PtNS6dsmm6vrzEajD62jKsz3J60sqZOChVGpvOBM8D20kh00tLtg1fuq');
-  };
-  document.head.appendChild(s);
-})();
+window.addEventListener('load',()=>{
+  stripe=Stripe('pk_test_51TeAq30lDcLkeMPeLSOzgCXuJ50IvRpcsFSIO7o7E0PtNS6dsmm6vrzEajD62jKsz3J60sqZOChVGpvOBM8D20kh00tLtg1fuq');
+});
 const SHIPPING={gls:{name:'GLS Házhozszállítás',price:990},packeta:{name:'Packeta csomagpont',price:690}};
 const stock={'White Tee':{S:true,M:true,L:true},'Black Tee':{S:true,M:false,L:true}};
 const galleries={
