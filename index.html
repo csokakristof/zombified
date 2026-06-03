@@ -686,7 +686,7 @@ function finishOrder(){
   cartItems=[];updateCart();
   document.getElementById('checkoutModal').classList.remove('open');
   ['fLastName','fFirstName','fEmail','fPhone','fAddress','fZip','fCity','fPacketaPoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  selectShipping('gls');selectPayment('card');
+  selectShipping('gls');cardElement=null;
 }
 function openLegal(id){document.getElementById(id).classList.add('open');window.scrollTo(0,0);}
 function closeLegal(id){document.getElementById(id).classList.remove('open');}
