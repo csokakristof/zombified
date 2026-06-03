@@ -634,7 +634,19 @@ function updateCart(){
 function removeItem(i){cartItems.splice(i,1);updateCart();}
 function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').style.display='block';}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').style.display='none';}
-function openCheckout(){closeCart();document.getElementById('checkoutModal').classList.add('open');showStep(1);}
+function openCheckout(){
+  closeCart();
+  document.getElementById('checkoutModal').classList.add('open');
+  showStep(1);
+  setTimeout(()=>{
+    if(!cardElement){
+      const elements=stripe.elements();
+      cardElement=elements.create('card',{style:{base:{color:'#fff',fontSize:'15px',fontFamily:'Segoe UI,sans-serif','::placeholder':{color:'#444'}},invalid:{color:'#e05'}}});
+      cardElement.mount('#stripe-card-element');
+      cardElement.on('change',e=>{document.getElementById('stripe-card-error').textContent=e.error?e.error.message:'';});
+    }
+  },300);
+}
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');}
 
 function showStep(n){
