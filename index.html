@@ -427,14 +427,10 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
       <div class="modal-title">Fizetési <span class="p">mód</span></div>
       <div id="paymentSummary" style="background:#0d0d0d;border:1px solid #490e7e22;border-radius:4px;padding:.9rem 1rem;margin-bottom:1.3rem;font-size:.8rem"></div>
       <div class="barion-section">
-        <div class="barion-label">Válassz fizetési módot</div>
-        <div class="barion-methods">
-          <div class="pay-method selected" id="pm-card" onclick="selectPayment('card')">Bankkártya</div>
-          <div class="pay-method" id="pm-google" onclick="selectPayment('google')">Google Pay</div>
-          <div class="pay-method" id="pm-apple" onclick="selectPayment('apple')">Apple Pay</div>
-          <div class="pay-method" id="pm-transfer" onclick="selectPayment('transfer')">Átutalás</div>
-        </div>
-        <div class="barion-badge"><div class="barion-badge-box">BARION</div><span>Biztonságos — PCI DSS</span></div>
+        <div class="barion-label">Kártyaadatok</div>
+        <div id="stripe-card-element" style="background:#0d0d0d;border:1px solid #490e7e33;border-radius:2px;padding:.9rem 1rem;margin-bottom:.8rem"></div>
+        <div id="stripe-card-error" style="color:#e05;font-size:.72rem;margin-bottom:.5rem;min-height:1rem"></div>
+        <div class="barion-badge"><div class="barion-badge-box">STRIPE</div><span>Biztonságos — PCI DSS</span></div>
       </div>
       <div class="modal-btns"><button class="btn-back" onclick="goToStep2()">← Vissza</button><button class="btn-next" id="payBtn" onclick="placeOrder()">Fizetés →</button></div>
     </div>
@@ -551,7 +547,15 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 </footer>
 
 <script>
-let cartItems=[],selectedShipping='gls',selectedPayment='card';
+let cartItems=[],selectedShipping='gls',selectedPayment='card',stripe,cardElement;
+(function(){
+  const s=document.createElement('script');
+  s.src='https://js.stripe.com/v3/';
+  s.onload=()=>{
+    stripe=Stripe('pk_test_51TeAq30lDcLkeMPeLSOzgCXuJ50IvRpcsFSIO7o7E0PtNS6dsmm6vrzEajD62jKsz3J60sqZOChVGpvOBM8D20kh00tLtg1fuq');
+  };
+  document.head.appendChild(s);
+})();
 const SHIPPING={gls:{name:'GLS Házhozszállítás',price:990},packeta:{name:'Packeta csomagpont',price:690}};
 const stock={'White Tee':{S:true,M:true,L:true},'Black Tee':{S:true,M:false,L:true}};
 const galleries={
@@ -560,14 +564,18 @@ const galleries={
 };
 
 function initStock(){
-  ['White Tee','Black Tee'].forEach(name=>{
-    const sel=name==='White Tee'?'#stock-white':'#stock-black';
-  });
   document.querySelectorAll('.product-card').forEach(card=>{
     const addBtn=card.querySelector('.add-btn');if(!addBtn)return;
     const match=addBtn.getAttribute('onclick').match(/'([^']+)'/);if(!match)return;
     const name=match[1];
     card.querySelectorAll('.size-btn').forEach(btn=>{
+      if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}
+    });
+  });
+  // also init gallery size btns
+  ['galleryWhite','galleryBlack'].forEach(gid=>{
+    const name=gid==='galleryWhite'?'White Tee':'Black Tee';
+    document.querySelectorAll('#'+gid+' .size-btn').forEach(btn=>{
       if(!stock[name]?.[btn.textContent.trim()]){btn.classList.add('out');btn.disabled=true;}
     });
   });
@@ -586,7 +594,7 @@ function addToCart(btn,name,price){
     card.querySelectorAll('.size-btn:not(.out)').forEach(b=>{b.style.borderColor='#c084f5';});
     setTimeout(()=>card.querySelectorAll('.size-btn').forEach(b=>{b.style.borderColor='';}),800);
     const info=card.querySelector('.stock-info');
-    if(info){info.textContent='Válassz méretet!';info.style.color='#c084f5';}
+    if(info){info.textContent='Válassz méretet!';info.style.color='#c084f5';setTimeout(()=>{info.textContent='';},2000);}
     return;
   }
   cartItems.push({name,size:sizeBtn.textContent.trim(),price});
@@ -704,7 +712,7 @@ function initGalleryDots(gid){
   g.imgs.forEach((_,i)=>{
     const d=document.createElement('button');
     d.className='gallery-dot'+(i===0?' active':'');
-    d.onclick=()=>goGalleryImg(gid,i,'next');
+    d.onclick=()=>goGalleryImg(gid,i,i>g.cur?'next':'prev');
     dotsEl.appendChild(d);
   });
 }
@@ -736,10 +744,22 @@ function initSwipe(gid){
     if(Math.abs(diff)>40){swiped=true;diff>0?galleryNext(gid):galleryPrev(gid);}
   },{passive:true});
 }
-function initCookieBanner(){if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
-function acceptAllCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));hideCookieBanner();}
-function rejectCookies(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:false,marketing:false}));hideCookieBanner();}
-function saveCookieSettings(){localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:document.getElementById('toggleAnalytics').checked,marketing:document.getElementById('toggleMarketing').checked}));hideCookieBanner();}
+function initCookieBanner(){
+  try{if(!localStorage.getItem('cookieConsent'))setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
+  catch(e){setTimeout(()=>document.getElementById('cookieBanner').classList.add('show'),800);}
+}
+function acceptAllCookies(){
+  try{localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:true,marketing:true}));}catch(e){}
+  hideCookieBanner();
+}
+function rejectCookies(){
+  try{localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:false,marketing:false}));}catch(e){}
+  hideCookieBanner();
+}
+function saveCookieSettings(){
+  try{localStorage.setItem('cookieConsent',JSON.stringify({necessary:true,analytics:document.getElementById('toggleAnalytics').checked,marketing:document.getElementById('toggleMarketing').checked}));}catch(e){}
+  hideCookieBanner();
+}
 function hideCookieBanner(){document.getElementById('cookieBanner').classList.remove('show');document.getElementById('cookieModal').classList.remove('open');}
 function openCookieSettings(){document.getElementById('cookieModal').classList.add('open');}
 function sendContact(){
@@ -759,12 +779,9 @@ function subscribe(){
   if(!slides.length)return;
   let cur=0;
   setInterval(()=>{
-    const prev=cur;cur=(cur+1)%slides.length;
-    slides[cur].style.transition='none';slides[cur].style.transform='translateX(100%)';slides[cur].style.opacity='1';
-    setTimeout(()=>{
-      slides[cur].style.transition='transform 0.8s ease';slides[cur].style.transform='translateX(0)';
-      slides[prev].style.transition='transform 0.8s ease';slides[prev].style.transform='translateX(-100%)';
-    },20);
+    slides[cur].style.opacity='0';
+    cur=(cur+1)%slides.length;
+    slides[cur].style.opacity='1';
   },3500);
 })();
 initStock();initCookieBanner();
