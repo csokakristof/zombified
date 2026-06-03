@@ -6,6 +6,7 @@
 <title>ZOMBIF!ED</title>
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
@@ -551,6 +552,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 let cartItems=[],selectedShipping='gls',selectedPayment='card',stripe,cardElement;
 window.addEventListener('load',()=>{
   stripe=Stripe('pk_test_51TeAq30lDcLkeMPeLSOzgCXuJ50IvRpcsFSIO7o7E0PtNS6dsmm6vrzEajD62jKsz3J60sqZOChVGpvOBM8D20kh00tLtg1fuq');
+  emailjs.init('1x3LGg1T29A7x0UY6');
 });
 const SHIPPING={gls:{name:'GLS Házhozszállítás',price:990},packeta:{name:'Packeta csomagpont',price:690}};
 const stock={'White Tee':{S:true,M:true,L:true},'Black Tee':{S:true,M:false,L:true}};
