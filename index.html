@@ -219,10 +219,12 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 .footer-copy{color:#333;font-size:.7rem;letter-spacing:1px}
 
 @media(min-width:601px){
-  .gallery-inner{max-width:900px}
-  .gallery-back{display:block}
-  .gallery-main-wrap{float:left;width:48%;margin-right:4%}
-  .gallery-dots{float:left;width:48%;margin-right:4%;justify-content:flex-start}
+  .gallery-inner{max-width:900px;display:flex;flex-wrap:wrap;gap:2rem}
+  .gallery-back{width:100%}
+  .gallery-main-wrap{width:48%;flex-shrink:0}
+  .gallery-dots{width:48%;justify-content:flex-start}
+  .gallery-name,.gallery-price,.gallery-inner .size-row,.gallery-inner .stock-info{width:calc(52% - 2rem);margin-left:auto}
+  .gallery-inner .add-btn{width:calc(52% - 2rem);margin-left:auto}
 }
 @media(max-width:600px){
   nav{padding:0 1rem;height:55px}
