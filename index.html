@@ -219,8 +219,10 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
 .footer-copy{color:#333;font-size:.7rem;letter-spacing:1px}
 
 @media(min-width:601px){
-  .product-card{display:grid;grid-template-columns:1fr 1fr}
-  .product-img{aspect-ratio:unset}
+  .gallery-inner{max-width:900px;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+  .gallery-main-wrap{margin-bottom:0}
+  .gallery-dots{justify-content:flex-start}
+  .gallery-back{grid-column:1/-1}
 }
 @media(max-width:600px){
   nav{padding:0 1rem;height:55px}
