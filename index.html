@@ -812,20 +812,27 @@ function subscribe(){
 (function(){
   const slides=document.querySelectorAll('.hslide');
   if(!slides.length)return;
-  let cur=0;
+  let cur=0,animating=false;
+  slides.forEach((s,i)=>{
+    s.style.position='absolute';s.style.inset='0';
+    s.style.transform=i===0?'translateX(0)':'translateX(100%)';
+    s.style.transition='none';s.style.opacity='1';
+  });
   setInterval(()=>{
+    if(animating)return;
+    animating=true;
     const prev=cur;
     cur=(cur+1)%slides.length;
     slides[cur].style.transition='none';
     slides[cur].style.transform='translateX(100%)';
-    slides[cur].style.opacity='1';
-    setTimeout(()=>{
-      slides[cur].style.transition='transform 0.8s ease';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      slides[cur].style.transition='transform 0.9s ease';
       slides[cur].style.transform='translateX(0)';
-      slides[prev].style.transition='transform 0.8s ease';
+      slides[prev].style.transition='transform 0.9s ease';
       slides[prev].style.transform='translateX(-100%)';
-    },20);
-  },3500);
+      setTimeout(()=>{animating=false;},950);
+    }));
+  },4000);
 })();
 initStock();initCookieBanner();
 </script>
