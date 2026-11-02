@@ -8,78 +8,161 @@
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-.lacquer{font-family:'Lacquer',cursive}
-.w{color:#fff}.p{color:#490e7e}
-header{display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem;height:64px;border-bottom:1px solid #490e7e55}
-header a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+:root{--p:#490e7e;--pl:#c084f5;--bg:#070707;--mono:'Courier New',Courier,monospace}
+html{background:var(--bg)}
+body{background:var(--bg);color:#e8e0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;position:relative}
+.w{color:#fff}.p{color:var(--p)}
+
+/* Szemcsés textúra */
+body::before{content:'';position:fixed;inset:-10%;pointer-events:none;z-index:50;opacity:.08;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation:grain .9s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
+/* Vignetta + szkennelő csíkok */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:49;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 3px),
+    radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.75) 100%)}
+
+header{position:relative;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem;height:64px;border-bottom:1px solid #490e7e44}
+header a{color:#8a8a8a;text-decoration:none;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:color .2s}
 header a:hover{color:#fff}
+header a.hl{color:var(--pl)}
 .logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
-main{flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1.2rem}
-.view{display:none;width:100%;max-width:460px;text-align:center}
-.view.on{display:block}
-h1{font-family:'Lacquer',cursive;font-size:clamp(2rem,8vw,3rem);letter-spacing:4px;line-height:1.1;margin-bottom:1rem}
-h2{font-family:'Lacquer',cursive;font-size:1.7rem;letter-spacing:3px;margin-bottom:.6rem}
-.tag{font-size:.72rem;letter-spacing:.35rem;color:#888;text-transform:uppercase;margin:.3rem 0}
-.lead{color:#999;font-size:.88rem;line-height:1.8;margin:1.2rem 0 1.8rem}
+
+main{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1.2rem}
+main::before{content:'';position:absolute;left:50%;top:50%;width:min(720px,140vw);height:min(720px,140vw);transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(circle,rgba(73,14,126,.32) 0%,transparent 62%);animation:breath 7s ease-in-out infinite}
+@keyframes breath{0%,100%{opacity:.45}50%{opacity:1}}
+
+.view{display:none;position:relative;width:100%;max-width:480px;text-align:center}
+.view.on{display:block;animation:viewIn .7s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateY(12px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+.eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.45rem;color:#5d5d5d;margin-bottom:1.1rem}
+h1{font-family:'Lacquer',cursive;font-size:clamp(2.1rem,9vw,3.3rem);letter-spacing:4px;line-height:1.08;margin-bottom:.4rem}
+h2{font-family:'Lacquer',cursive;font-size:clamp(1.6rem,6vw,2.2rem);letter-spacing:3px;margin-bottom:.5rem}
+
+/* Glitch a címen: ritkán, rövid időre villan */
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none}
+.glitch::before{color:var(--pl);animation:gl1 7s infinite steps(1)}
+.glitch::after{color:#fff;animation:gl2 9s infinite steps(1)}
+@keyframes gl1{0%,91%,100%{opacity:0;transform:none}92%{opacity:.85;transform:translate(-3px,0);clip-path:inset(8% 0 62% 0)}94%{opacity:.85;transform:translate(3px,1px);clip-path:inset(58% 0 12% 0)}96%{opacity:0}}
+@keyframes gl2{0%,95%,100%{opacity:0;transform:none}96%{opacity:.6;transform:translate(2px,0);clip-path:inset(30% 0 40% 0)}98%{opacity:0}}
+
+/* Terminál */
+.term{font-family:var(--mono);font-size:.78rem;letter-spacing:2px;text-align:left;line-height:2;margin:1.6rem auto 0;max-width:340px;min-height:8.2rem;color:#777}
+.term .warn{color:#cfcfcf}
+.term .ok{color:var(--pl)}
+.cursor{display:inline-block;width:.55em;height:1em;background:var(--pl);vertical-align:-.15em;margin-left:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.reveal{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none;pointer-events:auto}
+.lead{color:#9a9a9a;font-size:.84rem;line-height:1.9;letter-spacing:.5px;margin:1.2rem 0 1.6rem}
+.lead .strong{color:#fff;letter-spacing:3px;font-size:.78rem}
+.whisper{color:#666;font-size:.76rem;line-height:1.8;margin-bottom:1.6rem}
+.bar{display:inline-block;width:3.2em;height:.85em;vertical-align:-.1em;background:#171717;border-radius:1px;position:relative;overflow:hidden}
+.bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(192,132,245,.18),transparent);transform:translateX(-100%);animation:sheen 4s ease-in-out infinite}
+@keyframes sheen{60%,100%{transform:translateX(100%)}}
+
 .btns{display:flex;flex-direction:column;gap:.7rem}
-.btn{background:#490e7e;color:#fff;border:none;padding:.85rem 1.4rem;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Segoe UI',sans-serif;text-decoration:none;display:block}
-.btn:hover{background:#6d14b0}
-.btn:disabled{background:#2a2a2a;color:#666;cursor:not-allowed}
-.btn.ghost{background:transparent;border:1px solid #490e7e66;color:#c084f5}
-.btn.ghost:hover{background:#490e7e22}
+.btn{background:var(--p);color:#fff;border:1px solid var(--p);padding:.9rem 1.4rem;font-size:.78rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Segoe UI',sans-serif;text-decoration:none;display:block;transition:background .25s,box-shadow .25s}
+.btn:hover{background:#6d14b0;box-shadow:0 0 24px rgba(109,20,176,.45)}
+.btn:disabled{background:#222;border-color:#222;color:#666;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:transparent;border:1px solid #490e7e88;color:var(--pl)}
+.btn.ghost:hover{background:#490e7e22;box-shadow:0 0 18px rgba(73,14,126,.5)}
+:focus-visible{outline:1px solid var(--pl);outline-offset:3px}
+
 form{text-align:left;margin-top:1.4rem}
-label.l{display:block;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin:.9rem 0 .35rem}
-input[type=text],input[type=email],input[type=password]{width:100%;background:#0d0d0d;border:1px solid #490e7e44;color:#fff;padding:.75rem 1rem;font-size:.9rem;outline:none;border-radius:2px}
-input:focus{border-color:#490e7e}
-.chk{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;color:#999;margin-top:.9rem;line-height:1.5}
-.chk input{accent-color:#490e7e;margin-top:.2rem}
-form .btn{width:100%;margin-top:1.3rem}
-.msg{color:#e05;font-size:.78rem;min-height:1.1rem;margin-top:.9rem;text-align:left}
-.msg.ok{color:#c084f5}
-.back{display:inline-block;margin-top:1.4rem;color:#666;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;cursor:pointer}
+label.l{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#777;margin:1rem 0 .4rem}
+input[type=text],input[type=email],input[type=password]{width:100%;background:rgba(10,10,10,.85);border:1px solid #490e7e55;color:#fff;padding:.8rem 1rem;font-size:.9rem;outline:none;border-radius:2px;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--pl);box-shadow:0 0 18px rgba(73,14,126,.45)}
+input.key{font-family:var(--mono);letter-spacing:3px;text-transform:uppercase;text-align:center;font-size:.95rem}
+.chk{display:flex;gap:.6rem;align-items:flex-start;font-size:.76rem;color:#8a8a8a;margin-top:.9rem;line-height:1.5}
+.chk input{accent-color:var(--p);margin-top:.2rem}
+form .btn{width:100%;margin-top:1.4rem}
+.msg{font-family:var(--mono);color:#e05;font-size:.74rem;letter-spacing:1px;min-height:1.1rem;margin-top:.9rem;text-align:left}
+.msg.ok{color:var(--pl)}
+.back{display:inline-block;margin-top:1.5rem;color:#5d5d5d;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .2s}
 .back:hover{color:#fff}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.6rem 0}
-.tile{border:1px solid #490e7e33;background:#111;padding:1rem .6rem;border-radius:3px;font-size:.72rem;letter-spacing:2px;color:#777}
-.tile small{display:block;margin-top:.4rem;font-size:.6rem;color:#490e7e;letter-spacing:1.5px}
-.meta{color:#888;font-size:.8rem;line-height:1.9;margin-top:.8rem}
-.meta b{color:#c084f5;font-weight:600}
-footer{padding:1.2rem;text-align:center;color:#333;font-size:.7rem;letter-spacing:1px}
+
+/* Dashboard */
+.pulse{display:block;width:min(240px,70%);height:40px;margin:1.2rem auto .4rem;overflow:visible}
+.pulse polyline{fill:none;stroke:var(--pl);stroke-width:1.2;stroke-linejoin:round;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 3.4s linear infinite;filter:drop-shadow(0 0 4px rgba(192,132,245,.8))}
+@keyframes draw{0%{stroke-dashoffset:420;opacity:1}70%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.welcome{font-family:var(--mono);font-size:.82rem;letter-spacing:3px;color:#fff;min-height:1.4em;margin-top:.8rem}
+.sub{font-family:var(--mono);font-size:.68rem;letter-spacing:.4rem;color:#5d5d5d;margin:.5rem 0 1.4rem}
+.stats{max-width:340px;margin:0 auto 1.6rem}
+.stat{display:flex;gap:.6rem;align-items:baseline;font-family:var(--mono);font-size:.74rem;letter-spacing:2px;color:#6f6f6f;line-height:2.1}
+.stat i{flex:1;border-bottom:1px dotted #333;transform:translateY(-3px)}
+.stat b{font-weight:400;color:#cfcfcf}
+.stat b.alive{color:#3fa56b}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0 1.6rem}
+.tile{position:relative;overflow:hidden;border:1px solid #490e7e44;background:rgba(14,14,14,.85);padding:1.1rem .6rem;border-radius:3px;display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:default;transition:border-color .3s,box-shadow .3s}
+.tile:last-child{grid-column:1/-1}
+.tile:hover{border-color:var(--pl);box-shadow:0 0 22px rgba(73,14,126,.45)}
+.tile::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(192,132,245,.1),transparent);animation:sweep 6s ease-in-out infinite}
+.tile:nth-child(2n)::after{animation-delay:1.5s}
+.tile:nth-child(3n)::after{animation-delay:3s}
+@keyframes sweep{55%,100%{left:130%}}
+.tn{font-size:.7rem;letter-spacing:2.5px;color:#9a9a9a}
+.ts{font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:var(--p)}
+.tb{display:block;width:46%;height:5px;background:#171717;border-radius:1px}
+
+footer{position:relative;z-index:5;padding:1.2rem;text-align:center;color:#3a3a3a;font-family:var(--mono);font-size:.66rem;letter-spacing:.35rem}
+
+@media(max-width:480px){.term{font-size:.72rem;letter-spacing:1px}.eyebrow{letter-spacing:.3rem}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .reveal{opacity:1;transform:none;pointer-events:auto}
+  .pulse polyline{stroke-dashoffset:0}
+}
 </style>
 </head>
 <body>
 <header>
   <a href="/" class="logo"><span class="w">ZOMBI</span><span class="p">F!ED</span></a>
-  <a data-go="/network">Network</a>
+  <a href="/network" data-go="/network" class="hl">Network</a>
 </header>
 
 <main>
+  <!-- BEJÁRAT -->
   <section class="view" id="v-landing">
-    <h1><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
-    <div class="tag">Never Dead &nbsp; Never Done</div>
-    <p class="lead">NOT EVERYONE GETS ACCESS.<br>A NETWORK BEYOND THE ORDINARY.<br>YOUR CARD IS YOUR KEY.<br><br>A tagság egy jogosító ZOMBIF!ED-vásárlással jár: a csomagban egy aktiváló kártyát találsz.</p>
-    <div class="btns">
-      <a class="btn" data-go="/network/login" href="/network/login">Belépés</a>
-      <a class="btn ghost" data-go="/network/activate" href="/network/activate">Kártya aktiválása</a>
+    <div class="eyebrow">[ RESTRICTED ]</div>
+    <h1 class="glitch" data-text="NEVER DEAD NETWORK"><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
+    <div class="term" id="boot" aria-live="polite"></div>
+    <div class="reveal" id="landing-actions">
+      <p class="lead">NOT EVERYONE GETS ACCESS.<br>A NETWORK BEYOND THE ORDINARY.<br><span class="strong">YOUR CARD IS YOUR KEY.</span></p>
+      <p class="whisper">A tagság egy jogosító ZOMBIF!ED-vásárlással jár. A kártya a csomagban lapul. A többit <span class="bar"></span> mutatja meg.</p>
+      <div class="btns">
+        <a class="btn" data-go="/network/login" href="/network/login">Belépés</a>
+        <a class="btn ghost" data-go="/network/activate" href="/network/activate">Kártya aktiválása</a>
+      </div>
+      <a class="back" href="/">← Vissza a shopba</a>
     </div>
-    <a class="back" href="/">← Vissza a shopba</a>
   </section>
 
+  <!-- KULCS BEVITELE -->
   <section class="view" id="v-activate">
-    <h2>KÁRTYA AKTIVÁLÁSA</h2>
+    <div class="eyebrow">[ KEY REQUIRED ]</div>
+    <h2>YOUR CARD IS YOUR KEY.</h2>
     <p class="lead">Írd be a kártyán található kódot.</p>
     <form id="f-activate" autocomplete="off">
       <label class="l" for="code">Aktiváló kód</label>
-      <input type="text" id="code" placeholder="NDN-XXXX-XXXX-..." autocapitalize="characters" spellcheck="false" required>
-      <div class="msg" id="m-activate"></div>
+      <input class="key" type="text" id="code" placeholder="NDN-XXXX-XXXX-..." autocapitalize="characters" spellcheck="false" required>
+      <div class="msg" id="m-activate" role="status"></div>
       <button class="btn" type="submit">Continue</button>
     </form>
     <a class="back" data-go="/network">← Vissza</a>
   </section>
 
+  <!-- REGISZTRÁCIÓ -->
   <section class="view" id="v-register">
-    <h2>CSATLAKOZÁS</h2>
-    <p class="lead">A kód érvényes. Add meg az adataidat.</p>
+    <div class="eyebrow">[ KEY ACCEPTED ]</div>
+    <h2>JOIN THE NETWORK.</h2>
+    <p class="lead">A kulcs érvényes. Add meg az adataidat.</p>
     <form id="f-register">
       <label class="l" for="r-email">E-mail-cím</label>
       <input type="email" id="r-email" autocomplete="email" required>
@@ -91,34 +174,44 @@ footer{padding:1.2rem;text-align:center;color:#333;font-size:.7rem;letter-spacin
       <input type="password" id="r-p2" autocomplete="new-password" minlength="10" required>
       <label class="chk"><input type="checkbox" id="r-priv" required><span>Elfogadom az adatkezelési tájékoztatót.</span></label>
       <label class="chk"><input type="checkbox" id="r-terms" required><span>Elfogadom a felhasználási feltételeket.</span></label>
-      <div class="msg" id="m-register"></div>
+      <div class="msg" id="m-register" role="status"></div>
       <button class="btn" type="submit">Regisztráció</button>
     </form>
   </section>
 
+  <!-- BELÉPÉS -->
   <section class="view" id="v-login">
-    <h2>BELÉPÉS</h2>
+    <div class="eyebrow">[ AUTHENTICATION ]</div>
+    <h2>IDENTIFY YOURSELF.</h2>
     <form id="f-login">
       <label class="l" for="l-email">E-mail-cím</label>
       <input type="email" id="l-email" autocomplete="email" required>
       <label class="l" for="l-pass">Jelszó</label>
       <input type="password" id="l-pass" autocomplete="current-password" required>
-      <div class="msg" id="m-login"></div>
+      <div class="msg" id="m-login" role="status"></div>
       <button class="btn" type="submit">Belépés</button>
     </form>
     <a class="back" data-go="/network">← Vissza</a>
   </section>
 
+  <!-- DASHBOARD -->
   <section class="view" id="v-dashboard">
-    <h1><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
-    <p class="lead" style="margin-bottom:.4rem"><b id="d-welcome" style="color:#fff"></b><br>YOU ARE PART OF THE NETWORK.</p>
-    <div class="meta">Felhasználónév: <b id="d-name"></b><br>Csatlakozás: <b id="d-since"></b></div>
+    <div class="eyebrow">[ ACCESS GRANTED ]</div>
+    <h1 class="glitch" data-text="NEVER DEAD NETWORK"><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
+    <svg class="pulse" viewBox="0 0 240 40" aria-hidden="true"><polyline points="0,20 60,20 72,20 80,6 90,34 98,20 130,20 142,20 150,10 158,28 164,20 240,20"/></svg>
+    <div class="welcome" id="d-welcome"></div>
+    <div class="sub">YOU ARE PART OF THE NETWORK.</div>
+    <div class="stats">
+      <div class="stat"><span>STATUS</span><i></i><b class="alive">ALIVE</b></div>
+      <div class="stat"><span>USERNAME</span><i></i><b id="d-name"></b></div>
+      <div class="stat"><span>SINCE</span><i></i><b id="d-since"></b></div>
+    </div>
     <div class="tiles">
-      <div class="tile">HIDDEN DROPS<small>HAMAROSAN</small></div>
-      <div class="tile">THE SIGNAL<small>HAMAROSAN</small></div>
-      <div class="tile">MISSIONS<small>HAMAROSAN</small></div>
-      <div class="tile">THE MEMBERS<small>HAMAROSAN</small></div>
-      <div class="tile">ARCHIVE<small>HAMAROSAN</small></div>
+      <div class="tile"><span class="tn">HIDDEN DROPS</span><span class="ts">SEALED</span><i class="tb"></i></div>
+      <div class="tile"><span class="tn">THE SIGNAL</span><span class="ts">SEALED</span><i class="tb"></i></div>
+      <div class="tile"><span class="tn">MISSIONS</span><span class="ts">SEALED</span><i class="tb"></i></div>
+      <div class="tile"><span class="tn">THE MEMBERS</span><span class="ts">SEALED</span><i class="tb"></i></div>
+      <div class="tile"><span class="tn">ARCHIVE</span><span class="ts">SEALED</span><i class="tb"></i></div>
     </div>
     <button class="btn ghost" id="btn-logout" type="button">Kijelentkezés</button>
   </section>
@@ -128,7 +221,19 @@ footer{padding:1.2rem;text-align:center;color:#333;font-size:.7rem;letter-spacin
 <script>
 const $ = (s) => document.querySelector(s);
 const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard'];
-let pendingCode = null, me = null;
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let pendingCode = null, me = null, bootToken = 0;
+
+const BOOT_LINES = [
+  { t: '> SIGNAL DETECTED', c: '' },
+  { t: '> IDENTITY ........ UNKNOWN', c: '' },
+  { t: '> ACCESS .......... RESTRICTED', c: 'warn' },
+  { t: '> AWAITING KEY', c: 'ok', pause: 0 },
+];
+
+function seenBoot() { try { return sessionStorage.getItem('nd_boot') === '1'; } catch (e) { return false; } }
+function markBoot() { try { sessionStorage.setItem('nd_boot', '1'); } catch (e) {} }
 
 async function api(action, body) {
   const opt = body === undefined
@@ -143,7 +248,7 @@ function msg(sel, text, ok) { const el = $(sel); el.textContent = text || ''; el
 function clearMsgs() { document.querySelectorAll('.msg').forEach((e) => { e.textContent = ''; }); }
 function show(name) { VIEWS.forEach((v) => $('#v-' + v).classList.toggle('on', v === name)); }
 function setRobots(path) {
-  let m = document.querySelector('meta[name=robots]');
+  const m = document.querySelector('meta[name=robots]');
   m.content = path === '/network' ? 'index,follow' : 'noindex,nofollow';
 }
 function go(path) { history.pushState({}, '', path); return route(); }
@@ -153,11 +258,50 @@ async function busy(form, fn) {
   try { await fn(); } finally { b.disabled = false; }
 }
 
+// Gépelés-effekt. A token miatt oldalváltáskor a futó animáció megszakad.
+async function typeInto(el, text, speed, token) {
+  if (reduce) { el.textContent = text; return true; }
+  for (let i = 1; i <= text.length; i++) {
+    if (token !== bootToken) return false;
+    el.textContent = text.slice(0, i);
+    await sleep(speed);
+  }
+  return true;
+}
+
+async function boot() {
+  const box = $('#boot'), actions = $('#landing-actions');
+  const token = ++bootToken;
+  box.textContent = '';
+  actions.classList.remove('in');
+  const fast = reduce || seenBoot();
+  const cur = document.createElement('span');
+  cur.className = 'cursor';
+  for (const l of BOOT_LINES) {
+    if (token !== bootToken) return;
+    const row = document.createElement('div');
+    if (l.c) row.className = l.c;
+    const txt = document.createElement('span');
+    row.append(txt, cur);
+    box.appendChild(row);
+    if (fast) { txt.textContent = l.t; continue; }
+    if (!(await typeInto(txt, l.t, 28, token))) return;
+    await sleep(l.pause === undefined ? 260 : l.pause);
+  }
+  if (token !== bootToken) return;
+  if (!fast) await sleep(250);
+  if (token !== bootToken) return;
+  actions.classList.add('in');
+  markBoot();
+}
+
 async function route() {
+  bootToken++; // futó animációk megszakítása
   const path = location.pathname.replace(/\/+$/, '') || '/';
   setRobots(path);
   clearMsgs();
-  if (path === '/network') return show('landing');
+  window.scrollTo(0, 0);
+  if (path === '/network') { show('landing'); return boot(); }
   if (path === '/network/activate') return show('activate');
   if (path === '/network/register') return pendingCode ? show('register') : go('/network/activate');
   if (path === '/network/login') return show('login');
@@ -166,11 +310,12 @@ async function route() {
   const r = await api('me');
   if (!r.ok) return go('/network/login');
   me = r.data.member;
-  $('#d-welcome').textContent = 'WELCOME BACK, ' + me.label + '.';
+  $('#d-welcome').textContent = '';
   $('#d-name').textContent = me.username;
   $('#d-since').textContent = new Date(me.joinedAt).toLocaleDateString('hu-HU');
   if (path !== '/network/dashboard') history.replaceState({}, '', '/network/dashboard');
   show('dashboard');
+  typeInto($('#d-welcome'), 'WELCOME BACK, ' + me.label + '.', 34, bootToken);
 }
 
 window.addEventListener('popstate', route);
@@ -184,8 +329,15 @@ $('#f-activate').addEventListener('submit', (e) => {
   busy(e.target, async () => {
     const code = $('#code').value.trim();
     const r = await api('check-code', { code });
-    if (r.ok && r.data.valid) { pendingCode = code; $('#code').value = ''; go('/network/register'); }
-    else msg('#m-activate', r.data.error || 'Hiba történt.');
+    if (r.ok && r.data.valid) {
+      msg('#m-activate', '> KEY ACCEPTED', true);
+      pendingCode = code;
+      await sleep(reduce ? 0 : 750);
+      $('#code').value = '';
+      go('/network/register');
+    } else {
+      msg('#m-activate', r.data.error || 'Hiba történt.');
+    }
   });
 });
 
