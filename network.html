@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEVER DEAD NETWORK — ZOMBIF!ED</title>
+<meta name="robots" content="index,follow">
+<link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e8e0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.lacquer{font-family:'Lacquer',cursive}
+.w{color:#fff}.p{color:#490e7e}
+header{display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem;height:64px;border-bottom:1px solid #490e7e55}
+header a{color:#aaa;text-decoration:none;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+header a:hover{color:#fff}
+.logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1.2rem}
+.view{display:none;width:100%;max-width:460px;text-align:center}
+.view.on{display:block}
+h1{font-family:'Lacquer',cursive;font-size:clamp(2rem,8vw,3rem);letter-spacing:4px;line-height:1.1;margin-bottom:1rem}
+h2{font-family:'Lacquer',cursive;font-size:1.7rem;letter-spacing:3px;margin-bottom:.6rem}
+.tag{font-size:.72rem;letter-spacing:.35rem;color:#888;text-transform:uppercase;margin:.3rem 0}
+.lead{color:#999;font-size:.88rem;line-height:1.8;margin:1.2rem 0 1.8rem}
+.btns{display:flex;flex-direction:column;gap:.7rem}
+.btn{background:#490e7e;color:#fff;border:none;padding:.85rem 1.4rem;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-family:'Segoe UI',sans-serif;text-decoration:none;display:block}
+.btn:hover{background:#6d14b0}
+.btn:disabled{background:#2a2a2a;color:#666;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1px solid #490e7e66;color:#c084f5}
+.btn.ghost:hover{background:#490e7e22}
+form{text-align:left;margin-top:1.4rem}
+label.l{display:block;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#888;margin:.9rem 0 .35rem}
+input[type=text],input[type=email],input[type=password]{width:100%;background:#0d0d0d;border:1px solid #490e7e44;color:#fff;padding:.75rem 1rem;font-size:.9rem;outline:none;border-radius:2px}
+input:focus{border-color:#490e7e}
+.chk{display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;color:#999;margin-top:.9rem;line-height:1.5}
+.chk input{accent-color:#490e7e;margin-top:.2rem}
+form .btn{width:100%;margin-top:1.3rem}
+.msg{color:#e05;font-size:.78rem;min-height:1.1rem;margin-top:.9rem;text-align:left}
+.msg.ok{color:#c084f5}
+.back{display:inline-block;margin-top:1.4rem;color:#666;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.back:hover{color:#fff}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.6rem 0}
+.tile{border:1px solid #490e7e33;background:#111;padding:1rem .6rem;border-radius:3px;font-size:.72rem;letter-spacing:2px;color:#777}
+.tile small{display:block;margin-top:.4rem;font-size:.6rem;color:#490e7e;letter-spacing:1.5px}
+.meta{color:#888;font-size:.8rem;line-height:1.9;margin-top:.8rem}
+.meta b{color:#c084f5;font-weight:600}
+footer{padding:1.2rem;text-align:center;color:#333;font-size:.7rem;letter-spacing:1px}
+</style>
+</head>
+<body>
+<header>
+  <a href="/" class="logo"><span class="w">ZOMBI</span><span class="p">F!ED</span></a>
+  <a data-go="/network">Network</a>
+</header>
+
+<main>
+  <section class="view" id="v-landing">
+    <h1><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
+    <div class="tag">Never Dead &nbsp; Never Done</div>
+    <p class="lead">NOT EVERYONE GETS ACCESS.<br>A NETWORK BEYOND THE ORDINARY.<br>YOUR CARD IS YOUR KEY.<br><br>A tagság egy jogosító ZOMBIF!ED-vásárlással jár: a csomagban egy aktiváló kártyát találsz.</p>
+    <div class="btns">
+      <a class="btn" data-go="/network/login" href="/network/login">Belépés</a>
+      <a class="btn ghost" data-go="/network/activate" href="/network/activate">Kártya aktiválása</a>
+    </div>
+    <a class="back" href="/">← Vissza a shopba</a>
+  </section>
+
+  <section class="view" id="v-activate">
+    <h2>KÁRTYA AKTIVÁLÁSA</h2>
+    <p class="lead">Írd be a kártyán található kódot.</p>
+    <form id="f-activate" autocomplete="off">
+      <label class="l" for="code">Aktiváló kód</label>
+      <input type="text" id="code" placeholder="NDN-XXXX-XXXX-..." autocapitalize="characters" spellcheck="false" required>
+      <div class="msg" id="m-activate"></div>
+      <button class="btn" type="submit">Continue</button>
+    </form>
+    <a class="back" data-go="/network">← Vissza</a>
+  </section>
+
+  <section class="view" id="v-register">
+    <h2>CSATLAKOZÁS</h2>
+    <p class="lead">A kód érvényes. Add meg az adataidat.</p>
+    <form id="f-register">
+      <label class="l" for="r-email">E-mail-cím</label>
+      <input type="email" id="r-email" autocomplete="email" required>
+      <label class="l" for="r-user">Felhasználónév</label>
+      <input type="text" id="r-user" autocomplete="username" maxlength="20" required>
+      <label class="l" for="r-p1">Jelszó (min. 10 karakter)</label>
+      <input type="password" id="r-p1" autocomplete="new-password" minlength="10" required>
+      <label class="l" for="r-p2">Jelszó megerősítése</label>
+      <input type="password" id="r-p2" autocomplete="new-password" minlength="10" required>
+      <label class="chk"><input type="checkbox" id="r-priv" required><span>Elfogadom az adatkezelési tájékoztatót.</span></label>
+      <label class="chk"><input type="checkbox" id="r-terms" required><span>Elfogadom a felhasználási feltételeket.</span></label>
+      <div class="msg" id="m-register"></div>
+      <button class="btn" type="submit">Regisztráció</button>
+    </form>
+  </section>
+
+  <section class="view" id="v-login">
+    <h2>BELÉPÉS</h2>
+    <form id="f-login">
+      <label class="l" for="l-email">E-mail-cím</label>
+      <input type="email" id="l-email" autocomplete="email" required>
+      <label class="l" for="l-pass">Jelszó</label>
+      <input type="password" id="l-pass" autocomplete="current-password" required>
+      <div class="msg" id="m-login"></div>
+      <button class="btn" type="submit">Belépés</button>
+    </form>
+    <a class="back" data-go="/network">← Vissza</a>
+  </section>
+
+  <section class="view" id="v-dashboard">
+    <h1><span class="w">NEVER DEAD </span><span class="p">NETWORK</span></h1>
+    <p class="lead" style="margin-bottom:.4rem"><b id="d-welcome" style="color:#fff"></b><br>YOU ARE PART OF THE NETWORK.</p>
+    <div class="meta">Felhasználónév: <b id="d-name"></b><br>Csatlakozás: <b id="d-since"></b></div>
+    <div class="tiles">
+      <div class="tile">HIDDEN DROPS<small>HAMAROSAN</small></div>
+      <div class="tile">THE SIGNAL<small>HAMAROSAN</small></div>
+      <div class="tile">MISSIONS<small>HAMAROSAN</small></div>
+      <div class="tile">THE MEMBERS<small>HAMAROSAN</small></div>
+      <div class="tile">ARCHIVE<small>HAMAROSAN</small></div>
+    </div>
+    <button class="btn ghost" id="btn-logout" type="button">Kijelentkezés</button>
+  </section>
+</main>
+<footer>NEVER DEAD. NEVER DONE.</footer>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard'];
+let pendingCode = null, me = null;
+
+async function api(action, body) {
+  const opt = body === undefined
+    ? { method: 'GET' }
+    : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+  const r = await fetch('/api/network/' + action, { ...opt, credentials: 'same-origin' });
+  let data = {};
+  try { data = await r.json(); } catch (e) {}
+  return { ok: r.ok, status: r.status, data };
+}
+function msg(sel, text, ok) { const el = $(sel); el.textContent = text || ''; el.className = 'msg' + (ok ? ' ok' : ''); }
+function clearMsgs() { document.querySelectorAll('.msg').forEach((e) => { e.textContent = ''; }); }
+function show(name) { VIEWS.forEach((v) => $('#v-' + v).classList.toggle('on', v === name)); }
+function setRobots(path) {
+  let m = document.querySelector('meta[name=robots]');
+  m.content = path === '/network' ? 'index,follow' : 'noindex,nofollow';
+}
+function go(path) { history.pushState({}, '', path); return route(); }
+async function busy(form, fn) {
+  const b = form.querySelector('button[type=submit]');
+  b.disabled = true;
+  try { await fn(); } finally { b.disabled = false; }
+}
+
+async function route() {
+  const path = location.pathname.replace(/\/+$/, '') || '/';
+  setRobots(path);
+  clearMsgs();
+  if (path === '/network') return show('landing');
+  if (path === '/network/activate') return show('activate');
+  if (path === '/network/register') return pendingCode ? show('register') : go('/network/activate');
+  if (path === '/network/login') return show('login');
+
+  // minden más útvonal védett: a szerver dönt a munkamenetről
+  const r = await api('me');
+  if (!r.ok) return go('/network/login');
+  me = r.data.member;
+  $('#d-welcome').textContent = 'WELCOME BACK, ' + me.label + '.';
+  $('#d-name').textContent = me.username;
+  $('#d-since').textContent = new Date(me.joinedAt).toLocaleDateString('hu-HU');
+  if (path !== '/network/dashboard') history.replaceState({}, '', '/network/dashboard');
+  show('dashboard');
+}
+
+window.addEventListener('popstate', route);
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('[data-go]');
+  if (a) { e.preventDefault(); go(a.dataset.go); }
+});
+
+$('#f-activate').addEventListener('submit', (e) => {
+  e.preventDefault();
+  busy(e.target, async () => {
+    const code = $('#code').value.trim();
+    const r = await api('check-code', { code });
+    if (r.ok && r.data.valid) { pendingCode = code; $('#code').value = ''; go('/network/register'); }
+    else msg('#m-activate', r.data.error || 'Hiba történt.');
+  });
+});
+
+$('#f-register').addEventListener('submit', (e) => {
+  e.preventDefault();
+  busy(e.target, async () => {
+    const p1 = $('#r-p1').value, p2 = $('#r-p2').value;
+    if (p1 !== p2) return msg('#m-register', 'A két jelszó nem egyezik.');
+    const r = await api('register', {
+      code: pendingCode, email: $('#r-email').value, username: $('#r-user').value, password: p1,
+      acceptPrivacy: $('#r-priv').checked, acceptTerms: $('#r-terms').checked,
+    });
+    if (!r.ok) {
+      if (r.status === 400 && /kód/i.test(r.data.error || '')) pendingCode = null;
+      return msg('#m-register', r.data.error || 'Hiba történt.');
+    }
+    pendingCode = null;
+    $('#r-p1').value = ''; $('#r-p2').value = '';
+    if (r.data.loggedIn) go('/network/dashboard');
+    else { await go('/network/login'); msg('#m-login', 'A fiók létrejött (' + r.data.label + '). Jelentkezz be.', true); }
+  });
+});
+
+$('#f-login').addEventListener('submit', (e) => {
+  e.preventDefault();
+  busy(e.target, async () => {
+    const r = await api('login', { email: $('#l-email').value, password: $('#l-pass').value });
+    if (r.ok) { $('#l-pass').value = ''; go('/network/dashboard'); }
+    else msg('#m-login', r.data.error || 'Hiba történt.');
+  });
+});
+
+$('#btn-logout').addEventListener('click', async () => {
+  await api('logout', {});
+  me = null;
+  go('/network');
+});
+
+route();
+</script>
+</body>
+</html>
