@@ -1,1 +1,19 @@
-
+{
+  "rewrites": [
+    { "source": "/network", "destination": "/network.html" },
+    { "source": "/network/:path*", "destination": "/network.html" }
+  ],
+  "headers": [
+    {
+      "source": "/network/:path*",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/network/:path+",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}
