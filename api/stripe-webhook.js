@@ -1,5 +1,6 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
+const { ensureMembershipCode } = require('../lib/network');
 
 function readRaw(req) {
   return new Promise((resolve, reject) => {
@@ -64,8 +65,16 @@ async function handler(req, res) {
           const { data: result, error } = await supabase.rpc('finalize_paid_order', {
             p_order_id: order.id,
           });
-          if (error) throw error;
+                    if (error) throw error;
           console.log('Rendelés feldolgozva:', order.id, result);
+
+          if (result === 'paid' || result === 'already_processed') {
+            const { data: fresh } = await supabase
+              .from('orders').select('status').eq('id', order.id).single();
+            if (fresh && fresh.status === 'paid') {
+              await ensureMembershipCode(supabase, order.id);
+            }
+          }
         }
       }
     } else if (event.type === 'payment_intent.payment_failed') {
