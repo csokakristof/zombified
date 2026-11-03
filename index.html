@@ -260,6 +260,34 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
   .gallery-nav-links a{font-size:.68rem;letter-spacing:1px}
   .gallery-inner{padding:1.5rem 1rem 4rem}
 }
+  /* NETWORK gomb a menüben */
+.nav-links a.nav-network{
+  color:#c084f5;
+  padding:.3rem .85rem;
+  border:1px solid #490e7e99;
+  border-radius:2px;
+  background:rgba(73,14,126,.12);
+  position:relative;
+  animation:ndGlow 3.6s ease-in-out infinite;
+}
+.nav-links a.nav-network::before{
+  content:'';position:absolute;top:-3px;right:-3px;width:6px;height:6px;border-radius:50%;
+  background:#c084f5;box-shadow:0 0 8px #c084f5;
+  animation:ndDot 1.8s ease-in-out infinite;
+}
+.nav-links a.nav-network:hover{
+  color:#fff;background:#490e7e;border-color:#6d14b0;
+  box-shadow:0 0 18px rgba(109,20,176,.6);animation:none;
+}
+@keyframes ndGlow{0%,100%{box-shadow:0 0 0 rgba(109,20,176,0)}50%{box-shadow:0 0 14px rgba(109,20,176,.55)}}
+@keyframes ndDot{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){
+  .nav-links a.nav-network,.nav-links a.nav-network::before{animation:none}
+}
+@media(max-width:600px){
+  .nav-links{gap:.8rem}
+  .nav-links a.nav-network{padding:.25rem .55rem;font-size:.64rem;letter-spacing:1px}
+}
 </style>
 </head>
 <body>
@@ -454,7 +482,7 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <a onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop</a>
     <a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Rólunk</a>
     <a onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Kapcsolat</a>
-    <a href="/network">Network</a>
+    <a href="/network" class="nav-network">Network</a>
   </div>
   <button class="nav-cart" id="cartBtn" onclick="openCart()">Kosár (0)</button>
 </nav>
