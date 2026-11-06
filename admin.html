@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ADMIN — NEVER DEAD NETWORK</title>
+<link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#490e7e;--pl:#c084f5;--pb:#7a1fd1;--bg:#0a0a0a;--mono:'Courier New',Courier,monospace}
+body{background:var(--bg);color:#e8e0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+header{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:0 1.5rem;height:60px;border-bottom:1px solid #490e7e55}
+.logo{font-family:'Lacquer',cursive;font-size:1.25rem;letter-spacing:2px;text-decoration:none}
+.w{color:#fff}.p{color:var(--p)}
+.role{font-family:var(--mono);font-size:.66rem;letter-spacing:2px;color:var(--pl);border:1px solid #490e7e88;padding:.25rem .6rem;border-radius:2px;white-space:nowrap}
+main{max-width:920px;margin:0 auto;padding:1.6rem 1.2rem 4rem}
+h1{font-family:'Lacquer',cursive;font-size:1.6rem;letter-spacing:3px;margin-bottom:1.2rem}
+.panel{border:1px solid #490e7e44;background:#0f0f0f;border-radius:3px;padding:1.1rem;margin-bottom:1.2rem}
+.panel h2{font-family:var(--mono);font-size:.7rem;letter-spacing:.3rem;color:#8a8a8a;font-weight:400;margin-bottom:.9rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.7rem}
+.stat{border:1px solid #490e7e33;padding:.8rem;border-radius:2px;background:#0b0b0b}
+.stat b{display:block;font-family:var(--mono);font-size:1.4rem;color:#fff;font-weight:400}
+.stat span{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;color:#777}
+.msg{font-family:var(--mono);font-size:.75rem;letter-spacing:1px;color:#e05;min-height:1.1rem;margin-top:.6rem}
+.msg.ok{color:var(--pl)}
+.btn{background:var(--p);color:#fff;border:1px solid var(--p);padding:.55rem 1rem;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px}
+.btn:hover{background:#6d14b0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.danger{background:transparent;border-color:#8a1f3c;color:#e0587a}
+.btn.danger:hover{background:#8a1f3c;color:#fff}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.card{border:1px solid #490e7e33;background:#0b0b0b;border-radius:2px;padding:.5rem;font-family:var(--mono);font-size:.62rem;color:#888;line-height:1.7;letter-spacing:1px;word-break:break-word}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;margin-bottom:.4rem;background:#111}
+.card .btn{width:100%;margin-top:.4rem;padding:.4rem}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.68rem;letter-spacing:1px}
+th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid #1d1d1d;color:#aaa;vertical-align:top}
+th{color:#666;font-weight:400}
+.denied{text-align:center;padding:4rem 1rem;color:#888;font-family:var(--mono);letter-spacing:2px;font-size:.8rem;line-height:2.2}
+.denied a{color:var(--pl)}
+.hide{display:none}
+input[type=file]{color:#aaa;font-size:.8rem;max-width:100%}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="/"><span class="w">ZOMBI</span><span class="p">F!ED</span></a>
+  <span class="role" id="role">ADMIN</span>
+</header>
+
+<main>
+  <div class="denied hide" id="denied">
+    <div>NINCS HOZZÁFÉRÉS.</div>
+    <div><a href="/network/login">Belépés a Networkbe</a></div>
+  </div>
+
+  <div id="app" class="hide">
+    <h1>ADMIN</h1>
+
+    <div class="panel"><h2>ÁTTEKINTÉS</h2><div class="stats" id="stats"></div></div>
+
+    <div class="panel">
+      <h2>KÉPFELTÖLTÉS TESZT</h2>
+      <input type="file" id="t-file" accept="image/jpeg,image/png,image/webp">
+      <div class="msg" id="t-msg" role="status"></div>
+    </div>
+
+    <div class="panel"><h2>FELTÖLTÖTT KÉPEK</h2><div class="list" id="uploads"></div></div>
+
+    <div class="panel hide" id="audit-panel">
+      <h2>AUDITNAPLÓ</h2>
+      <div class="tw"><table><thead><tr><th>IDŐ</th><th>ADMIN</th><th>MŰVELET</th><th>CÉL</th></tr></thead><tbody id="audit"></tbody></table></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+let role = null;
+
+async function api(path, opt) {
+  const r = await fetch('/api/network/' + path, { credentials: 'same-origin', ...(opt || {}) });
+  let data = {};
+  try { data = await r.json(); } catch (e) {}
+  return { ok: r.ok, status: r.status, data };
+}
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function tmsg(t, ok) { const m = $('#t-msg'); m.textContent = t || ''; m.className = 'msg' + (ok ? ' ok' : ''); }
+const kb = (b) => Math.round(b / 1024) + ' KB';
+const when = (x) => new Date(x).toLocaleString('hu-HU');
+
+// Kép előkészítése feltöltés előtt: méretezés + újrakódolás (a metaadatok ekkor törlődnek)
+async function prepareImage(file) {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error('Csak JPG, PNG vagy WebP kép tölthető fel.');
+  if (file.size > 30 * 1024 * 1024) throw new Error('A kép túl nagy (max. 30 MB).');
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  try {
+    await new Promise((ok, no) => { img.onload = ok; img.onerror = () => no(new Error('A fájl nem érvényes kép.')); img.src = url; });
+  } finally { URL.revokeObjectURL(url); }
+  const scale = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+  const w = Math.max(1, Math.round(img.naturalWidth * scale));
+  const h = Math.max(1, Math.round(img.naturalHeight * scale));
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(img, 0, 0, w, h);
+  for (const q of [0.85, 0.7, 0.55]) {
+    const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', q));
+    if (blob && blob.size <= 3900000) return blob;
+  }
+  throw new Error('A kép feldolgozás után is túl nagy.');
+}
+
+async function loadStats() {
+  const r = await api('admin/stats');
+  if (!r.ok) return;
+  const box = $('#stats'); box.textContent = '';
+  (r.data.items || []).forEach(([label, val]) => {
+    const d = el('div', 'stat');
+    d.appendChild(el('b', '', String(val)));
+    d.appendChild(el('span', '', label));
+    box.appendChild(d);
+  });
+}
+
+async function loadUploads() {
+  const r = await api('admin/uploads');
+  const box = $('#uploads'); box.textContent = '';
+  if (!r.ok) { box.appendChild(el('div', 'card', 'Hiba a lista betöltésekor.')); return; }
+  if (!r.data.items.length) { box.appendChild(el('div', 'card', 'Nincs feltöltött kép.')); return; }
+  r.data.items.forEach((u) => {
+    const c = el('div', 'card');
+    const img = document.createElement('img');
+    img.loading = 'lazy'; img.alt = '';
+    img.src = '/api/network/media?id=' + encodeURIComponent(u.id);
+    c.appendChild(img);
+    c.appendChild(el('div', '', u.owner + ' · ' + u.purpose));
+    c.appendChild(el('div', '', u.width + '×' + u.height + ' · ' + kb(u.bytes)));
+    c.appendChild(el('div', '', when(u.createdAt)));
+    const b = el('button', 'btn danger', 'Eltávolítás');
+    b.type = 'button';
+    b.addEventListener('click', () => removeUpload(u.id, b));
+    c.appendChild(b);
+    box.appendChild(c);
+  });
+}
+
+async function removeUpload(id, btn) {
+  if (!confirm('Biztosan eltávolítod ezt a képet?')) return;
+  btn.disabled = true;
+  const r = await api('admin/upload-remove', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }),
+  });
+  if (!r.ok) { alert(r.data.error || 'Hiba történt.'); btn.disabled = false; return; }
+  loadUploads(); loadStats();
+  if (role === 'super_admin') loadAudit();
+}
+
+async function loadAudit() {
+  const r = await api('admin/audit');
+  const tb = $('#audit'); tb.textContent = '';
+  if (!r.ok) return;
+  r.data.items.forEach((l) => {
+    const tr = document.createElement('tr');
+    [when(l.createdAt), l.admin, l.action, l.target].forEach((t) => tr.appendChild(el('td', '', t)));
+    tb.appendChild(tr);
+  });
+  if (!r.data.items.length) { const tr = document.createElement('tr'); tr.appendChild(el('td', '', 'Még nincs bejegyzés.')); tb.appendChild(tr); }
+}
+
+$('#t-file').addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  tmsg('Feldolgozás...', true);
+  try {
+    const blob = await prepareImage(f);
+    const r = await fetch('/api/network/upload?purpose=test', {
+      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'image/jpeg' }, body: blob,
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Feltöltési hiba.');
+    tmsg('Sikeres feltöltés: ' + d.width + '×' + d.height, true);
+    loadUploads(); loadStats();
+  } catch (err) {
+    tmsg(err.message || 'Hiba történt.');
+  }
+  e.target.value = '';
+});
+
+(async function init() {
+  const w = await api('admin/whoami');
+  if (!w.ok) { $('#denied').classList.remove('hide'); return; }
+  role = w.data.role;
+  $('#role').textContent = (role === 'super_admin' ? 'SUPER ADMIN' : 'MODERATOR') + ' · ' + w.data.label;
+  $('#app').classList.remove('hide');
+  loadStats(); loadUploads();
+  if (role === 'super_admin') { $('#audit-panel').classList.remove('hide'); loadAudit(); }
+})();
+</script>
+</body>
+</html>
