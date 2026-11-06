@@ -2,7 +2,7 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>NEVER DEAD NETWORK — ZOMBIF!ED</title>
 <meta name="robots" content="index,follow">
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
@@ -160,6 +160,15 @@ footer{position:relative;z-index:5;padding:1.2rem;text-align:center;color:#3a3a3
   .reveal{opacity:1;transform:none;pointer-events:auto}
   .pulse polyline{stroke-dashoffset:0}
 }
+/* Mobil stabilitás: nincs vízszintes elbillenés, nincs nagyítás */
+@supports (overflow:clip){html,body{overflow-x:clip}}
+html,body{max-width:100%;overscroll-behavior-x:none}
+html{touch-action:manipulation}
+body{min-height:100dvh}
+/* A szemcsés réteg és a lila fény többé nem lóg ki a képernyőből */
+body::before{inset:0;animation-name:grain2}
+@keyframes grain2{0%{background-position:0 0}25%{background-position:-40px 30px}50%{background-position:30px -40px}75%{background-position:-30px -30px}100%{background-position:0 0}}
+main::before{width:min(720px,100vw);height:min(720px,100vw)}
 </style>
 </head>
 <body>
@@ -589,6 +598,11 @@ $('#btn-logout').addEventListener('click', async () => {
   me = null;
   go('/network');
 });
+
+// Nagyítás tiltása: iOS csippentés, trackpad-csippentés és Ctrl+görgő
+document.addEventListener('gesturestart', (e) => e.preventDefault());
+document.addEventListener('gesturechange', (e) => e.preventDefault());
+document.addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 
 route();
 </script>
