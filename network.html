@@ -8,10 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Lacquer&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--p:#490e7e;--pl:#c084f5;--bg:#070707;--mono:'Courier New',Courier,monospace}
+:root{--p:#490e7e;--pl:#c084f5;--pb:#7a1fd1;--bg:#070707;--mono:'Courier New',Courier,monospace}
 html{background:var(--bg)}
 body{background:var(--bg);color:#e8e0f0;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;position:relative}
 .w{color:#fff}.p{color:var(--p)}
+.bang{color:var(--pb);font-weight:inherit}
 
 /* Szemcsés textúra */
 body::before{content:'';position:fixed;inset:-10%;pointer-events:none;z-index:50;opacity:.08;
@@ -27,8 +28,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:49;
 header{position:relative;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 1.5rem;height:64px;border-bottom:1px solid #490e7e44}
 header a{color:#8a8a8a;text-decoration:none;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:color .2s}
 header a:hover{color:#fff}
-header a.hl{color:var(--pl)}
 .logo{font-family:'Lacquer',cursive;font-size:1.3rem;letter-spacing:2px}
+/* Z! jel: tisztán dizájnelem, nem kattintható */
+.zmark{display:inline-flex;width:36px;height:36px;pointer-events:none;user-select:none;
+  filter:drop-shadow(0 0 6px rgba(122,31,209,.75));animation:zpulse 5s ease-in-out infinite}
+.zmark svg{width:100%;height:100%}
+@keyframes zpulse{0%,100%{opacity:.8;filter:drop-shadow(0 0 4px rgba(122,31,209,.5))}50%{opacity:1;filter:drop-shadow(0 0 11px rgba(122,31,209,.95))}}
 
 main{position:relative;z-index:5;flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1.2rem}
 main::before{content:'';position:absolute;left:50%;top:50%;width:min(720px,140vw);height:min(720px,140vw);transform:translate(-50%,-50%);pointer-events:none;
@@ -36,6 +41,7 @@ main::before{content:'';position:absolute;left:50%;top:50%;width:min(720px,140vw
 @keyframes breath{0%,100%{opacity:.45}50%{opacity:1}}
 
 .view{display:none;position:relative;width:100%;max-width:480px;text-align:center}
+#v-dashboard{max-width:560px}
 .view.on{display:block;animation:viewIn .7s ease both}
 @keyframes viewIn{from{opacity:0;transform:translateY(12px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
 
@@ -43,7 +49,7 @@ main::before{content:'';position:absolute;left:50%;top:50%;width:min(720px,140vw
 h1{font-family:'Lacquer',cursive;font-size:clamp(2.1rem,9vw,3.3rem);letter-spacing:4px;line-height:1.08;margin-bottom:.4rem}
 h2{font-family:'Lacquer',cursive;font-size:clamp(1.6rem,6vw,2.2rem);letter-spacing:3px;margin-bottom:.5rem}
 
-/* Glitch a címen: ritkán, rövid időre villan */
+/* Glitch a címen */
 .glitch{position:relative;display:inline-block}
 .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none}
 .glitch::before{color:var(--pl);animation:gl1 7s infinite steps(1)}
@@ -88,32 +94,67 @@ form .btn{width:100%;margin-top:1.4rem}
 .back{display:inline-block;margin-top:1.5rem;color:#5d5d5d;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .2s}
 .back:hover{color:#fff}
 
+/* Ikonok */
+.ico{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--pl)}
+.ico.big{width:88px;height:88px;display:block;margin:.4rem auto 1.1rem;filter:drop-shadow(0 0 12px rgba(192,132,245,.55))}
+
 /* Dashboard */
-.pulse{display:block;width:min(240px,70%);height:40px;margin:1.2rem auto .4rem;overflow:visible}
+.pulse{display:block;width:min(240px,70%);height:40px;margin:1rem auto .4rem;overflow:visible}
 .pulse polyline{fill:none;stroke:var(--pl);stroke-width:1.2;stroke-linejoin:round;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 3.4s linear infinite;filter:drop-shadow(0 0 4px rgba(192,132,245,.8))}
 @keyframes draw{0%{stroke-dashoffset:420;opacity:1}70%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
-.welcome{font-family:var(--mono);font-size:.82rem;letter-spacing:3px;color:#fff;min-height:1.4em;margin-top:.8rem}
-.sub{font-family:var(--mono);font-size:.68rem;letter-spacing:.4rem;color:#5d5d5d;margin:.5rem 0 1.4rem}
-.stats{max-width:340px;margin:0 auto 1.6rem}
-.stat{display:flex;gap:.6rem;align-items:baseline;font-family:var(--mono);font-size:.74rem;letter-spacing:2px;color:#6f6f6f;line-height:2.1}
-.stat i{flex:1;border-bottom:1px dotted #333;transform:translateY(-3px)}
-.stat b{font-weight:400;color:#cfcfcf}
-.stat b.alive{color:#3fa56b}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0 1.6rem}
-.tile{position:relative;overflow:hidden;border:1px solid #490e7e44;background:rgba(14,14,14,.85);padding:1.1rem .6rem;border-radius:3px;display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:default;transition:border-color .3s,box-shadow .3s}
-.tile:last-child{grid-column:1/-1}
-.tile:hover{border-color:var(--pl);box-shadow:0 0 22px rgba(73,14,126,.45)}
-.tile::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(192,132,245,.1),transparent);animation:sweep 6s ease-in-out infinite}
+.welcome{font-family:var(--mono);font-size:.8rem;letter-spacing:3px;color:#fff;min-height:1.4em;margin-top:.6rem}
+.sub{font-family:var(--mono);font-size:.66rem;letter-spacing:.4rem;color:#5d5d5d;margin:.5rem 0 0}
+
+.idcard{display:flex;align-items:center;gap:1rem;text-align:left;text-decoration:none;color:inherit;margin-top:1.4rem;position:relative;overflow:hidden;
+  border:1px solid #490e7e77;background:linear-gradient(135deg,rgba(30,10,52,.92),rgba(12,12,12,.92));padding:1rem 1.1rem;border-radius:3px;
+  transition:border-color .3s,box-shadow .3s}
+.idcard:hover{border-color:var(--pl);box-shadow:0 0 26px rgba(73,14,126,.55)}
+.idcard .ico{width:48px;height:48px;flex:none}
+.idmain{flex:1;min-width:0}
+.idname{font-family:'Lacquer',cursive;font-size:1.55rem;letter-spacing:2px;color:#fff;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.idsub{font-family:var(--mono);font-size:.72rem;letter-spacing:3px;color:var(--pl);margin:.25rem 0 .55rem}
+.idrow{display:flex;gap:.4rem 1.2rem;flex-wrap:wrap;font-family:var(--mono);font-size:.64rem;letter-spacing:2px;color:#777}
+.idrow b{font-weight:400;color:#cfcfcf}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#3fa56b;box-shadow:0 0 8px #3fa56b;margin-right:6px;vertical-align:1px;animation:dotg 2s ease-in-out infinite}
+@keyframes dotg{0%,100%{opacity:.45}50%{opacity:1}}
+.idgo{font-family:var(--mono);color:#5d5d5d;font-size:1.1rem;transition:color .3s,transform .3s}
+.idcard:hover .idgo{color:var(--pl);transform:translateX(3px)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0 1.6rem}
+.tile{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:.55rem;text-align:center;text-decoration:none;cursor:pointer;color:inherit;
+  border:1px solid #490e7e44;background:rgba(14,14,14,.88);padding:1.3rem .8rem 1.1rem;border-radius:3px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.tile:hover{border-color:var(--pl);box-shadow:0 0 24px rgba(73,14,126,.5);transform:translateY(-2px)}
+.tile .ico{width:42px;height:42px;transition:transform .35s,filter .35s}
+.tile:hover .ico{transform:translateY(-3px) scale(1.07);filter:drop-shadow(0 0 8px rgba(192,132,245,.75))}
+.tile::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(192,132,245,.09),transparent);animation:sweep 6s ease-in-out infinite;pointer-events:none}
 .tile:nth-child(2n)::after{animation-delay:1.5s}
 .tile:nth-child(3n)::after{animation-delay:3s}
 @keyframes sweep{55%,100%{left:130%}}
-.tn{font-size:.7rem;letter-spacing:2.5px;color:#9a9a9a}
-.ts{font-family:var(--mono);font-size:.6rem;letter-spacing:3px;color:var(--p)}
-.tb{display:block;width:46%;height:5px;background:#171717;border-radius:1px}
+.tn{font-size:.7rem;letter-spacing:2.5px;color:#d0d0d0;line-height:1.5}
+.tt{font-size:.68rem;color:#6f6f6f;line-height:1.5}
+.ts{font-family:var(--mono);font-size:.58rem;letter-spacing:3px;color:var(--p)}
+
+.stats{max-width:340px;margin:0 auto 1.4rem}
+.stat{display:flex;gap:.6rem;align-items:baseline;font-family:var(--mono);font-size:.74rem;letter-spacing:2px;color:#6f6f6f;line-height:2.1}
+.stat i{flex:1;border-bottom:1px dotted #333;transform:translateY(-3px)}
+.stat b{font-weight:400;color:#cfcfcf}
+.stat b.online{color:#3fa56b}
+.stat b.sealed{color:var(--pb)}
+
+.soonbox{text-align:left;max-width:360px;margin:0 auto 1.4rem;font-family:var(--mono);font-size:.74rem;letter-spacing:1px;color:#8a8a8a;line-height:1.9}
+.soonbox h4{font-weight:400;font-size:.62rem;letter-spacing:.35rem;color:#5d5d5d;margin-bottom:.4rem}
+.soonbox li{list-style:none;padding-left:1.1rem;position:relative}
+.soonbox li::before{content:'>';position:absolute;left:0;color:var(--pb)}
+.note{color:#5d5d5d;font-size:.72rem;line-height:1.7;margin-top:.6rem}
 
 footer{position:relative;z-index:5;padding:1.2rem;text-align:center;color:#3a3a3a;font-family:var(--mono);font-size:.66rem;letter-spacing:.35rem}
 
-@media(max-width:480px){.term{font-size:.72rem;letter-spacing:1px}.eyebrow{letter-spacing:.3rem}}
+@media(max-width:480px){
+  .term{font-size:.72rem;letter-spacing:1px}
+  .eyebrow{letter-spacing:.3rem}
+  .tn{letter-spacing:1.5px}
+  .idname{font-size:1.3rem}
+}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
   .reveal{opacity:1;transform:none;pointer-events:auto}
@@ -122,9 +163,66 @@ footer{position:relative;z-index:5;padding:1.2rem;text-align:center;color:#3a3a3
 </style>
 </head>
 <body>
+
+<!-- Ikon-készlet -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- Z! jel (a ruhán lévő hímzés alapján, közelítés) -->
+  <symbol id="i-zmark" viewBox="0 0 60 60">
+    <g transform="rotate(-6 30 30)" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.2">
+      <path d="M9 14 H33 L10 46 H34" stroke="#ffffff"/>
+      <path d="M46 12 L45 33" stroke="#7a1fd1"/>
+      <circle cx="44.5" cy="43" r="3.2" fill="#7a1fd1" stroke="none"/>
+    </g>
+  </symbol>
+  <!-- NEW DROPS: csepp hullámgyűrűvel -->
+  <symbol id="i-drop" viewBox="0 0 48 48">
+    <path d="M24 5 C24 5 12 19 12 28 a12 12 0 0 0 24 0 C36 19 24 5 24 5 Z"/>
+    <path d="M18.5 29.5 a6 6 0 0 0 5 5"/>
+    <ellipse cx="24" cy="44.5" rx="11" ry="2"/>
+  </symbol>
+  <!-- THE VOTE: bal oldalt felfelé, jobb oldalt lefelé mutató nyíl -->
+  <symbol id="i-vote" viewBox="0 0 48 48">
+    <path d="M15 40 V10"/><path d="M7 18 L15 9 L23 18"/>
+    <path d="M33 8 V38"/><path d="M25 30 L33 39 L41 30"/>
+  </symbol>
+  <!-- THE COMMUN!TY: három alak -->
+  <symbol id="i-community" viewBox="0 0 48 48">
+    <circle cx="24" cy="15" r="5.5"/><path d="M13.5 39 v-3 a10.5 10.5 0 0 1 21 0 v3"/>
+    <circle cx="9.5" cy="22" r="4"/><path d="M3.5 37 v-1 a6.5 6.5 0 0 1 8 -6.3"/>
+    <circle cx="38.5" cy="22" r="4"/><path d="M44.5 37 v-1 a6.5 6.5 0 0 0 -8 -6.3"/>
+  </symbol>
+  <!-- WALL OF THE AWAKEN: faliújság Z!-vel -->
+  <symbol id="i-wall" viewBox="0 0 48 48">
+    <rect x="6" y="9" width="36" height="29" rx="2"/>
+    <circle cx="11" cy="9" r="1.6" fill="currentColor"/><circle cx="37" cy="9" r="1.6" fill="currentColor"/>
+    <path d="M15 19 H25 L15 30 H25"/>
+    <path d="M32 18 V27"/><circle cx="32" cy="31.5" r="1" fill="currentColor"/>
+    <path d="M24 38 V43 M17 43 H31"/>
+  </symbol>
+  <!-- MISS!ONS: nagyító -->
+  <symbol id="i-mission" viewBox="0 0 48 48">
+    <circle cx="20.5" cy="20.5" r="13"/>
+    <path d="M13 17 a8 8 0 0 1 6 -5"/>
+    <path d="M30.5 30.5 L43 43" stroke-width="2.6"/>
+  </symbol>
+  <!-- BEH!ND THE SCENES: csapó Z!-vel -->
+  <symbol id="i-scenes" viewBox="0 0 48 48">
+    <g transform="rotate(-10 6 18)"><rect x="6" y="9" width="36" height="8" rx="1.5"/><path d="M15 9 L11 17 M25 9 L21 17 M35 9 L31 17"/></g>
+    <rect x="6" y="19" width="36" height="22" rx="2"/>
+    <path d="M17 25 H25 L17 35 H25"/>
+    <path d="M32 25 V31"/><circle cx="32" cy="35" r="1" fill="currentColor"/>
+  </symbol>
+  <!-- SUBJECT ID: azonosítókártya -->
+  <symbol id="i-id" viewBox="0 0 48 48">
+    <rect x="5" y="10" width="38" height="28" rx="3"/>
+    <circle cx="16" cy="22" r="4.2"/><path d="M8.5 33 a7.5 6 0 0 1 15 0"/>
+    <path d="M28 20 H38 M28 26 H38 M28 32 H34"/>
+  </symbol>
+</svg>
+
 <header>
   <a href="/" class="logo"><span class="w">ZOMBI</span><span class="p">F!ED</span></a>
-  <a href="/network" data-go="/network" class="hl">Network</a>
+  <span class="zmark" aria-hidden="true"><svg><use href="#i-zmark"/></svg></span>
 </header>
 
 <main>
@@ -201,26 +299,77 @@ footer{position:relative;z-index:5;padding:1.2rem;text-align:center;color:#3a3a3
     <svg class="pulse" viewBox="0 0 240 40" aria-hidden="true"><polyline points="0,20 60,20 72,20 80,6 90,34 98,20 130,20 142,20 150,10 158,28 164,20 240,20"/></svg>
     <div class="welcome" id="d-welcome"></div>
     <div class="sub">YOU ARE PART OF THE NETWORK.</div>
-    <div class="stats">
-      <div class="stat"><span>STATUS</span><i></i><b class="alive">ALIVE</b></div>
-      <div class="stat"><span>USERNAME</span><i></i><b id="d-name"></b></div>
-      <div class="stat"><span>SINCE</span><i></i><b id="d-since"></b></div>
-    </div>
-    <div class="tiles">
-      <div class="tile"><span class="tn">HIDDEN DROPS</span><span class="ts">SEALED</span><i class="tb"></i></div>
-      <div class="tile"><span class="tn">THE SIGNAL</span><span class="ts">SEALED</span><i class="tb"></i></div>
-      <div class="tile"><span class="tn">MISSIONS</span><span class="ts">SEALED</span><i class="tb"></i></div>
-      <div class="tile"><span class="tn">THE MEMBERS</span><span class="ts">SEALED</span><i class="tb"></i></div>
-      <div class="tile"><span class="tn">ARCHIVE</span><span class="ts">SEALED</span><i class="tb"></i></div>
+
+    <a class="idcard" href="/network/id" data-go="/network/id">
+      <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-id"/></svg>
+      <div class="idmain">
+        <div class="idname" id="c-name"></div>
+        <div class="idsub" id="c-label"></div>
+        <div class="idrow"><span><span class="dot"></span>STATUS <b>ONLINE</b></span><span>RANK <b>MEMBER</b></span></div>
+      </div>
+      <div class="idgo" aria-hidden="true">›</div>
+    </a>
+
+    <div class="grid">
+      <a class="tile" href="/network/drops" data-go="/network/drops">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-drop"/></svg>
+        <span class="tn">NEW DROPS</span><span class="tt">Elsőként tudod meg, mi jön.</span><span class="ts">SEALED</span>
+      </a>
+      <a class="tile" href="/network/vote" data-go="/network/vote">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-vote"/></svg>
+        <span class="tn">THE VOTE</span><span class="tt">A ti hangotok számít.</span><span class="ts">SEALED</span>
+      </a>
+      <a class="tile" href="/network/community" data-go="/network/community">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-community"/></svg>
+        <span class="tn">THE COMMUN<b class="bang">!</b>TY</span><span class="tt">A Network közös tere.</span><span class="ts">SEALED</span>
+      </a>
+      <a class="tile" href="/network/wall" data-go="/network/wall">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-wall"/></svg>
+        <span class="tn">WALL OF THE AWAKEN</span><span class="tt">A Z<b class="bang">!</b> faliújság.</span><span class="ts">SEALED</span>
+      </a>
+      <a class="tile" href="/network/missions" data-go="/network/missions">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-mission"/></svg>
+        <span class="tn">MISS<b class="bang">!</b>ONS</span><span class="tt">Találd meg. Fotózd le.</span><span class="ts">SEALED</span>
+      </a>
+      <a class="tile" href="/network/scenes" data-go="/network/scenes">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-scenes"/></svg>
+        <span class="tn">BEH<b class="bang">!</b>ND THE SCENES</span><span class="tt">Amit a boltban sosem látsz.</span><span class="ts">SEALED</span>
+      </a>
     </div>
     <button class="btn ghost" id="btn-logout" type="button">Kijelentkezés</button>
+  </section>
+
+  <!-- FUNKCIÓ RÉSZLETEI -->
+  <section class="view" id="v-feature">
+    <div class="eyebrow">[ SEALED ]</div>
+    <svg class="ico big" viewBox="0 0 48 48" aria-hidden="true"><use id="f-use" href="#i-drop"/></svg>
+    <h2 id="f-name"></h2>
+    <p class="lead" id="f-desc"></p>
+    <div class="soonbox"><h4>HAMAROSAN</h4><ul id="f-soon"></ul></div>
+    <div class="stats"><div class="stat"><span>STATUS</span><i></i><b class="sealed">SEALED</b></div></div>
+    <a class="back" data-go="/network/dashboard">← Vissza</a>
+  </section>
+
+  <!-- SUBJECT ID (saját profil) -->
+  <section class="view" id="v-id">
+    <div class="eyebrow">[ SUBJECT ID ]</div>
+    <svg class="ico big" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-id"/></svg>
+    <h2 id="i-name"></h2>
+    <div class="idsub" id="i-label" style="margin-bottom:1.4rem"></div>
+    <div class="stats">
+      <div class="stat"><span>STATUS</span><i></i><b class="online">ONLINE</b></div>
+      <div class="stat"><span>RANK</span><i></i><b>MEMBER</b></div>
+      <div class="stat"><span>SINCE</span><i></i><b id="i-since"></b></div>
+    </div>
+    <p class="note">Profilkép és bemutatkozás hamarosan.</p>
+    <a class="back" data-go="/network/dashboard">← Vissza</a>
   </section>
 </main>
 <footer>NEVER DEAD. NEVER DONE.</footer>
 
 <script>
 const $ = (s) => document.querySelector(s);
-const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard'];
+const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard', 'feature', 'id'];
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let pendingCode = null, me = null, bootToken = 0;
@@ -231,6 +380,40 @@ const BOOT_LINES = [
   { t: '> ACCESS .......... RESTRICTED', c: 'warn' },
   { t: '> AWAITING KEY', c: 'ok', pause: 0 },
 ];
+
+// Funkciók leírása (a tartalom később, külön szakaszokban készül el)
+const FEATURES = {
+  drops: {
+    path: '/network/drops', icon: 'i-drop', name: 'NEW DROPS',
+    desc: 'Elsőként tudod meg, mi jön. A Network tagjai korábban látják és érik el az új dropokat, mint bárki más.',
+    soon: ['Zárt előzetesek és titkos kollekciók', 'Korai hozzáférés a limitált dropokhoz', 'Csak tagoknak elérhető termékek'],
+  },
+  vote: {
+    path: '/network/vote', icon: 'i-vote', name: 'THE VOTE',
+    desc: 'A ti hangotok számít. Megmutatjuk, min dolgozunk, ti pedig szavaztok, melyik tetszik a legjobban.',
+    soon: ['Több dizájn közül választhatsz', 'Upvote és downvote', 'Az eredmények a tagok előtt is látszanak'],
+  },
+  community: {
+    path: '/network/community', icon: 'i-community', name: 'THE COMMUN!TY',
+    desc: 'A Network közös tere. Beszélgess a tagokkal, tegyél fel nekünk kérdéseket, és oszd meg a képeidet.',
+    soon: ['Csevegőszobák tagoknak', 'Kérdések közvetlenül nekünk', 'Képküldés', 'Moderált tér: némítás és tiltás'],
+  },
+  wall: {
+    path: '/network/wall', icon: 'i-wall', name: 'WALL OF THE AWAKEN',
+    desc: 'A Z! faliújság. Mutasd meg, hogyan élsz a ZOMBIF!ED-ben, és küzdj meg a hét Z!-jéért.',
+    soon: ['Képfeltöltés élethelyzetekből', 'Heti szavazás: Z! OF THE WEEK', 'A nyertes ideig látható a falon', 'Jelvény a neved mellett minden győzelemért'],
+  },
+  missions: {
+    path: '/network/missions', icon: 'i-mission', name: 'MISS!ONS',
+    desc: 'Küldetések, feladványok, rejtvények. Keresd a nyomokat, és bizonyítsd, hogy megtaláltad.',
+    soon: ['Rejtett matricák és nyomok', 'Fotózd le, küldd be', 'Jutalom a teljesítőknek'],
+  },
+  scenes: {
+    path: '/network/scenes', icon: 'i-scenes', name: 'BEH!ND THE SCENES',
+    desc: 'Amit a boltban sosem látsz. Forgatások, tervezés, megbeszélések: a kulisszák mögül.',
+    soon: ['Képek a forgatásokról', 'Tervezési folyamat', 'Kulisszák a márka mögül'],
+  },
+};
 
 function seenBoot() { try { return sessionStorage.getItem('nd_boot') === '1'; } catch (e) { return false; } }
 function markBoot() { try { sessionStorage.setItem('nd_boot', '1'); } catch (e) {} }
@@ -256,6 +439,14 @@ async function busy(form, fn) {
   const b = form.querySelector('button[type=submit]');
   b.disabled = true;
   try { await fn(); } finally { b.disabled = false; }
+}
+// A "!" jel lila kiemelése a márkanevekben
+function brand(el, text) {
+  el.textContent = '';
+  text.split('!').forEach((part, i) => {
+    if (i > 0) { const b = document.createElement('b'); b.className = 'bang'; b.textContent = '!'; el.appendChild(b); }
+    el.appendChild(document.createTextNode(part));
+  });
 }
 
 // Gépelés-effekt. A token miatt oldalváltáskor a futó animáció megszakad.
@@ -295,6 +486,26 @@ async function boot() {
   markBoot();
 }
 
+function fillFeature(k) {
+  const f = FEATURES[k];
+  $('#f-use').setAttribute('href', '#' + f.icon);
+  brand($('#f-name'), f.name);
+  $('#f-desc').textContent = f.desc;
+  const ul = $('#f-soon');
+  ul.textContent = '';
+  f.soon.forEach((t) => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+}
+function fillId() {
+  $('#i-name').textContent = me.username;
+  $('#i-label').textContent = me.label;
+  $('#i-since').textContent = new Date(me.joinedAt).toLocaleDateString('hu-HU');
+}
+function fillDash() {
+  $('#c-name').textContent = me.username;
+  $('#c-label').textContent = me.label;
+  $('#d-welcome').textContent = '';
+}
+
 async function route() {
   bootToken++; // futó animációk megszakítása
   const path = location.pathname.replace(/\/+$/, '') || '/';
@@ -310,9 +521,12 @@ async function route() {
   const r = await api('me');
   if (!r.ok) return go('/network/login');
   me = r.data.member;
-  $('#d-welcome').textContent = '';
-  $('#d-name').textContent = me.username;
-  $('#d-since').textContent = new Date(me.joinedAt).toLocaleDateString('hu-HU');
+
+  const key = Object.keys(FEATURES).find((k) => FEATURES[k].path === path);
+  if (key) { fillFeature(key); return show('feature'); }
+  if (path === '/network/id') { fillId(); return show('id'); }
+
+  fillDash();
   if (path !== '/network/dashboard') history.replaceState({}, '', '/network/dashboard');
   show('dashboard');
   typeInto($('#d-welcome'), 'WELCOME BACK, ' + me.label + '.', 34, bootToken);
