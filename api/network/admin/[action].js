@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
       case 'uploads': {
         const { data, error } = await db
           .from('uploads')
-          .select('id,purpose,bytes,width,height,created_at,network_users(username,member_number)')
+          .select('id,purpose,bytes,width,height,created_at,network_users!uploads_owner_id_fkey(username,member_number)')
           .eq('status', 'ready')
           .order('created_at', { ascending: false })
           .limit(50);
