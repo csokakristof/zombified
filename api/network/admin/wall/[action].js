@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
         if (!ids.length) return res.status(200).json({ items: [] });
 
         const { data: posts, error: pErr } = await db.from('wall_posts')
-          .select('id,upload_id,caption,situation,created_at,network_users(username,member_number)')
+          .select('id,upload_id,caption,situation,created_at,network_users!wall_posts_owner_id_fkey(username,member_number)')
           .in('id', ids).eq('status', 'visible');
         if (pErr) throw pErr;
 
