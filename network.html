@@ -379,7 +379,7 @@ main::before{width:min(720px,100vw);height:min(720px,100vw)}
 <script src="/wall.js"></script>
 <script>
 const $ = (s) => document.querySelector(s);
-const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard', 'feature', 'id'];
+const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard', 'feature', 'id', 'wall'];
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let pendingCode = null, me = null, bootToken = 0;
@@ -532,9 +532,20 @@ async function route() {
   if (!r.ok) return go('/network/login');
   me = r.data.member;
 
+  if (path === '/network/wall') {
+    if (!window.NDWall) return go('/network/dashboard');
+    show('wall');
+    return window.NDWall.open();
+  }
+
   const key = Object.keys(FEATURES).find((k) => FEATURES[k].path === path);
   if (key) { fillFeature(key); return show('feature'); }
-  if (path === '/network/id') { fillId(); return show('id'); }
+  if (path === '/network/id') {
+    fillId();
+    show('id');
+    if (window.NDWall) window.NDWall.fillWins();
+    return;
+  }
 
   fillDash();
   if (path !== '/network/dashboard') history.replaceState({}, '', '/network/dashboard');
