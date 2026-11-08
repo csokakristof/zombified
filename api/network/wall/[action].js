@@ -8,7 +8,7 @@ const REASONS = ['inappropriate', 'not_mine', 'spam', 'other'];
 const PAGE = 24;
 const MAX_WEEKLY = 3; // ugyanennek kell lennie, mint az SQL-ben a wall_create_post korlátjának
 const BUCKET = 'network-media';
-const POST_COLS = 'id,upload_id,caption,situation,week_start,created_at,owner_id,network_users(username,member_number)';
+const POST_COLS = 'id,upload_id,caption,situation,week_start,created_at,owner_id,network_users!wall_posts_owner_id_fkey(username,member_number)';
 
 function needPost(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return false; }
