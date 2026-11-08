@@ -105,7 +105,8 @@
   const $ = (s) => sec.querySelector(s);
   const S = {
     week: null, winner: null, posts: [], hasMore: false, loaded: false,
-    busy: false, timer: null, hallLoaded: false, pending: null, fetchedAt: 0,
+    busy: false, timer: null, pending: null, fetchedAt: 0,
+    hall: null, hallPending: null, hallAt: 0,
   };
   const URLS = new Map(); // imageId -> { url, at }: a már letöltött képek ne töltődjenek le újra
 
@@ -300,20 +301,36 @@
     S.posts = S.posts.concat(r.data.posts); S.hasMore = r.data.hasMore;
     renderGrid();
   }
-  async function loadHall() {
+    function renderHall() {
     const box = $('#w-hall');
     box.textContent = '';
-    const r = await api('wall/winners');
-    if (!r.ok) return flash(r.data.error || 'Hiba történt.');
-    if (!r.data.items.length) { box.appendChild(el('div', 'wempty', 'MÉG NINCS KIHIRDETETT GYŐZTES.')); return; }
-    r.data.items.forEach((it, i) => {
-      const c = postCard(it.post, true, i);
+    if (!S.hall) {
+      for (let i = 0; i < 3; i++) box.appendChild(el('div', 'wsk'));
+      return;
+    }
+    if (!S.hall.length) { box.appendChild(el('div', 'wempty', 'MÉG NINCS KIHIRDETETT GYŐZTES.')); return; }
+    S.hall.forEach((it) => {
+      const c = postCard(it.post, true, 0);
       const sub = el('div', 'wp-sub', 'HÉT: ' + it.weekStart + ' · ' + it.votes + ' SZAVAZAT');
       sub.style.padding = '0 .8rem .8rem';
       c.appendChild(sub);
       box.appendChild(c);
     });
-    S.hallLoaded = true;
+  }
+
+  function loadHall(silent) {
+    if (S.hallPending) return S.hallPending;
+    S.hallPending = (async () => {
+      const r = await api('wall/winners');
+      if (!r.ok) { if (!silent) flash(r.data.error || 'Hiba történt.'); return; }
+      S.hall = r.data.items;
+      S.hallAt = Date.now();
+      preload(S.hall.map((it) => it.post), 12);
+      if ($('#t-win').classList.contains('on')) renderHall();
+    })().finally(() => { S.hallPending = null; });
+    return S.hallPending;
+  }
+    
   }
 
   // Futó hét: legtöbb szavazat elöl, egyenlőségnél az előbb feltöltött; utána a régebbi hetek
@@ -356,7 +373,10 @@
     $('#t-win').classList.toggle('on', t === 'win');
     $('#w-pane-wall').style.display = t === 'wall' ? 'block' : 'none';
     $('#w-pane-win').style.display = t === 'win' ? 'block' : 'none';
-    if (t === 'win' && !S.hallLoaded) loadHall();
+    if (t === 'win') {
+    renderHall();
+    if (!S.hall || Date.now() - S.hallAt > 30000) loadHall(!!S.hall);
+  }
   }
   $('#t-wall').addEventListener('click', () => setTab('wall'));
   $('#t-win').addEventListener('click', () => setTab('win'));
@@ -400,7 +420,7 @@
     setTab('wall');
     $('#w-form').classList.remove('open');
     flash('');
-    S.hallLoaded = false;
+    if (!S.hall || Date.now() - S.hallAt > 30000) loadHall(true);
     clearInterval(S.timer);
     S.timer = setInterval(renderHead, 30000);
     renderAll(); // a korábban betöltött fal azonnal látszik (vagy a vázlap)
@@ -412,7 +432,7 @@
   // A dashboard megjelenésekor a háttérben előre betöltjük a falat és az első képeket
   async function prefetch() {
     if (S.pending || Date.now() - S.fetchedAt < 30000) return;
-    await loadFeed(true);
+    await Promise.all([loadFeed(true), loadHall(true)]);
     preload(S.posts, 8);
   }
   const dash = document.getElementById('v-dashboard');
