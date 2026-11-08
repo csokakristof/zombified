@@ -8,7 +8,8 @@ const REASONS = ['inappropriate', 'not_mine', 'spam', 'other'];
 const PAGE = 24;
 const MAX_WEEKLY = 3; // ugyanennek kell lennie, mint az SQL-ben a wall_create_post korlátjának
 const BUCKET = 'network-media';
-const POST_COLS = 'id,upload_id,caption,situation,week_start,created_at,owner_id,network_users!wall_posts_owner_id_fkey(username,member_number)';
+const URL_TTL = 3600; // a képcímek 1 óráig érvényesek
+const POST_COLS = 'id,upload_id,caption,situation,week_start,created_at,owner_id,network_users!wall_posts_owner_id_fkey(username,member_number),uploads(path)';
 
 function needPost(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return false; }
@@ -20,8 +21,7 @@ function needPost(req, res) {
 }
 
 async function currentWeek(db) {
-  const a = await db.rpc('wall_current_week');
-  const b = await db.rpc('wall_week_end');
+  const [a, b] = await Promise.all([db.rpc('wall_current_week'), db.rpc('wall_week_end')]);
   if (a.error) throw a.error;
   if (b.error) throw b.error;
   return { start: a.data, endsAt: b.data };
@@ -33,18 +33,32 @@ async function winMap(db) {
   return new Map((data || []).map((r) => [r.owner_id, r.wins]));
 }
 
+// Kész, rövid ideig érvényes képcímek egyetlen kéréssel (nem kell képenként függvényhívás)
+async function signUrls(db, posts) {
+  const paths = [...new Set(posts.map((p) => p.uploads && p.uploads.path).filter(Boolean))];
+  const map = new Map();
+  if (!paths.length) return map;
+  const { data, error } = await db.storage.from(BUCKET).createSignedUrls(paths, URL_TTL);
+  if (error) { console.error(error); return map; }
+  (data || []).forEach((d) => { if (d && d.signedUrl && d.path) map.set(d.path, d.signedUrl); });
+  return map;
+}
+
 function serialize(p, ctx) {
   const cur = p.week_start === ctx.week;
   const o = p.network_users;
+  const path = p.uploads && p.uploads.path;
   return {
     id: p.id,
     imageId: p.upload_id,
+    imageUrl: (path && ctx.urls.get(path)) || null,
     caption: p.caption,
     situation: p.situation,
     createdAt: p.created_at,
     weekStart: p.week_start,
     current: cur,
     votes: cur ? (ctx.counts.get(p.id) || 0) : null,
+    rank: ctx.ranks.get(p.id) || null,
     voted: ctx.myVote === p.id,
     mine: p.owner_id === ctx.me,
     owner: {
@@ -57,23 +71,26 @@ function serialize(p, ctx) {
 
 async function feed(req, res, db, s) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-  const { error: cErr } = await db.rpc('wall_close_due_weeks');
-  if (cErr) console.error(cErr);
-
   const me = s.member.id;
-  const week = await currentWeek(db);
   const before = req.query.before ? new Date(String(req.query.before)) : null;
   if (before && Number.isNaN(before.getTime())) return res.status(400).json({ error: 'Hibás kérés.' });
 
-  let q = db.from('wall_posts').select(POST_COLS).eq('status', 'visible')
-    .order('created_at', { ascending: false }).limit(PAGE + 1);
-  if (before) q = q.lt('created_at', before.toISOString());
-  const { data: rows, error } = await q;
-  if (error) throw error;
-  const hasMore = rows.length > PAGE;
-  const posts = rows.slice(0, PAGE);
+  // 1. kör: aktuális hét + lezárt hetek kihirdetése (párhuzamosan)
+  const [week, closeRes] = await Promise.all([currentWeek(db), db.rpc('wall_close_due_weeks')]);
+  if (closeRes.error) console.error(closeRes.error);
 
-  const [wins, votesRes, myVoteRes, countRes, lwRes] = await Promise.all([
+  // 2. kör: minden egyéb adat párhuzamosan
+  let olderQ = db.from('wall_posts').select(POST_COLS).eq('status', 'visible')
+    .lt('week_start', week.start).order('created_at', { ascending: false }).limit(PAGE + 1);
+  if (before) olderQ = olderQ.lt('created_at', before.toISOString());
+  const curQ = before
+    ? Promise.resolve({ data: [], error: null })
+    : db.from('wall_posts').select(POST_COLS).eq('status', 'visible').eq('week_start', week.start)
+        .order('created_at', { ascending: true }).limit(150);
+
+  const [older, cur, wins, votesRes, myVoteRes, countRes, lwRes] = await Promise.all([
+    olderQ,
+    curQ,
     winMap(db),
     db.rpc('wall_week_votes', { p_week: week.start }),
     db.from('wall_votes').select('post_id').eq('week_start', week.start).eq('voter_id', me).maybeSingle(),
@@ -82,26 +99,43 @@ async function feed(req, res, db, s) {
     db.from('wall_weeks').select('week_start,vote_count,winner_post_id')
       .not('winner_post_id', 'is', null).order('week_start', { ascending: false }).limit(1).maybeSingle(),
   ]);
-  [votesRes, myVoteRes, countRes, lwRes].forEach((r) => { if (r.error) throw r.error; });
+  [older, cur, votesRes, myVoteRes, countRes, lwRes].forEach((r) => { if (r.error) throw r.error; });
 
   const counts = new Map((votesRes.data || []).map((v) => [v.post_id, v.votes]));
-  const ctx = { week: week.start, counts, wins, me, myVote: myVoteRes.data ? myVoteRes.data.post_id : null };
+  const myVote = myVoteRes.data ? myVoteRes.data.post_id : null;
 
-  let winner = null;
+  // Futó hét: legtöbb szavazat elöl; egyenlőségnél az előbb feltöltött (mint a győztes kihirdetésénél)
+  const curPosts = (cur.data || []).slice().sort((a, b) =>
+    (counts.get(b.id) || 0) - (counts.get(a.id) || 0) || (a.created_at < b.created_at ? -1 : 1));
+  const ranks = new Map();
+  curPosts.slice(0, 3).forEach((p, i) => { if ((counts.get(p.id) || 0) > 0) ranks.set(p.id, i + 1); });
+
+  const hasMore = older.data.length > PAGE;
+  const posts = curPosts.concat(older.data.slice(0, PAGE));
+
+  // 3. kör: a legutóbbi győztes képe
+  let winnerRow = null;
   if (!before && lwRes.data) {
-    const { data: wp } = await db.from('wall_posts').select(POST_COLS)
+    const { data: wp, error: wErr } = await db.from('wall_posts').select(POST_COLS)
       .eq('id', lwRes.data.winner_post_id).eq('status', 'visible').maybeSingle();
-    if (wp) winner = { ...serialize(wp, ctx), weekStart: lwRes.data.week_start, votes: lwRes.data.vote_count };
+    if (wErr) throw wErr;
+    winnerRow = wp || null;
   }
+
+  // 4. kör: képcímek
+  const urls = await signUrls(db, winnerRow ? posts.concat([winnerRow]) : posts);
+  const ctx = { week: week.start, counts, wins, me, myVote, urls, ranks };
 
   return res.status(200).json({
     week: {
       start: week.start,
       endsAt: week.endsAt,
       postsLeft: Math.max(0, MAX_WEEKLY - (countRes.count || 0)),
-      myVotePostId: ctx.myVote,
+      myVotePostId: myVote,
     },
-    winner,
+    winner: winnerRow
+      ? { ...serialize(winnerRow, ctx), weekStart: lwRes.data.week_start, votes: lwRes.data.vote_count }
+      : null,
     posts: posts.map((p) => serialize(p, ctx)),
     hasMore,
   });
@@ -109,10 +143,9 @@ async function feed(req, res, db, s) {
 
 async function winners(req, res, db) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-  const { error: cErr } = await db.rpc('wall_close_due_weeks');
-  if (cErr) console.error(cErr);
+  const [week, closeRes] = await Promise.all([currentWeek(db), db.rpc('wall_close_due_weeks')]);
+  if (closeRes.error) console.error(closeRes.error);
 
-  const week = await currentWeek(db);
   const { data: ws, error } = await db.from('wall_weeks').select('week_start,vote_count,winner_post_id')
     .not('winner_post_id', 'is', null).order('week_start', { ascending: false }).limit(12);
   if (error) throw error;
@@ -123,11 +156,13 @@ async function winners(req, res, db) {
     if (pErr) throw pErr;
     posts = data;
   }
+  const [wins, urls] = await Promise.all([winMap(db), signUrls(db, posts)]);
   const byId = new Map(posts.map((p) => [p.id, p]));
-  const ctx = { week: week.start, counts: new Map(), wins: await winMap(db), me: null, myVote: null };
-  const items = ws
+  const ctx = { week: week.start, counts: new Map(), wins, me: null, myVote: null, urls, ranks: new Map() };
+  const items = (ws || [])
     .filter((w) => byId.has(w.winner_post_id))
-    .map((w) => ({ weekStart: w.week_start, votes: w.vote_count, post: serialize(byId.get(w.winner_post_id), ctx) }));
+    .map((w) => ({ weekStart: w.week_start, votes: w.vote_count, post: serialize(byId.get(w.winner_post_id), ctx) }))
+    .sort((a, b) => (a.weekStart < b.weekStart ? 1 : -1)); // legfrissebb győztes elöl
   return res.status(200).json({ items });
 }
 
