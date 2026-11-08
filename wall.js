@@ -27,7 +27,10 @@
 .wtabs button.on{border-color:var(--pl);color:#fff;background:#490e7e33}
 .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.9rem;text-align:left}
 .wp{border:1px solid #490e7e44;background:rgba(14,14,14,.9);border-radius:3px;overflow:hidden;display:flex;flex-direction:column}
-.wp img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#111}
+.wp-img{position:relative;aspect-ratio:4/5;background:#111}
+.wp-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s ease}
+.wp-img img.ld{opacity:1}
+.wp-rank{position:absolute;top:.5rem;left:.5rem;z-index:1;background:#490e7e;color:#fff;font-family:var(--mono);font-size:.62rem;letter-spacing:1px;padding:.2rem .45rem;border-radius:2px;border:1px solid var(--pl)}
 .wp-meta{padding:.7rem .8rem .3rem}
 .wp-who{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .wp-name{font-family:'Lacquer',cursive;font-size:1.05rem;letter-spacing:1.5px;color:#fff;word-break:break-all}
@@ -42,16 +45,19 @@
 .wp-ico:hover{color:#fff;border-color:var(--pl)}
 .zb{display:inline-block;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;padding:.12rem .4rem;border:1px solid #7a1fd1;color:#fff;background:#490e7e88;border-radius:2px;box-shadow:0 0 8px rgba(122,31,209,.6)}
 .wwin{border:1px solid var(--pl);box-shadow:0 0 28px rgba(73,14,126,.6);background:linear-gradient(135deg,rgba(30,10,52,.92),rgba(12,12,12,.92));border-radius:3px;padding:1rem;margin-bottom:1.2rem;display:flex;gap:1rem;text-align:left;align-items:center}
-.wwin img{width:120px;aspect-ratio:4/5;object-fit:cover;border-radius:2px;flex:none;background:#111}
+.wwin .wp-img{width:120px;flex:none;border-radius:2px;overflow:hidden}
 .wwin .wt{font-family:var(--mono);font-size:.62rem;letter-spacing:.3rem;color:var(--pl);display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
 .wz{width:22px;height:22px}
+.wsk{aspect-ratio:4/5.6;background:#111;border:1px solid #490e7e22;border-radius:3px;animation:wsk 1.6s ease-in-out infinite}
+@keyframes wsk{50%{opacity:.45}}
 .wm{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:1rem}
 .wm-box{width:100%;max-width:340px;background:#0f0f0f;border:1px solid #490e7e88;padding:1.2rem;border-radius:3px;text-align:left}
 .wm-t{font-family:var(--mono);font-size:.7rem;letter-spacing:3px;color:#fff;margin-bottom:.9rem}
 .wm-row{display:flex;gap:.6rem;margin-top:1rem}
 .wm-row .btn{flex:1;padding:.7rem}
 .wempty{font-family:var(--mono);font-size:.74rem;letter-spacing:2px;color:#6f6f6f;padding:2rem 0;grid-column:1/-1;text-align:center}
-@media(max-width:480px){.wgrid{grid-template-columns:1fr 1fr;gap:.6rem}.wwin{flex-direction:column;text-align:center}.wwin img{width:60%}}
+@media(max-width:480px){.wgrid{grid-template-columns:1fr 1fr;gap:.6rem}.wwin{flex-direction:column;text-align:center}.wwin .wp-img{width:60%}}
+@media(prefers-reduced-motion:reduce){.wsk{animation:none}.wp-img img{transition:none}}
 `;
   const style = document.createElement('style');
   style.textContent = CSS;
@@ -97,7 +103,11 @@
   mainEl.appendChild(sec);
 
   const $ = (s) => sec.querySelector(s);
-  const S = { week: null, winner: null, posts: [], hasMore: false, busy: false, timer: null, hallLoaded: false };
+  const S = {
+    week: null, winner: null, posts: [], hasMore: false, loaded: false,
+    busy: false, timer: null, hallLoaded: false, pending: null, fetchedAt: 0,
+  };
+  const URLS = new Map(); // imageId -> { url, at }: a már letöltött képek ne töltődjenek le újra
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -121,6 +131,31 @@
     if (!(ms > 0)) return 'LEZÁRUL';
     const m = Math.floor(ms / 60000), d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60);
     return (d ? d + 'n ' : '') + h + 'ó ' + (m % 60) + 'p';
+  }
+
+  // Ugyanazt a képcímet használjuk újra (50 percig), így a böngésző gyorsítótára működik
+  function imgUrl(p) {
+    const c = URLS.get(p.imageId);
+    if (c && Date.now() - c.at < 50 * 60 * 1000) return c.url;
+    if (p.imageUrl) { URLS.set(p.imageId, { url: p.imageUrl, at: Date.now() }); return p.imageUrl; }
+    return '/api/network/media?id=' + encodeURIComponent(p.imageId);
+  }
+  function imgBox(p, eager) {
+    const box = el('div', 'wp-img');
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.loading = eager ? 'eager' : 'lazy';
+    const done = () => img.classList.add('ld');
+    img.addEventListener('load', done);
+    img.addEventListener('error', done);
+    img.src = imgUrl(p);
+    if (img.complete && img.naturalWidth) done();
+    box.appendChild(img);
+    return box;
+  }
+  function preload(posts, n) {
+    posts.slice(0, n).forEach((p) => { const i = new Image(); i.src = imgUrl(p); });
   }
 
   // Kép előkészítése feltöltés előtt: méretezés + újrakódolás (a metaadatok ekkor törlődnek)
@@ -165,12 +200,11 @@
     });
   }
 
-  function postCard(p, plain) {
+  function postCard(p, plain, idx) {
     const c = el('article', 'wp');
-    const img = document.createElement('img');
-    img.loading = 'lazy'; img.alt = '';
-    img.src = '/api/network/media?id=' + encodeURIComponent(p.imageId);
-    c.appendChild(img);
+    const box = imgBox(p, (idx || 0) < 6);
+    if (p.rank) box.appendChild(el('span', 'wp-rank', '#' + p.rank));
+    c.appendChild(box);
 
     const meta = el('div', 'wp-meta');
     const who = el('div', 'wp-who');
@@ -215,9 +249,7 @@
     const w = S.winner;
     if (!w) return;
     const c = el('div', 'wwin');
-    const img = document.createElement('img');
-    img.alt = ''; img.src = '/api/network/media?id=' + encodeURIComponent(w.imageId);
-    c.appendChild(img);
+    c.appendChild(imgBox(w, true));
     const t = el('div', '');
     const tag = el('div', 'wt');
     tag.innerHTML = '<svg class="wz" viewBox="0 0 60 60" aria-hidden="true"><use href="#i-zmark"/></svg>';
@@ -237,18 +269,28 @@
   function renderGrid() {
     const g = $('#w-grid');
     g.textContent = '';
+    if (!S.loaded) {
+      for (let i = 0; i < 6; i++) g.appendChild(el('div', 'wsk'));
+      $('#w-more').style.display = 'none';
+      return;
+    }
     if (!S.posts.length) g.appendChild(el('div', 'wempty', 'MÉG NINCS KÉP A FALON.'));
-    S.posts.forEach((p) => g.appendChild(postCard(p, false)));
+    S.posts.forEach((p, i) => g.appendChild(postCard(p, false, i)));
     $('#w-more').style.display = S.hasMore ? 'inline-block' : 'none';
   }
   function renderAll() { renderHead(); renderWinner(); renderGrid(); }
 
-  async function loadFeed() {
-    const r = await api('wall/feed');
-    if (r.status === 401) { location.assign('/network/login'); return; }
-    if (!r.ok) { flash(r.data.error || 'A fal betöltése nem sikerült.'); return; }
-    S.week = r.data.week; S.winner = r.data.winner; S.posts = r.data.posts; S.hasMore = r.data.hasMore;
-    renderAll();
+  function loadFeed(silent) {
+    if (S.pending) return S.pending;
+    S.pending = (async () => {
+      const r = await api('wall/feed');
+      if (r.status === 401) { if (!silent) location.assign('/network/login'); return; }
+      if (!r.ok) { if (!silent) flash(r.data.error || 'A fal betöltése nem sikerült.'); return; }
+      S.week = r.data.week; S.winner = r.data.winner; S.posts = r.data.posts; S.hasMore = r.data.hasMore;
+      S.loaded = true; S.fetchedAt = Date.now();
+      renderAll();
+    })().finally(() => { S.pending = null; });
+    return S.pending;
   }
   async function loadMore() {
     const last = S.posts[S.posts.length - 1];
@@ -264,13 +306,23 @@
     const r = await api('wall/winners');
     if (!r.ok) return flash(r.data.error || 'Hiba történt.');
     if (!r.data.items.length) { box.appendChild(el('div', 'wempty', 'MÉG NINCS KIHIRDETETT GYŐZTES.')); return; }
-    r.data.items.forEach((it) => {
-      const c = postCard(it.post, true);
-      c.appendChild(el('div', 'wp-sub', 'HÉT: ' + it.weekStart + ' · ' + it.votes + ' SZAVAZAT'));
-      c.lastChild.style.padding = '0 .8rem .8rem';
+    r.data.items.forEach((it, i) => {
+      const c = postCard(it.post, true, i);
+      const sub = el('div', 'wp-sub', 'HÉT: ' + it.weekStart + ' · ' + it.votes + ' SZAVAZAT');
+      sub.style.padding = '0 .8rem .8rem';
+      c.appendChild(sub);
       box.appendChild(c);
     });
     S.hallLoaded = true;
+  }
+
+  // Futó hét: legtöbb szavazat elöl, egyenlőségnél az előbb feltöltött; utána a régebbi hetek
+  function resort() {
+    const cur = S.posts.filter((p) => p.current)
+      .sort((a, b) => (b.votes - a.votes) || (a.createdAt < b.createdAt ? -1 : 1));
+    const rest = S.posts.filter((p) => !p.current);
+    cur.forEach((p, i) => { p.rank = (i < 3 && p.votes > 0) ? i + 1 : null; });
+    S.posts = cur.concat(rest);
   }
 
   async function vote(p) {
@@ -282,6 +334,7 @@
     if (!r.ok) return flash(r.data.error || 'Hiba történt.');
     S.posts.forEach((x) => { if (x.voted) { x.voted = false; if (x.votes != null) x.votes--; } });
     if (!was) { p.voted = true; p.votes++; S.week.myVotePostId = p.id; } else { S.week.myVotePostId = null; }
+    resort();
     renderGrid();
   }
   async function del(p) {
@@ -350,7 +403,23 @@
     S.hallLoaded = false;
     clearInterval(S.timer);
     S.timer = setInterval(renderHead, 30000);
-    await loadFeed();
+    renderAll(); // a korábban betöltött fal azonnal látszik (vagy a vázlap)
+    if (!S.loaded || Date.now() - S.fetchedAt > 15000) await loadFeed();
+    else await S.pending;
+    if (!S.loaded) flash('A fal betöltése nem sikerült.');
+  }
+
+  // A dashboard megjelenésekor a háttérben előre betöltjük a falat és az első képeket
+  async function prefetch() {
+    if (S.pending || Date.now() - S.fetchedAt < 30000) return;
+    await loadFeed(true);
+    preload(S.posts, 8);
+  }
+  const dash = document.getElementById('v-dashboard');
+  if (dash) {
+    new MutationObserver(() => { if (dash.classList.contains('on')) prefetch(); })
+      .observe(dash, { attributes: true, attributeFilter: ['class'] });
+    if (dash.classList.contains('on')) prefetch();
   }
 
   // Z! OF THE WEEK sor a SUBJECT ID oldalon
