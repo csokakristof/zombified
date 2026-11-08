@@ -169,6 +169,17 @@ body{min-height:100dvh}
 body::before{inset:0;animation-name:grain2}
 @keyframes grain2{0%{background-position:0 0}25%{background-position:-40px 30px}50%{background-position:30px -40px}75%{background-position:-30px -30px}100%{background-position:0 0}}
 main::before{width:min(720px,100vw);height:min(720px,100vw)}
+/* Teljesítmény: csak GPU-barát animációk (transform, opacity), nincs szűrő-animáció */
+body::before{animation:none !important;will-change:transform;transform:translateZ(0)}
+body::after{will-change:transform;transform:translateZ(0)}
+main::before{will-change:opacity}
+.zmark{animation-name:zpulse2;filter:drop-shadow(0 0 6px rgba(122,31,209,.8))}
+@keyframes zpulse2{0%,100%{opacity:.7}50%{opacity:1}}
+.pulse polyline{filter:none}
+.tile::after{left:0;transform:translateX(-160%);will-change:transform;animation-name:sweep2}
+@keyframes sweep2{0%,55%{transform:translateX(-160%)}100%{transform:translateX(420%)}}
+.view.on{animation-name:viewIn2}
+@keyframes viewIn2{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -439,7 +450,10 @@ async function api(action, body) {
 }
 function msg(sel, text, ok) { const el = $(sel); el.textContent = text || ''; el.className = 'msg' + (ok ? ' ok' : ''); }
 function clearMsgs() { document.querySelectorAll('.msg').forEach((e) => { e.textContent = ''; }); }
-function show(name) { VIEWS.forEach((v) => $('#v-' + v).classList.toggle('on', v === name)); }
+function show(name) {
+  VIEWS.forEach((v) => $('#v-' + v).classList.toggle('on', v === name));
+  window.scrollTo(0, 0); // a felgörgetés a nézetváltással egyszerre történik, nem előtte
+}
 function setRobots(path) {
   const m = document.querySelector('meta[name=robots]');
   m.content = path === '/network' ? 'index,follow' : 'noindex,nofollow';
@@ -521,16 +535,21 @@ async function route() {
   const path = location.pathname.replace(/\/+$/, '') || '/';
   setRobots(path);
   clearMsgs();
-  window.scrollTo(0, 0);
+  // nyilvános oldalon a bejelentkezés-ellenőrzés gyorsítótára törlődik
+  if (path === '/network' || /^\/network\/(activate|register|login)$/.test(path)) { window._meAt = 0; }
   if (path === '/network') { show('landing'); return boot(); }
   if (path === '/network/activate') return show('activate');
   if (path === '/network/register') return pendingCode ? show('register') : go('/network/activate');
   if (path === '/network/login') return show('login');
 
   // minden más útvonal védett: a szerver dönt a munkamenetről
-  const r = await api('me');
-  if (!r.ok) return go('/network/login');
-  me = r.data.member;
+  // Ha az ellenőrzés 60 mp-nél frissebb, nem várunk a szerverre (az adatokat a szerver így is ellenőrzi)
+  if (!(me && Date.now() - (window._meAt || 0) < 60000)) {
+    const r = await api('me');
+    if (!r.ok) { me = null; return go('/network/login'); }
+    me = r.data.member;
+    window._meAt = Date.now();
+  }
 
   if (path === '/network/wall') {
     if (!window.NDWall) return go('/network/dashboard');
