@@ -281,27 +281,7 @@
   }
   function renderAll() { renderHead(); renderWinner(); renderGrid(); }
 
-  function loadFeed(silent) {
-    if (S.pending) return S.pending;
-    S.pending = (async () => {
-      const r = await api('wall/feed');
-      if (r.status === 401) { if (!silent) location.assign('/network/login'); return; }
-      if (!r.ok) { if (!silent) flash(r.data.error || 'A fal betöltése nem sikerült.'); return; }
-      S.week = r.data.week; S.winner = r.data.winner; S.posts = r.data.posts; S.hasMore = r.data.hasMore;
-      S.loaded = true; S.fetchedAt = Date.now();
-      renderAll();
-    })().finally(() => { S.pending = null; });
-    return S.pending;
-  }
-  async function loadMore() {
-    const last = S.posts[S.posts.length - 1];
-    if (!last) return;
-    const r = await api('wall/feed?before=' + encodeURIComponent(last.createdAt));
-    if (!r.ok) return flash(r.data.error || 'Hiba történt.');
-    S.posts = S.posts.concat(r.data.posts); S.hasMore = r.data.hasMore;
-    renderGrid();
-  }
-    function renderHall() {
+  function renderHall() {
     const box = $('#w-hall');
     box.textContent = '';
     if (!S.hall) {
@@ -318,6 +298,18 @@
     });
   }
 
+  function loadFeed(silent) {
+    if (S.pending) return S.pending;
+    S.pending = (async () => {
+      const r = await api('wall/feed');
+      if (r.status === 401) { if (!silent) location.assign('/network/login'); return; }
+      if (!r.ok) { if (!silent) flash(r.data.error || 'A fal betöltése nem sikerült.'); return; }
+      S.week = r.data.week; S.winner = r.data.winner; S.posts = r.data.posts; S.hasMore = r.data.hasMore;
+      S.loaded = true; S.fetchedAt = Date.now();
+      renderAll();
+    })().finally(() => { S.pending = null; });
+    return S.pending;
+  }
   function loadHall(silent) {
     if (S.hallPending) return S.hallPending;
     S.hallPending = (async () => {
@@ -330,7 +322,13 @@
     })().finally(() => { S.hallPending = null; });
     return S.hallPending;
   }
-    
+  async function loadMore() {
+    const last = S.posts[S.posts.length - 1];
+    if (!last) return;
+    const r = await api('wall/feed?before=' + encodeURIComponent(last.createdAt));
+    if (!r.ok) return flash(r.data.error || 'Hiba történt.');
+    S.posts = S.posts.concat(r.data.posts); S.hasMore = r.data.hasMore;
+    renderGrid();
   }
 
   // Futó hét: legtöbb szavazat elöl, egyenlőségnél az előbb feltöltött; utána a régebbi hetek
@@ -374,9 +372,9 @@
     $('#w-pane-wall').style.display = t === 'wall' ? 'block' : 'none';
     $('#w-pane-win').style.display = t === 'win' ? 'block' : 'none';
     if (t === 'win') {
-    renderHall();
-    if (!S.hall || Date.now() - S.hallAt > 30000) loadHall(!!S.hall);
-  }
+      renderHall();
+      if (!S.hall || Date.now() - S.hallAt > 30000) loadHall(!!S.hall);
+    }
   }
   $('#t-wall').addEventListener('click', () => setTab('wall'));
   $('#t-win').addEventListener('click', () => setTab('win'));
@@ -429,7 +427,7 @@
     if (!S.loaded) flash('A fal betöltése nem sikerült.');
   }
 
-  // A dashboard megjelenésekor a háttérben előre betöltjük a falat és az első képeket
+  // A dashboard megjelenésekor a háttérben előre betöltjük a falat, a győzteseket és a képeket
   async function prefetch() {
     if (S.pending || Date.now() - S.fetchedAt < 30000) return;
     await Promise.all([loadFeed(true), loadHall(true)]);
