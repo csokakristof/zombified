@@ -451,7 +451,7 @@ async function api(action, body) {
 function msg(sel, text, ok) { const el = $(sel); el.textContent = text || ''; el.className = 'msg' + (ok ? ' ok' : ''); }
 function clearMsgs() { document.querySelectorAll('.msg').forEach((e) => { e.textContent = ''; }); }
 function show(name) {
-  VIEWS.forEach((v) => $('#v-' + v).classList.toggle('on', v === name));
+  VIEWS.forEach((v) => { const e = $('#v-' + v); if (e) e.classList.toggle('on', v === name); });
   window.scrollTo(0, 0); // a felgörgetés a nézetváltással egyszerre történik, nem előtte
 }
 function setRobots(path) {
