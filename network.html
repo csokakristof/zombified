@@ -388,6 +388,7 @@ main::before{will-change:opacity}
 <footer>NEVER DEAD. NEVER DONE.</footer>
 
 <script src="/wall.js"></script>
+<script src="/missions.js"></script>
 <script>
 const $ = (s) => document.querySelector(s);
 const VIEWS = ['landing', 'activate', 'register', 'login', 'dashboard', 'feature', 'id', 'wall'];
@@ -451,7 +452,7 @@ async function api(action, body) {
 function msg(sel, text, ok) { const el = $(sel); el.textContent = text || ''; el.className = 'msg' + (ok ? ' ok' : ''); }
 function clearMsgs() { document.querySelectorAll('.msg').forEach((e) => { e.textContent = ''; }); }
 function show(name) {
-  VIEWS.forEach((v) => { const e = $('#v-' + v); if (e) e.classList.toggle('on', v === name); });
+  document.querySelectorAll('main .view').forEach((e) => e.classList.toggle('on', e.id === 'v-' + name));
   window.scrollTo(0, 0); // a felgörgetés a nézetváltással egyszerre történik, nem előtte
 }
 function setRobots(path) {
@@ -550,6 +551,9 @@ async function route() {
     me = r.data.member;
     window._meAt = Date.now();
   }
+
+  const ext = window.NDRoutes && window.NDRoutes[path];
+  if (ext) { show(ext.view); return ext.open(); }
 
   if (path === '/network/wall') {
     if (!window.NDWall) return go('/network/dashboard');
