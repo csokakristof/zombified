@@ -238,7 +238,7 @@
     box.textContent = '';
     if (!S.loaded) { for (let i = 0; i < 3; i++) box.appendChild(el('div', 'ms-sk')); $('#m-count').textContent = ''; return; }
     const done = S.items.filter((m) => m.state === 'done').length;
-    $('#m-count').textContent = 'TELJESÍTVE: ' + done;
+    $('#m-count').textContent = 'TELJESÍTVE: ' + done + '/' + S.items.length;
     if (!S.items.length) { box.appendChild(el('div', 'wempty', 'MÉG NINCS AKTÍV KÜLDETÉS.')); return; }
     S.items.forEach((m) => box.appendChild(card(m)));
   }
