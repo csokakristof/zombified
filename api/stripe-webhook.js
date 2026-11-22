@@ -61,12 +61,17 @@ async function handler(req, res) {
         } else if (pi.currency !== 'huf' || pi.amount_received !== order.total * 100) {
           console.error('Összeg eltérés:', order.id, pi.amount_received, order.total * 100);
           await supabase.from('orders').update({ status: 'needs_review' }).eq('id', order.id);
+          await supabase.rpc('coupon_settle', { p_order: order.id, p_paid: true });
         } else {
           const { data: result, error } = await supabase.rpc('finalize_paid_order', {
             p_order_id: order.id,
           });
-                    if (error) throw error;
+          if (error) throw error;
           console.log('Rendelés feldolgozva:', order.id, result);
+
+          // A kupon véglegesen felhasználtnak számít
+          const { error: cErr } = await supabase.rpc('coupon_settle', { p_order: order.id, p_paid: true });
+          if (cErr) throw cErr;
 
           if (result === 'paid' || result === 'already_processed') {
             const { data: fresh } = await supabase
@@ -81,6 +86,8 @@ async function handler(req, res) {
       const orderId = event.data.object.metadata && event.data.object.metadata.order_id;
       if (orderId) {
         await supabase.from('orders').update({ status: 'failed' }).eq('id', orderId).eq('status', 'pending');
+        // A kupon felszabadul, újra felhasználható
+        await supabase.rpc('coupon_settle', { p_order: orderId, p_paid: false });
       }
     }
     return res.status(200).json({ received: true });
