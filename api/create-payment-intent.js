@@ -1,9 +1,20 @@
 const Stripe = require('stripe');
 const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
+const { clientIp, sha, allow } = require('../lib/network');
 
 const SHIPPING = { gls: 990, packeta: 690 };
 const clean = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+
+function couponError(e) {
+  const m = String((e && e.message) || '');
+  if (/COUPON_INVALID/.test(m)) return 'Érvénytelen vagy lejárt kuponkód.';
+  if (/COUPON_USED/.test(m)) return 'Ez a kupon már fel lett használva.';
+  const min = m.match(/COUPON_MIN:(\d+)/);
+  if (min) return 'A kuponhoz legalább ' + Number(min[1]).toLocaleString('hu-HU') + ' Ft értékű termék szükséges.';
+  if (/COUPON_NO_EFFECT/.test(m)) return 'A kupon erre a rendelésre nem ad kedvezményt.';
+  return null;
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -14,7 +25,7 @@ module.exports = async (req, res) => {
   });
 
   try {
-    const { items, shipping, customer } = req.body || {};
+    const { items, shipping, customer, coupon, quote } = req.body || {};
 
     if (!Array.isArray(items) || items.length < 1 || items.length > 20) {
       return res.status(400).json({ error: 'Üres vagy érvénytelen kosár.' });
@@ -24,23 +35,13 @@ module.exports = async (req, res) => {
     }
 
     const c = customer || {};
-    const name = clean(c.name, 120);
     const email = clean(c.email, 200);
-    const phone = clean(c.phone, 40);
-    const address = clean(c.address, 200);
-    const zip = clean(c.zip, 20);
-    const city = clean(c.city, 100);
-    const packetaPoint = clean(c.packetaPoint, 200);
+    const couponCode = clean(coupon, 40).toUpperCase().replace(/[^A-Z0-9-]/g, '');
 
-    if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || phone.length < 6) {
-      return res.status(400).json({ error: 'Hiányzó vagy hibás vásárlói adatok.' });
+    // Kuponkód-találgatás ellen: IP-nként korlátozott próbálkozás
+    if (couponCode && !(await allow(supabase, 'coupon:' + sha(clientIp(req)), 25, 900))) {
+      return res.status(429).json({ error: 'Túl sok kuponpróbálkozás. Próbáld újra később.' });
     }
-    if (shipping === 'packeta' ? !packetaPoint : (!address || !zip || !city)) {
-      return res.status(400).json({ error: 'Hiányzó szállítási cím vagy csomagpont.' });
-    }
-    const shippingAddress = shipping === 'packeta'
-      ? 'Packeta pont: ' + packetaPoint
-      : zip + ' ' + city + ', ' + address;
 
     // Termékek és készlet a szerver adatbázisából
     const { data: products, error: pErr } = await supabase
@@ -69,7 +70,47 @@ module.exports = async (req, res) => {
 
     const itemsTotal = lines.reduce((s, l) => s + l.unit_price, 0);
     const shippingTotal = SHIPPING[shipping];
-    const total = itemsTotal + shippingTotal;
+
+    // Előnézet: kedvezmény kiszámítása rendelés létrehozása nélkül
+    if (quote === true) {
+      let discount = 0;
+      if (couponCode) {
+        const { data, error } = await supabase.rpc('coupon_quote', {
+          p_code: couponCode,
+          p_email: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? email.toLowerCase() : '',
+          p_items: itemsTotal,
+          p_shipping: shippingTotal,
+        });
+        if (error) {
+          const msg = couponError(error);
+          if (msg) return res.status(400).json({ error: msg });
+          throw error;
+        }
+        discount = data || 0;
+        if (discount <= 0) return res.status(400).json({ error: 'A kupon erre a rendelésre nem ad kedvezményt.' });
+      }
+      return res.status(200).json({
+        itemsTotal, shippingTotal, discount, total: itemsTotal + shippingTotal - discount,
+      });
+    }
+
+    // Vásárlói adatok ellenőrzése
+    const name = clean(c.name, 120);
+    const phone = clean(c.phone, 40);
+    const address = clean(c.address, 200);
+    const zip = clean(c.zip, 20);
+    const city = clean(c.city, 100);
+    const packetaPoint = clean(c.packetaPoint, 200);
+
+    if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || phone.length < 6) {
+      return res.status(400).json({ error: 'Hiányzó vagy hibás vásárlói adatok.' });
+    }
+    if (shipping === 'packeta' ? !packetaPoint : (!address || !zip || !city)) {
+      return res.status(400).json({ error: 'Hiányzó szállítási cím vagy csomagpont.' });
+    }
+    const shippingAddress = shipping === 'packeta'
+      ? 'Packeta pont: ' + packetaPoint
+      : zip + ' ' + city + ', ' + address;
 
     // Rendelés mentése (egyedi rendelésszám, ütközésnél újrapróbál)
     let order = null;
@@ -85,7 +126,7 @@ module.exports = async (req, res) => {
           shipping_address: shippingAddress,
           items_total: itemsTotal,
           shipping_total: shippingTotal,
-          total,
+          total: itemsTotal + shippingTotal,
         })
         .select('id,order_number')
         .single();
@@ -99,15 +140,32 @@ module.exports = async (req, res) => {
       .insert(lines.map((l) => ({ ...l, order_id: order.id })));
     if (iErr) throw iErr;
 
+    // Kupon alkalmazása (foglalás + végösszeg frissítése egy tranzakcióban)
+    let discount = 0;
+    if (couponCode) {
+      const { data: d, error: cErr } = await supabase.rpc('coupon_apply_to_order', {
+        p_order: order.id, p_code: couponCode,
+      });
+      if (cErr) {
+        await supabase.from('orders').update({ status: 'failed' }).eq('id', order.id);
+        const msg = couponError(cErr);
+        if (msg) return res.status(400).json({ error: msg });
+        throw cErr;
+      }
+      discount = d || 0;
+    }
+    const total = itemsTotal + shippingTotal - discount;
+
     let pi;
     try {
       pi = await stripe.paymentIntents.create({
         amount: total * 100,
         currency: 'huf',
-        metadata: { order_id: order.id, order_number: order.order_number },
+        metadata: { order_id: order.id, order_number: order.order_number, coupon: couponCode || '' },
       });
     } catch (e) {
       await supabase.from('orders').update({ status: 'failed' }).eq('id', order.id);
+      await supabase.rpc('coupon_settle', { p_order: order.id, p_paid: false });
       throw e;
     }
 
@@ -117,6 +175,7 @@ module.exports = async (req, res) => {
       clientSecret: pi.client_secret,
       orderNumber: order.order_number,
       total,
+      discount,
     });
   } catch (e) {
     console.error(e);
