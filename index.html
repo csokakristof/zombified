@@ -456,6 +456,14 @@ footer{background:#050505;border-top:1px solid #490e7e33;padding:2rem;text-align
     <div id="step3" style="display:none">
       <div class="modal-title">Fizetési <span class="p">mód</span></div>
       <div id="paymentSummary" style="background:#0d0d0d;border:1px solid #490e7e22;border-radius:4px;padding:.9rem 1rem;margin-bottom:1.3rem;font-size:.8rem"></div>
+            <div style="margin-bottom:1.3rem">
+        <label class="form-label" for="couponInput">Kuponkód</label>
+        <div style="display:flex;gap:.5rem">
+          <input class="form-input" id="couponInput" placeholder="Pl. ZOMBI10" autocomplete="off" autocapitalize="characters" style="flex:1">
+          <button class="btn-back" type="button" id="couponBtn" onclick="applyCoupon()" style="flex:none;padding:.7rem 1rem">Alkalmaz</button>
+        </div>
+        <div id="couponMsg" style="font-size:.72rem;min-height:1rem;margin-top:.4rem"></div>
+      </div>
       <div class="barion-section">
         <div class="barion-label">Kártyaadatok</div>
         <div id="stripe-card-element" style="background:#0d0d0d;border:1px solid #490e7e33;border-radius:2px;padding:.9rem 1rem;margin-bottom:.8rem"></div>
@@ -697,11 +705,58 @@ function selectShipping(type){
   document.getElementById('packetaPointRow').style.display=type==='packeta'?'block':'none';
 }
 function goToStep3(){
+  let appliedCoupon=null; // { code, discount }
+
+function fmtFt(n){return n.toLocaleString('hu-HU')+' Ft';}
+function setCouponMsg(text,ok){
+  const m=document.getElementById('couponMsg');
+  m.textContent=text||'';
+  m.style.color=ok?'#c084f5':'#e05';
+}
+function renderPaymentSummary(){
   const itemTotal=cartItems.reduce((s,i)=>s+i.price,0);
   const ship=SHIPPING[selectedShipping];
+  const disc=appliedCoupon?appliedCoupon.discount:0;
   const ln=document.getElementById('fLastName').value,fn=document.getElementById('fFirstName').value,city=document.getElementById('fCity').value;
-  document.getElementById('paymentSummary').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.4rem"><span style="color:#666">Termékek (${cartItems.length} db)</span><span>${itemTotal.toLocaleString('hu-HU')} Ft</span></div><div style="display:flex;justify-content:space-between;margin-bottom:.6rem"><span style="color:#666">${ship.name}</span><span>${ship.price.toLocaleString('hu-HU')} Ft</span></div><div style="display:flex;justify-content:space-between;font-weight:700;border-top:1px solid #490e7e33;padding-top:.6rem"><span>Végösszeg</span><span style="color:#c084f5">${(itemTotal+ship.price).toLocaleString('hu-HU')} Ft</span></div><div style="margin-top:.6rem;font-size:.72rem;color:#555">${ln} ${fn} — ${city}</div>`;
+  const discRow=disc?`<div style="display:flex;justify-content:space-between;margin-bottom:.6rem"><span style="color:#666">Kupon (${appliedCoupon.code})</span><span style="color:#c084f5">-${fmtFt(disc)}</span></div>`:'';
+  document.getElementById('paymentSummary').innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:.4rem"><span style="color:#666">Termékek (${cartItems.length} db)</span><span>${fmtFt(itemTotal)}</span></div><div style="display:flex;justify-content:space-between;margin-bottom:.6rem"><span style="color:#666">${ship.name}</span><span>${fmtFt(ship.price)}</span></div>${discRow}<div style="display:flex;justify-content:space-between;font-weight:700;border-top:1px solid #490e7e33;padding-top:.6rem"><span>Végösszeg</span><span style="color:#c084f5">${fmtFt(itemTotal+ship.price-disc)}</span></div><div style="margin-top:.6rem;font-size:.72rem;color:#555">${ln} ${fn} — ${city}</div>`;
+}
+async function quoteCoupon(code){
+  const res=await fetch('/api/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({quote:true,items:cartItems.map(i=>({name:i.name,size:i.size})),shipping:selectedShipping,coupon:code,customer:{email:document.getElementById('fEmail').value}})});
+  const data=await res.json().catch(()=>({}));
+  return {ok:res.ok,data};
+}
+async function applyCoupon(){
+  const input=document.getElementById('couponInput');
+  const code=input.value.trim().toUpperCase().replace(/[^A-Z0-9-]/g,'');
+  if(!code){removeCoupon();return;}
+  const btn=document.getElementById('couponBtn');
+  btn.disabled=true;
+  const r=await quoteCoupon(code);
+  btn.disabled=false;
+  if(!r.ok){appliedCoupon=null;setCouponMsg(r.data.error||'Hiba történt.',false);renderPaymentSummary();return;}
+  appliedCoupon={code,discount:r.data.discount};
+  input.value=code;
+  setCouponMsg('Kupon alkalmazva: -'+fmtFt(r.data.discount),true);
+  renderPaymentSummary();
+}
+function removeCoupon(){
+  appliedCoupon=null;
+  document.getElementById('couponInput').value='';
+  setCouponMsg('');
+  renderPaymentSummary();
+}
+async function goToStep3(){
   showStep(3);
+  renderPaymentSummary();
+  // a kosár vagy a szállítás megváltozhatott, ezért a kupont újra ellenőrizzük
+  if(appliedCoupon){
+    const r=await quoteCoupon(appliedCoupon.code);
+    if(r.ok){appliedCoupon.discount=r.data.discount;}
+    else{appliedCoupon=null;setCouponMsg(r.data.error||'A kupon már nem érvényes.',false);}
+    renderPaymentSummary();
+  }
+}
 }
 function selectPayment(type){
   selectedPayment=type;
@@ -713,26 +768,28 @@ async function placeOrder(){
   if(!cardElement){document.getElementById('stripe-card-error').textContent='Kérjük töltsd be újra az oldalt.';return;}
   const btn=document.getElementById('payBtn');
   btn.disabled=true;btn.textContent='Feldolgozás...';
-  const itemTotal=cartItems.reduce((s,i)=>s+i.price,0);
   const ship=SHIPPING[selectedShipping];
-  const total=itemTotal+ship.price;
   const name=document.getElementById('fLastName').value+' '+document.getElementById('fFirstName').value;
   const email=document.getElementById('fEmail').value;
   try{
-    const res=await fetch('/api/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cartItems.map(i=>({name:i.name,size:i.size})),shipping:selectedShipping,customer:{name,email,phone:document.getElementById('fPhone').value,address:document.getElementById('fAddress').value,zip:document.getElementById('fZip').value,city:document.getElementById('fCity').value,packetaPoint:document.getElementById('fPacketaPoint').value}})});
+    const res=await fetch('/api/create-payment-intent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cartItems.map(i=>({name:i.name,size:i.size})),shipping:selectedShipping,coupon:appliedCoupon?appliedCoupon.code:'',customer:{name,email,phone:document.getElementById('fPhone').value,address:document.getElementById('fAddress').value,zip:document.getElementById('fZip').value,city:document.getElementById('fCity').value,packetaPoint:document.getElementById('fPacketaPoint').value}})});
     const data=await res.json();
     if(!res.ok){throw new Error(data.error||('Szerver hiba: '+res.status));}
     const {clientSecret,orderNumber}=data;
     if(!clientSecret){throw new Error('Nincs clientSecret');}
+    const paid=data.total;
+    const discount=data.discount||0;
     const result=await stripe.confirmCardPayment(clientSecret,{payment_method:{card:cardElement,billing_details:{name,email}}});
     if(result.error){
       document.getElementById('stripe-card-error').textContent=result.error.message;
       btn.disabled=false;btn.textContent='Fizetés →';
     } else if(result.paymentIntent&&result.paymentIntent.status==='succeeded'){
       const orderNum=orderNumber;
-      emailjs.send('service_za2zu8v','template_oq6dnqg',{to_name:name,to_email:email,order_num:orderNum,items:cartItems.map(i=>i.name+' ('+i.size+')').join(', '),shipping:ship.name,total:total.toLocaleString('hu-HU')});
-      emailjs.send('service_za2zu8v','template_rrefo5k',{subject:'Új rendelés — '+orderNum,message:'Vásárló: '+name+'\nEmail: '+email+'\nTelefon: '+document.getElementById('fPhone').value+'\nCím: '+(selectedShipping==='packeta'?'Packeta pont: '+document.getElementById('fPacketaPoint').value:document.getElementById('fZip').value+' '+document.getElementById('fCity').value+', '+document.getElementById('fAddress').value)+'\nTermékek: '+cartItems.map(i=>i.name+' ('+i.size+')').join(', ')+'\nSzállítás: '+ship.name+'\nVégösszeg: '+total.toLocaleString('hu-HU')+' Ft'});
-      document.getElementById('successOrder').innerHTML=`<div class="success-order-row"><span>Rendelési szám</span><span style="color:#c084f5">${orderNum}</span></div><div class="success-order-row"><span>Szállítás</span><span>${ship.name}</span></div><div class="success-order-row"><span>Fizetési mód</span><span>Bankkártya (Stripe)</span></div><div class="success-order-row"><span>Végösszeg</span><span style="color:#c084f5">${total.toLocaleString('hu-HU')} Ft</span></div>`;
+      const couponLine=discount&&appliedCoupon?appliedCoupon.code+' (-'+discount.toLocaleString('hu-HU')+' Ft)':'—';
+      emailjs.send('service_za2zu8v','template_oq6dnqg',{to_name:name,to_email:email,order_num:orderNum,items:cartItems.map(i=>i.name+' ('+i.size+')').join(', '),shipping:ship.name,total:paid.toLocaleString('hu-HU')});
+      emailjs.send('service_za2zu8v','template_rrefo5k',{subject:'Új rendelés — '+orderNum,message:'Vásárló: '+name+'\nEmail: '+email+'\nTelefon: '+document.getElementById('fPhone').value+'\nCím: '+(selectedShipping==='packeta'?'Packeta pont: '+document.getElementById('fPacketaPoint').value:document.getElementById('fZip').value+' '+document.getElementById('fCity').value+', '+document.getElementById('fAddress').value)+'\nTermékek: '+cartItems.map(i=>i.name+' ('+i.size+')').join(', ')+'\nSzállítás: '+ship.name+'\nKupon: '+couponLine+'\nVégösszeg: '+paid.toLocaleString('hu-HU')+' Ft'});
+      const discRow=discount?`<div class="success-order-row"><span>Kupon</span><span>-${discount.toLocaleString('hu-HU')} Ft</span></div>`:'';
+      document.getElementById('successOrder').innerHTML=`<div class="success-order-row"><span>Rendelési szám</span><span style="color:#c084f5">${orderNum}</span></div><div class="success-order-row"><span>Szállítás</span><span>${ship.name}</span></div><div class="success-order-row"><span>Fizetési mód</span><span>Bankkártya (Stripe)</span></div>${discRow}<div class="success-order-row"><span>Végösszeg</span><span style="color:#c084f5">${paid.toLocaleString('hu-HU')} Ft</span></div>`;
       showStep(4);
     } else {
       document.getElementById('stripe-card-error').textContent='Fizetés sikertelen, próbáld újra.';
@@ -741,6 +798,8 @@ async function placeOrder(){
   } catch(e){
     console.error(e);
     document.getElementById('stripe-card-error').textContent='Hiba: '+e.message;
+    // ha a kuponnal volt gond, a kupon törlődik, és a vásárló látja az új végösszeget
+    if(/kupon/i.test(e.message)){appliedCoupon=null;setCouponMsg(e.message,false);renderPaymentSummary();}
     btn.disabled=false;btn.textContent='Fizetés →';
   }
 }
@@ -748,6 +807,9 @@ function finishOrder(){
   cartItems=[];updateCart();
   document.getElementById('checkoutModal').classList.remove('open');
   ['fLastName','fFirstName','fEmail','fPhone','fAddress','fZip','fCity','fPacketaPoint'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  appliedCoupon=null;
+  document.getElementById('couponInput').value='';
+  setCouponMsg('');
   selectShipping('gls');
   if(cardElement){cardElement.unmount();cardElement=null;}
 }
