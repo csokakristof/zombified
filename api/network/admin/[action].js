@@ -1,5 +1,6 @@
 const { adminClient, sameOrigin } = require('../../../lib/network');
 const { getAdminSession, audit, label } = require('../../../lib/admin');
+const { handleCouponAction } = require('../../../lib/coupons');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const BUCKET = 'network-media';
@@ -106,8 +107,11 @@ module.exports = async (req, res) => {
         });
       }
 
-      default:
+      default: {
+        const handled = await handleCouponAction(String(req.query.action || ''), req, res, db, a);
+        if (handled) return;
         return res.status(404).json({ error: 'Not found' });
+      }
     }
   } catch (e) {
     console.error(e);
