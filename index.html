@@ -704,7 +704,6 @@ function selectShipping(type){
   document.getElementById('optPacketa').classList.toggle('selected',type==='packeta');
   document.getElementById('packetaPointRow').style.display=type==='packeta'?'block':'none';
 }
-function goToStep3(){
   let appliedCoupon=null; // { code, discount }
 
 function fmtFt(n){return n.toLocaleString('hu-HU')+' Ft';}
@@ -756,7 +755,6 @@ async function goToStep3(){
     else{appliedCoupon=null;setCouponMsg(r.data.error||'A kupon már nem érvényes.',false);}
     renderPaymentSummary();
   }
-}
 }
 function selectPayment(type){
   selectedPayment=type;
