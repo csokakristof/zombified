@@ -28,7 +28,7 @@
     return e;
   }
   async function api(path, opt) {
-    const r = await fetch('/api/network/' + path, { credentials: 'same-origin', ...(opt || {}) });
+    const r = await fetch('/api/network/admin/' + path, { credentials: 'same-origin', ...(opt || {}) });
     let data = {};
     try { data = await r.json(); } catch (e) {}
     return { ok: r.ok, status: r.status, data };
